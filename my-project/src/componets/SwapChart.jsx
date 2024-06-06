@@ -12,7 +12,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import _ from "lodash";
-
+import { Link } from "react-router-dom";
 function SwapChart(props) {
   const { chartData, currentShare } = props;
   const [newChartData, setNewChartData] = useState(null);
@@ -61,7 +61,7 @@ function SwapChart(props) {
             padding: "5px",
           }}
         >
-          <p className="label text-stone-300">{`${label} : ${payload[0].value} Ξ`}</p>
+          <p className="label text-stone-300 text-[8px]">{`${label} : ${payload[0].value} Ξ / share`}</p>
           {/* You can include additional data or styling here */}
         </div>
       );
@@ -117,19 +117,19 @@ function SwapChart(props) {
                 </div>
               </div>
             </div>
-            <div
-              style={{ width: "700px", height: "400px" }}
-              className="mx-auto"
-            >
-              <ResponsiveContainer width="49%" height="90%">
-                <AreaChart data={newChartData}>
+            <div style={{ width: "400px", height: "400px" }} className="">
+              <ResponsiveContainer width="90%" height={400}>
+                <AreaChart
+                  data={newChartData}
+                  margin={{ top: 10, right: 30, bottom: 20, left: 20 }}
+                >
                   <XAxis
                     dataKey="fullDate"
                     tick={{ fontSize: 9, fill: "#cccccc" }}
                   />
                   <YAxis
                     dataKey={"priceAtDate"}
-                    tick={{ fontSize: 7, fill: "#cccccc" }}
+                    tick={{ fontSize: 9, fill: "#cccccc" }}
                   />
                   <Tooltip content={<CustomTooltip />} />
                   <Area
@@ -150,22 +150,25 @@ function SwapChart(props) {
                   return (
                     <div
                       key={item}
-                      className="border border-slate-500 grid grid-cols-4 p-2 mt-1 rounded-lg"
+                      className="border border-stone-700 bg-stone-900 grid grid-cols-4 p-1 mt-1 rounded-lg"
                     >
-                      <div className="flex justify-start">
+                      <div className="flex justify-start  w-[40px]">
                         <img
                           src={item?.traderPfp}
                           alt=""
-                          className="w-6 h-6 rounded-full"
+                          className="w-6 h-6 rounded-full mt-1"
                         />
                       </div>
 
-                      <div>
-                        <h3 className="text-white text-[12px]">
+                      <div className="">
+                        <Link
+                          to={`/friend/${item?.traderShareAddress}`}
+                          className="text-white text-[10px] break-keep hover:underline"
+                        >
                           {item?.traderName}
-                        </h3>
+                        </Link>
                       </div>
-                      <div className="flex justify-center">
+                      <div className="flex justify-center  w-[40px] ms-5 mt-1">
                         <h3
                           className={`${item?.isBuy ? `text-green-500 text-[10px]` : "text-red-500 text-[10px]"}`}
                         >
@@ -174,7 +177,7 @@ function SwapChart(props) {
                             : `-${item?.shareAmount}`}
                         </h3>
                       </div>
-                      <div className="flex justify-end me-10">
+                      <div className="flex justify-end me-10 mt-1">
                         <h3
                           className={`${item?.isBuy ? `text-green-500 text-[10px]` : "text-red-500 text-[10px]"}`}
                         >

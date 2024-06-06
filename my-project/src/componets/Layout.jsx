@@ -21,7 +21,7 @@ function Layout() {
   return (
     <div className="container">
       <div className="flex justify-center">
-        {authenticated && ready ? <NavBar /> : null}
+        {authenticated && wallet ? <NavBar /> : null}
       </div>
 
       {authenticated && wallet ? (
