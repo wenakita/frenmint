@@ -141,50 +141,52 @@ function SwapChart(props) {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-            <div className="border w-[390px] border-stone-600 p-1 overflow-y-auto h-[100px]">
+            <div className="border w-[390px] border-stone-600 ">
               <div className="flex justify-start">
                 <h3 className="text-white text-[8px]">Trade History</h3>
               </div>
-              {chartData.map((item) => {
-                return (
-                  <div
-                    key={item}
-                    className="border border-slate-500 grid grid-cols-4 p-2 mt-1 rounded-lg"
-                  >
-                    <div className="flex justify-start">
-                      <img
-                        src={item?.traderPfp}
-                        alt=""
-                        className="w-6 h-6 rounded-full"
-                      />
-                    </div>
+              <div className="border w-[390px] border-stone-600 p-1 overflow-y-auto h-[100px] border-t-0">
+                {chartData.map((item) => {
+                  return (
+                    <div
+                      key={item}
+                      className="border border-slate-500 grid grid-cols-4 p-2 mt-1 rounded-lg"
+                    >
+                      <div className="flex justify-start">
+                        <img
+                          src={item?.traderPfp}
+                          alt=""
+                          className="w-6 h-6 rounded-full"
+                        />
+                      </div>
 
-                    <div>
-                      <h3 className="text-white text-[12px]">
-                        {item?.traderName}
-                      </h3>
+                      <div>
+                        <h3 className="text-white text-[12px]">
+                          {item?.traderName}
+                        </h3>
+                      </div>
+                      <div className="flex justify-center">
+                        <h3
+                          className={`${item?.isBuy ? `text-green-500 text-[10px]` : "text-red-500 text-[10px]"}`}
+                        >
+                          {item?.isBuy
+                            ? `+${item?.shareAmount}`
+                            : `-${item?.shareAmount}`}
+                        </h3>
+                      </div>
+                      <div className="flex justify-end me-10">
+                        <h3
+                          className={`${item?.isBuy ? `text-green-500 text-[10px]` : "text-red-500 text-[10px]"}`}
+                        >
+                          {item?.isBuy
+                            ? `+${uintFormat(Number(item?.ethAmount))}`
+                            : `-${uintFormat(Number(item?.ethAmount))}`}
+                        </h3>
+                      </div>
                     </div>
-                    <div className="flex justify-center">
-                      <h3
-                        className={`${item?.isBuy ? `text-green-500 text-[10px]` : "text-red-500 text-[10px]"}`}
-                      >
-                        {item?.isBuy
-                          ? `+${item?.shareAmount}`
-                          : `-${item?.shareAmount}`}
-                      </h3>
-                    </div>
-                    <div className="flex justify-end me-10">
-                      <h3
-                        className={`${item?.isBuy ? `text-green-500 text-[10px]` : "text-red-500 text-[10px]"}`}
-                      >
-                        {item?.isBuy
-                          ? `+${uintFormat(Number(item?.ethAmount))}`
-                          : `-${uintFormat(Number(item?.ethAmount))}`}
-                      </h3>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </>
         ) : (
