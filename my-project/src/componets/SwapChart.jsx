@@ -121,7 +121,7 @@ function SwapChart(props) {
               style={{ width: "700px", height: "400px" }}
               className="mx-auto"
             >
-              <ResponsiveContainer width="55%" height="100%">
+              <ResponsiveContainer width="49%" height="90%">
                 <AreaChart data={newChartData}>
                   <XAxis
                     dataKey="fullDate"
