@@ -6,10 +6,10 @@ import Home from "./componets/Home";
 import Friend from "./componets/Friend";
 import BalancesPage from "./componets/BalancesPage";
 import MyPools from "./componets/MyPools";
-import Pools from "./componets/Pools";
-import Swap from "./componets/Swap";
+
 import FriendTechPools from "./componets/FriendTechPools";
 import Pool from "./componets/Pool";
+import UniversalSwap from "./componets/UniversalSwap";
 import NotFound from "./componets/NotFound";
 function App() {
   return (
@@ -22,8 +22,10 @@ function App() {
           <Route path="/balances" element={<BalancesPage />} />
           <Route path="/my-pools" element={<MyPools />} />
           <Route path="/pools" element={<FriendTechPools />} />
-          <Route path="/swap" element={<Swap />} />
+          <Route path="/swap" element={<UniversalSwap />} />
+
           <Route path="/pool/:id" element={<Pool />} />
+
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

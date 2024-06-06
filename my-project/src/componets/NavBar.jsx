@@ -65,6 +65,13 @@ function NavBar() {
             Pools
           </Link>
 
+          <Link
+            to="/swap"
+            className="text-white text-center p-5 mt-2 font-bold "
+          >
+            Swap
+          </Link>
+
           <Menu>
             <MenuButton>
               <img

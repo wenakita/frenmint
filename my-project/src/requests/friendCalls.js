@@ -34,6 +34,13 @@ export function GetTrendingFriends() {
   return trendingUsers;
 }
 
+export async function getTrending() {
+  const res = await fetch("https://prod-api.kosetto.com/lists/top-by-price");
+  const trendingUsers = await res.json();
+
+  return trendingUsers;
+}
+
 export async function SearchByContract(address) {
   try {
     const response = await fetch(
@@ -117,6 +124,7 @@ function formatUserName(target) {
 // }
 
 // findNftHoldings("0x0f76Cd9bb6b3b7eAeDA808818218d61F923b3494");
+
 export async function findId(userAddress) {
   try {
     const res = await fetch(
@@ -204,3 +212,127 @@ export async function fetchFollowers(userAddress) {
 
 //   return "1";
 // }
+
+//if lapotop discharges we gotta finish these last two functions here we get all chart data for users
+
+export async function getShareChartData(shareAddress) {
+  let currentPageStart = null;
+  let isNull = false;
+  let shareChartData = [];
+  try {
+    console.log(shareAddress);
+    const res = await fetch(
+      `https://prod-api.kosetto.com/users/${shareAddress}/account-trade-activity`,
+      {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiMHhhMjRlMTQyNmJjMzdkMGQxYTllNzAzN2Y1ZGUzMzIyZTgwMGYyZDdkIiwiaWF0IjoxNzE3MDI1MzAzLCJleHAiOjE3MTk2MTczMDN9.pk9d_c7NMUBgRC5ySrGdxwLBoHKSYjlG8RMVKN0a5JY",
+        },
+      }
+    );
+    const data = await res.json();
+    const activity = data.users;
+    console.log(data.users);
+    console.log(data.nextPageStart);
+    currentPageStart = data.nextPageStart;
+
+    for (const key in activity) {
+      console.log(activity[key]);
+
+      if (activity[key].subject !== null) {
+        const currentShareAddress = activity[key].subject.address;
+        console.log(currentShareAddress);
+        console.log(currentShareAddress.localeCompare(shareAddress));
+        if (currentShareAddress.localeCompare(shareAddress) === 0) {
+          console.log(activity[key]);
+          console.log(activity[key].isBuy);
+          shareChartData.push({
+            tradedShareAddress: activity[key].subject.address,
+            traderShareAddress: activity[key].trader.address,
+            traderName: activity[key].trader.ftName,
+            traderPfp: activity[key].trader.ftPfpUrl,
+            isBuy: activity[key].isBuy,
+            shareAmount: activity[key].shareAmount,
+            ethAmount: activity[key].ethAmount,
+            date: activity[key].createdAt,
+          });
+        }
+      }
+    }
+    console.log(shareChartData);
+    console.log(data.nextPageStart);
+    if (data.nextPageStart !== null) {
+      currentPageStart = data.nextPageStart;
+      console.log("ture");
+      console.log(data.nextPageStart);
+      while (currentPageStart !== null) {
+        const newData = await continueFindingChartData(
+          currentPageStart,
+          shareAddress
+        );
+        const usersActivity = newData.users;
+
+        for (const key in usersActivity) {
+          if (
+            usersActivity[key].subject !== null ||
+            usersActivity[key].club == null
+          ) {
+            console.log(usersActivity[key]);
+            const currentShareAddress = usersActivity[key].subject.address;
+
+            if (
+              currentShareAddress !== null ||
+              usersActivity[key].club == null
+            ) {
+              console.log(currentShareAddress);
+              console.log(usersActivity[key].isBuy);
+              if (currentShareAddress.localeCompare(shareAddress) === 0) {
+                shareChartData.push({
+                  tradedShareAddress: usersActivity[key].subject.address,
+                  traderShareAddress: usersActivity[key].trader.address,
+                  traderName: usersActivity[key].trader.ftName,
+                  traderPfp: usersActivity[key].trader.ftPfpUrl,
+                  isBuy: usersActivity[key].isBuy,
+                  shareAmount: usersActivity[key].shareAmount,
+                  ethAmount: usersActivity[key].ethAmount,
+                  date: usersActivity[key].createdAt,
+                });
+              }
+            }
+          }
+        }
+
+        console.log(newData.nextPageStart);
+        currentPageStart = newData?.nextPageStart;
+        if (currentPageStart === null) {
+          break;
+        }
+      }
+    }
+    return shareChartData;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function continueFindingChartData(pageStart, shareAddress) {
+  console.log(pageStart);
+  const result = [];
+  try {
+    const res = await fetch(
+      `https://prod-api.kosetto.com/users/${shareAddress}/account-trade-activity?pageStart=${pageStart}`,
+      {
+        headers: {
+          Authorization:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiMHhhMjRlMTQyNmJjMzdkMGQxYTllNzAzN2Y1ZGUzMzIyZTgwMGYyZDdkIiwiaWF0IjoxNzE3MDI1MzAzLCJleHAiOjE3MTk2MTczMDN9.pk9d_c7NMUBgRC5ySrGdxwLBoHKSYjlG8RMVKN0a5JY",
+        },
+      }
+    );
+    const data = await res.json();
+    console.log(data.nextPageStart);
+    return await data;
+  } catch (error) {
+    console.log(error);
+  }
+}

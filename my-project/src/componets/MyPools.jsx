@@ -10,11 +10,13 @@ import friendTechABI from "../abi/FriendTechABi";
 import GodDogABI from "../abi/GodDogABI";
 import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import Pools from "./Pools";
 const API_KEY = import.meta.env.VITE_DEFINED_KEY;
 
 function MyPools() {
   const navigate = useNavigate();
+  const [finalizeTx, setFinalizeTx] = useState(false);
   const [userPools, setUserPools] = useState(null);
   const [input, setInput] = useState("");
   const [spotPrice, setSpotPrice] = useState("");

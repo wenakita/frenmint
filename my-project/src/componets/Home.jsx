@@ -5,6 +5,7 @@ import TrendingFriends from "./TrendingFriends";
 import NotableFriends from "./NotableFriends";
 import GlobalActivity from "./GlobalActivity";
 import { useEffect, useState } from "react";
+import RecentTx from "./RecentTx";
 function Home() {
   const [loading, setLoading] = useState(true);
   const { wallets } = useWallets();
@@ -22,6 +23,9 @@ function Home() {
   }, []);
   return (
     <div className="">
+      <center className="flex justify-center">
+        <RecentTx />
+      </center>
       <div className="text-[30px] text-center p-5  flex justify-center">
         <img
           src="https://ivory-accurate-pig-375.mypinata.cloud/ipfs/QmNfe9547vPVgd8qqdCFeH81yHos1n1CoQZu1D9n5Nrjvp?pinataGatewayToken=DdSIfjJJunjBBaGpRA4VE7rw9Q3bNil3avaM8VrHQkPRh_2vaSMuwGFYGbn9Xzt2"

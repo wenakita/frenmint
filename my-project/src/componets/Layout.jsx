@@ -5,6 +5,8 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import RecentTx from "./RecentTx";
+import LiveChat from "./LiveChat";
 function Layout() {
   const navigate = useNavigate();
   const params = useParams();
@@ -21,11 +23,16 @@ function Layout() {
       <div className="flex justify-center">
         {authenticated && ready ? <NavBar /> : null}
       </div>
+
       {authenticated && wallet ? (
-        <div className="flex justify-center p-3">
-          <SearchBar />
-        </div>
+        <>
+          <div className="flex justify-center p-3 gap-2">
+            <SearchBar />
+            <LiveChat />
+          </div>
+        </>
       ) : null}
+
       <div className="">
         <Outlet />
       </div>

@@ -4,11 +4,13 @@ import { SearchByContract } from "../requests/friendCalls";
 import { uintFormat } from "../formatters/format";
 import { fetchFollowers } from "../requests/friendCalls";
 import FriendSwap from "./FriendSwap";
+import RecentTx from "./RecentTx";
 function Friend() {
   const [data, setData] = useState(null);
   const [followers, setFollowers] = useState(null);
   const [shareBalance, setShareBalance] = useState("0");
   const [loading, setLoading] = useState(true);
+  const [getTxData, setGetTxData] = useState(false);
   const { address } = useParams();
   useEffect(() => {
     fetchInfo();
@@ -29,7 +31,7 @@ function Friend() {
   }
 
   return (
-    <div className="mt-10 container p-5 mb-10">
+    <div className="container p-5 mb-10">
       {loading ? (
         <div className="flex justify-center mt-56 mb-10">
           <img
@@ -40,6 +42,11 @@ function Friend() {
         </div>
       ) : (
         <>
+          <div className="mb-20">
+            <center className="flex justify-center">
+              <RecentTx getTxData={getTxData} />
+            </center>
+          </div>
           {data !== null ? (
             <div className="flex justify-center">
               <div className="border border-slate-500 rounded-xl w-[400px] p-5 mb-20">
@@ -107,6 +114,8 @@ function Friend() {
                   <FriendSwap
                     shareAddress={data?.address}
                     price={uintFormat(data?.displayPrice)}
+                    setGetTxData={setGetTxData}
+                    shareData={data}
                   />
                 </div>
               </div>

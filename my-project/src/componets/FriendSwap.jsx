@@ -9,6 +9,8 @@ import { readContract } from "@wagmi/core";
 import { useBalance } from "wagmi";
 import { config } from "../config";
 import { parseEther } from "viem";
+import { postTransaction } from "../requests/supaBaseHandler";
+import { supabase } from "../client";
 function FriendSwap(props) {
   const [input, setInput] = useState("");
   const [recieve, seteRecieve] = useState("0");
@@ -16,7 +18,7 @@ function FriendSwap(props) {
   const [finalPayAmount, setFinalPayAmount] = useState("");
   const [shouldWrap, setShouldWrap] = useState(true);
   const [balance, setBalance] = useState(0);
-  const { shareAddress, price } = props;
+  const { shareAddress, price, setGetTxData, shareData } = props;
 
   const { ready, user, login, logout, authenticated } = usePrivy();
   const { wallets } = useWallets();
@@ -121,6 +123,7 @@ function FriendSwap(props) {
   }
 
   async function calculateTotalWithGas() {
+    console.log(input);
     try {
       const result = await readContract(config, {
         abi: FriendABI,
@@ -162,10 +165,21 @@ function FriendSwap(props) {
 
       const receipt = await res.wait();
       console.log(await receipt.events);
+
       setAlert({
         message: `Transaction complete!`,
         variant: "green",
       });
+      await postTransaction();
+      await postTransaction(
+        supabase,
+        shareData,
+        input,
+        w0?.address,
+        true,
+        finalAmount
+      );
+      setGetTxData(true);
     } catch (error) {
       setAlert({ message: "Insufficient Balance", variant: "green" });
     }
@@ -191,6 +205,16 @@ function FriendSwap(props) {
       );
       const receipt = await res.wait();
       console.log(await receipt.events);
+      await postTransaction(
+        supabase,
+        shareData,
+        input,
+        w0?.address,
+        false,
+        recieve
+      );
+      setGetTxData(true);
+
       setAlert({
         message: `Transaction complete!`,
         variant: "green",
