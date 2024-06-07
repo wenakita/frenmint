@@ -19,7 +19,7 @@ function Portal() {
     address: wallet?.address,
   });
   useEffect(() => {
-    if (authenticated && wallet) {
+    if (authenticated && wallet && ready) {
       // const formattedBalance = Number(userEthBalance?.data?.formatted);
       // console.log(formattedBalance);
       // if ()
@@ -37,7 +37,7 @@ function Portal() {
       </div>
 
       <div className="flex justify-center mt-10">
-        {authenticated && wallet ? (
+        {authenticated && wallet && ready ? (
           <button
             className="border border-slate-500 rounded-lg text-white p-2 text-[20px] hover:bg-white hover:text-black"
             onClick={logout}
