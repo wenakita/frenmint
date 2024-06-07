@@ -20,15 +20,21 @@ import SwapChart from "./SwapChart.jsx";
 import { Link } from "react-router-dom";
 import { base } from "wagmi/chains";
 import {
+  getSingleBuyNftPrice,
+  getSingleSellNftPrice,
+} from "../requests/txRequests";
+import {
   Description,
   Dialog,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
+import { Quoter } from "sudo-defined-quoter";
 import { wrapToken } from "../requests/txRequests";
 import { Contract } from "ethers";
 import { parseEther } from "viem";
 import friendTechABI from "../abi/FriendTechABi";
+import SudoSwapPoolABI from "../abi/SudoSwapPoolABI.js";
 function UniversalSwap() {
   let [isOpen, setIsOpen] = useState(false);
   const [ethPrice, setEthPrice] = useState(null);
@@ -41,8 +47,11 @@ function UniversalSwap() {
   const [recievedShares, setRecievedShares] = useState(null);
   const [showSwap, setShowSwap] = useState(true);
   const [showChart, setShowChart] = useState(false);
+  const [goddogPools, setGoddogPools] = useState(null);
   const [shareInput, setShareInput] = useState(null);
   const [txCallCompleted, setTxCallCompleted] = useState(false);
+  const [currentPoolShareSelected, setCurrentPoolsShareSelected] =
+    useState(null);
 
   const [shareSearchResults, setShareSearchResults] = useState(null);
   const [shareResultType, setShareResultType] = useState("user");
@@ -86,8 +95,72 @@ function UniversalSwap() {
     console.log(currentPairToken);
     if (currentPairToken?.name === "Goddog") {
       console.log("true");
+      getGoddogPools();
     }
   }, [currentPairToken]);
+
+  async function getGoddogPools() {
+    // const existingGoddogPools = await getGoddogPools(
+    //   Quoter,
+    //   import.meta.env.VITE_DEFINED_KEY,
+    //   "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+    //   8453
+    // );
+    const poolFormattedData = [];
+
+    const instance = new Quoter(import.meta.env.VITE_DEFINED_KEY, 8453);
+    const existingGoddogPools = await instance.getPoolsForCollection(
+      "0xbeea45F16D512a01f7E2a3785458D4a7089c8514"
+    );
+    console.log(existingGoddogPools);
+    for (const key in existingGoddogPools) {
+      const currentPool = existingGoddogPools[key];
+      console.log(currentPool);
+      console.log(currentPool?.erc1155Id);
+      const currentPoolShareContract = await getShareUri(
+        readContract,
+        config,
+        FriendTechABI,
+        currentPool?.erc1155Id
+      );
+      if (currentPoolShareContract !== null) {
+        const currentPoolShareData = await SearchByContract(
+          currentPoolShareContract
+        );
+        const usersCurrentPoolShareBalance = await getShareBalance(
+          readContract,
+          config,
+          FriendTechABI,
+          w0?.address,
+          currentPool?.erc1155Id
+        );
+        console.log(usersCurrentPoolShareBalance);
+        const poolGoddogSellPrice = await getSingleBuyNftPrice(
+          readContract,
+          config,
+          SudoSwapPoolABI,
+          currentPool?.erc1155Id,
+          currentPool?.address
+        );
+        const poolGoddogBuyPrice = await getSingleSellNftPrice(
+          readContract,
+          config,
+          SudoSwapPoolABI,
+          currentPool?.erc1155Id,
+          currentPool?.address
+        );
+        poolFormattedData.push({
+          sudoSwapData: currentPool,
+          friendTehcData: currentPoolShareData,
+          userShareBalance: usersCurrentPoolShareBalance,
+          buyPrice: poolGoddogBuyPrice,
+          sellPrice: poolGoddogSellPrice,
+        });
+      }
+    }
+    console.log(poolFormattedData);
+    setGoddogPools(poolFormattedData);
+  }
 
   async function getCharts() {
     const foundChartData = await getShareChartData(currentShare?.address);
@@ -463,7 +536,11 @@ function UniversalSwap() {
                   >
                     <span className="flex justify-center gap-2">
                       <img
-                        src={currentShare?.ftPfpUrl}
+                        src={
+                          currentPairToken?.name === "Ethereum"
+                            ? currentShare?.ftPfpUrl
+                            : currentPoolShareSelected?.friendTehcData?.ftPfpUrl
+                        }
                         alt=""
                         className="w-4 h-4 rounded-full mt-1"
                       />
@@ -505,14 +582,20 @@ function UniversalSwap() {
               <div className="flex justify-between mt-2 p-1">
                 <div>
                   <h3 className="text-stone-400 font-bold text-[10px] hover:underline">
-                    Contract: {currentShare?.address}
+                    {currentPairToken?.name === "Ethereum"
+                      ? `Contract: ${currentShare?.address}`
+                      : `Pool contract: ${currentPoolShareSelected?.sudoSwapData?.address}`}
                   </h3>
                   <h3 className="text-stone-400 text-[10px] font-bold mt-0.5">
-                    Price: {uintFormat(currentShare?.displayPrice)} Ξ / share
+                    {currentPairToken?.name === "Ethereum"
+                      ? ` Price: ${uintFormat(currentShare?.displayPrice)} Ξ / share`
+                      : ` Price: ${Number(currentPoolShareSelected?.buyPrice)} $OOOooo / share`}
                   </h3>
                   <div className="flex">
                     <h3 className="text-stone-400 mt-0.5  font-bold text-[10px]">
-                      Creator fees Earned: 5%
+                      {currentPairToken?.name === "Ethereum"
+                        ? `Creator fees Earned: 5%`
+                        : `Pool Creator fees Earned: 7%`}
                     </h3>
                   </div>
                 </div>
@@ -593,7 +676,9 @@ function UniversalSwap() {
               <div className="fixed inset-0 flex w-screen h-screen items-center justify-center p-4 mb-10 bg-gradient-to-tr from-stone-950">
                 <DialogPanel className="max-w-lg  border border-slate-500 bg-stone-900 p-2 rounded-lg">
                   <DialogTitle className="font-bold text-white p-2 flex justify-between">
-                    Select a share
+                    {currentPairToken?.name === "Ethereum"
+                      ? `Select a share`
+                      : `Select a pool`}
                     <button
                       className="text-[10px]"
                       onClick={() => setOpenTokenPairs(false)}
@@ -873,7 +958,15 @@ function UniversalSwap() {
                                   );
                                 })}
                               </>
-                            ) : null}
+                            ) : (
+                              <div className="flex justify-center mb-10 mt-[300px]">
+                                <img
+                                  src="https://www.friend.tech/friendtechlogo.png"
+                                  alt=""
+                                  className="w-20 h-20 animate-bounce"
+                                />
+                              </div>
+                            )}
                           </>
                         )}
                       </>
@@ -881,9 +974,88 @@ function UniversalSwap() {
                       <>
                         {currentPairToken.name === "Goddog" ? (
                           <>
-                            <h3 className="text-white">hello</h3>
+                            {goddogPools ? (
+                              <>
+                                {goddogPools.map((item) => {
+                                  return (
+                                    <button
+                                      key={item}
+                                      className="border border-slate-500 mt-1 rounded-lg p-2 grid grid-cols-4"
+                                      onClick={() => {
+                                        setCurrentPoolsShareSelected(item);
+                                        setCurrentShare(item?.friendTehcData);
+                                        setIsOpen(false);
+                                      }}
+                                    >
+                                      <div className="flex justify-start gap-2">
+                                        <img
+                                          src={item?.friendTehcData?.ftPfpUrl}
+                                          alt=""
+                                          className="w-7 h-7 rounded-full"
+                                        />
+                                        <div className="grid grid-rows-2 text-white text-[10px]">
+                                          <div className=" w-[300px] flex justify-start">
+                                            <h3 className="break-keep">
+                                              {item?.friendTehcData?.ftName}
+                                            </h3>
+                                          </div>
+                                          <div className=" flex justify-start">
+                                            <h3>
+                                              {" "}
+                                              {item?.sudoSwapData?.address.slice(
+                                                0,
+                                                4
+                                              )}
+                                              ...
+                                              {item?.sudoSwapData?.address.slice(
+                                                item?.sudoSwapData?.address
+                                                  .length - 3,
+                                                item?.sudoSwapData?.address
+                                                  .length
+                                              )}
+                                            </h3>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div></div>
+                                      <div className="grid grid-rows-2  text-[9px] text-white flex justify-end w-[220px]">
+                                        <div className="flex justify-start">
+                                          {item?.userShareBalance}
+                                        </div>
+                                        <div>
+                                          USD $
+                                          {Number(
+                                            uintFormat(
+                                              item?.friendTehcData?.displayPrice
+                                            ) *
+                                              ethPrice *
+                                              item?.userShareBalance
+                                          ).toFixed(2)}
+                                        </div>
+                                      </div>
+                                    </button>
+                                  );
+                                })}
+                              </>
+                            ) : (
+                              <div className="flex justify-center mb-10 mt-[300px]">
+                                <img
+                                  src="https://www.friend.tech/friendtechlogo.png"
+                                  alt=""
+                                  className="w-20 h-20 animate-bounce"
+                                />
+                              </div>
+                            )}
                           </>
-                        ) : null}
+                        ) : (
+                          <div className="flex justify-center mb-10 mt-[300px]">
+                            <img
+                              src="https://www.friend.tech/friendtechlogo.png"
+                              alt=""
+                              className="w-20 h-20 animate-bounce"
+                            />
+                          </div>
+                        )}
                       </>
                     )}
                   </div>

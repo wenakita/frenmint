@@ -51,12 +51,13 @@ function Home() {
             <motion.div
               className="flex justify-center"
               style={{
-                width: 410,
-                height: 200,
+                width: 700,
+                height: 300,
                 borderRadius: 8,
 
                 align: "center",
                 cursor: "pointer",
+                margin: 10,
               }}
               animate={["initial"]}
               whileHover={["grow"]}
