@@ -32,7 +32,7 @@ function NavBar() {
     <div
       className={`mt-1 w-[440px] border border-stone-800 p-2 rounded-xl text-[8px] ${authenticated && wallet ? "flex justify-between" : null}`}
     >
-      {authenticated && ready ? (
+      {authenticated && wallet ? (
         <>
           <Link
             to={
