@@ -9,7 +9,7 @@ function NavBar() {
   const wallet = user?.wallet;
   const address = wallet?.address;
   useEffect(() => {
-    if (!authenticated && !wallet) {
+    if ((!authenticated && !wallet) || (!authenticated && !ready)) {
       navigate("/");
     }
   }, [authenticated, wallet]);
@@ -32,7 +32,7 @@ function NavBar() {
     <div
       className={`mt-1 w-[440px] border border-stone-800 p-2 rounded-xl text-[8px] ${authenticated && wallet ? "flex justify-between" : null}`}
     >
-      {authenticated && wallet ? (
+      {(authenticated && wallet) || (ready && authenticated) ? (
         <>
           <Link
             to={
