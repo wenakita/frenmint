@@ -134,8 +134,8 @@ function SearchBar() {
   return (
     <div className="flex justify-center gap-2">
       <svg
-        width="15"
-        height="15"
+        width="12"
+        height="12"
         viewBox="0 0 15 15"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +150,7 @@ function SearchBar() {
       </svg>
       <input
         type="text"
-        className="text-white border border-slate-500 bg-stone-800 rounded-xl w-[300px]"
+        className="text-white border border-stone-800 bg-stone-900 rounded-xl w-[300px]"
         value={input}
         onChange={(e) => {
           console.log(e.target.value);

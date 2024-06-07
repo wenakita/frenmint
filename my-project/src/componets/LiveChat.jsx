@@ -82,7 +82,7 @@ function LiveChat() {
         onClick={() => {
           setIsOpen(true);
         }}
-        className="border p-1 border-slate-500 text-white flex justify-center text-[8px] p-1 rounded-lg"
+        className="border p-1 border-stone-700 text-white flex justify-center text-[8px] p-1 rounded-lg"
       >
         <img
           src="https://i.postimg.cc/qqhQyJgK/friendmint-removebg-preview.png"
@@ -98,8 +98,8 @@ function LiveChat() {
           className="relative z-50"
         >
           <div className="fixed inset-0 flex w-screen items-center justify-center p-4 bg-gradient-to-br from-stone-950">
-            <DialogPanel className="w-[350px] h-[500px] text-white border border-slate-500 rounded-lg bg-black p-2">
-              <DialogTitle className="font-bold flex justify-start mb-5">
+            <DialogPanel className="w-[350px] h-[500px] text-white border border-stone-800 rounded-lg bg-black p-3">
+              <DialogTitle className="font-bold flex justify-start mb-2 mt-1">
                 <img
                   src="https://i.postimg.cc/qqhQyJgK/friendmint-removebg-preview.png"
                   alt=""
@@ -107,13 +107,13 @@ function LiveChat() {
                 />
                 Live Chat With frenmint users
               </DialogTitle>
-              <div className="border overflow-y-auto h-[390px] scroll-snap-y-container bg-stone-900 border-slate-500 rounded-lg text-[10px]">
+              <div className="border overflow-y-auto h-[390px] scroll-snap-y-container bg-stone-900 border-stone-800 rounded-lg text-[10px]">
                 {messagesData !== null || messagesData ? (
                   <div className="grid grid-flow-row">
                     {messagesData.map((item) => {
                       return (
                         <div
-                          className="border border-slate-600 grid grid-rows-1 p-1"
+                          className="border border-stone-700 grid grid-rows-1 p-1"
                           key={item}
                         >
                           <div className=" ">
@@ -145,7 +145,7 @@ function LiveChat() {
               <div className="flex justify-center mt-3 gap-2">
                 <input
                   type="text"
-                  className="bg-stone-800 rounded-lg w-[300px] h-[25px] mt-1 text-[10px]"
+                  className="bg-stone-900 rounded-lg w-[300px] h-[25px] mt-1 text-[10px]"
                   onChange={(e) => {
                     console.log(e.target.value);
                     setPostMessage(e.target.value);
@@ -153,7 +153,7 @@ function LiveChat() {
                   value={postMessage}
                 />
                 <button
-                  className="border border-slate-500 text-white rounded-lg text-[10px]"
+                  className="border border-stone-800 text-white rounded-lg text-[10px] font-bold  p-1"
                   onClick={async () => {
                     const postStatus = await postMessageData(
                       supabase,
@@ -166,7 +166,7 @@ function LiveChat() {
                     }
                   }}
                 >
-                  Send Message
+                  Send
                 </button>
               </div>
             </DialogPanel>

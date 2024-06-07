@@ -6,5 +6,5 @@ export default {
       // that is actual animation
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 };

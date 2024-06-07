@@ -82,6 +82,13 @@ function UniversalSwap() {
     //here we get balance for current share how much the user has
   }, [currentShare]);
 
+  useEffect(() => {
+    console.log(currentPairToken);
+    if (currentPairToken?.name === "Goddog") {
+      console.log("true");
+    }
+  }, [currentPairToken]);
+
   async function getCharts() {
     const foundChartData = await getShareChartData(currentShare?.address);
     setChartData(foundChartData);
@@ -307,7 +314,7 @@ function UniversalSwap() {
   return (
     <div className="container mt-10  w-[400px] mx-auto">
       <center className="mt-3">
-        <div className="">
+        <div className="mb-2">
           <div className="flex justify-start gap-1">
             <img
               src="https://i.postimg.cc/qqhQyJgK/friendmint-removebg-preview.png"
@@ -351,7 +358,7 @@ function UniversalSwap() {
       {showSwap ? (
         <>
           <div className="flex justify-center">
-            <div className="border border-slate-500 bg-stone-900 rounded-lg w-[400px] mt-3 text-white p-2">
+            <div className="border border-stone-700 bg-stone-900 rounded-lg w-[400px] mt-3 text-white p-2">
               <div className="flex justify-start">Swap</div>
               <div className="border border-slate-500 bg-stone-800 rounded-lg p-2 mt-3">
                 <div className="flex justify-between">
@@ -497,7 +504,7 @@ function UniversalSwap() {
               </div>
               <div className="flex justify-between mt-2 p-1">
                 <div>
-                  <h3 className="text-stone-400 font-bold text-[10px]">
+                  <h3 className="text-stone-400 font-bold text-[10px] hover:underline">
                     Contract: {currentShare?.address}
                   </h3>
                   <h3 className="text-stone-400 text-[10px] font-bold mt-0.5">
@@ -565,7 +572,7 @@ function UniversalSwap() {
                 </div>
               </div>
 
-              <div className="mt-3">
+              <div className="mt-3 mb-1">
                 <button
                   className="border border-slate-500 bg-blue-600 hover:bg-blue-700 w-full rounded-md p-1 text-[13px]"
                   onClick={() => {
@@ -874,84 +881,7 @@ function UniversalSwap() {
                       <>
                         {currentPairToken.name === "Goddog" ? (
                           <>
-                            {trendingShares !== null || trendingShares ? (
-                              <>
-                                {trendingShares.map((item) => {
-                                  return (
-                                    <button
-                                      key={item}
-                                      className="border border-slate-500 mt-1 rounded-lg p-2 grid grid-cols-4"
-                                      onClick={() => {
-                                        setCurrentShare(item);
-                                        setIsOpen(false);
-                                      }}
-                                    >
-                                      <div className="flex justify-start gap-2">
-                                        <img
-                                          src={item?.ftPfpUrl}
-                                          alt=""
-                                          className="w-7 h-7 rounded-full"
-                                        />
-                                        <div className="grid grid-rows-2 text-white text-[10px]">
-                                          <div>
-                                            <h3>Wrapped {item?.ftName}</h3>
-                                          </div>
-                                          <div>
-                                            <h3>{item?.address}</h3>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div></div>
-                                      <div className="grid grid-rows-2  text-[9px] text-white flex justify-end w-[220px]">
-                                        <div>0.00</div>
-                                        <div>USD $0.00</div>
-                                      </div>
-                                    </button>
-                                  );
-                                })}
-                              </>
-                            ) : (
-                              <>
-                                {shareSearchResults !== null ||
-                                shareSearchResults ? (
-                                  <>
-                                    {shareSearchResults.map((item) => {
-                                      return (
-                                        <button
-                                          key={item}
-                                          className="border border-slate-500 mt-1 rounded-lg p-2 grid grid-cols-4"
-                                          onClick={() => {
-                                            setCurrentShare(item);
-                                            setIsOpen(false);
-                                          }}
-                                        >
-                                          <div className="flex justify-start gap-2">
-                                            <img
-                                              src={item?.ftPfpUrl}
-                                              alt=""
-                                              className="w-7 h-7 rounded-full"
-                                            />
-                                            <div className="grid grid-rows-2 text-white text-[10px]">
-                                              <div>
-                                                <h3>Wrapped {item?.ftName}</h3>
-                                              </div>
-                                              <div>
-                                                <h3>{item?.address}</h3>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div></div>
-                                          <div className="grid grid-rows-2  text-[9px] text-white flex justify-end w-[220px]">
-                                            <div>0.00</div>
-                                            <div>USD $0.00</div>
-                                          </div>
-                                        </button>
-                                      );
-                                    })}
-                                  </>
-                                ) : null}
-                              </>
-                            )}
+                            <h3 className="text-white">hello</h3>
                           </>
                         ) : null}
                       </>

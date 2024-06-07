@@ -49,7 +49,7 @@ function Friend() {
           </div>
           {data !== null ? (
             <div className="flex justify-center">
-              <div className="border border-slate-500 rounded-xl w-[400px] p-5 mb-20">
+              <div className="border border-stone-700 rounded-xl w-[400px] p-5 mb-20">
                 <div className="p-2">
                   <img
                     src={data?.ftPfpUrl}

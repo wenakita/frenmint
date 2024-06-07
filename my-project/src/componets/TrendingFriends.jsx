@@ -10,14 +10,14 @@ function TrendingFriends(props) {
         Trending friends
       </h3>
 
-      <div className="mt-2 overflow-auto h-[550px] border border-slate-500 rounded-xl">
+      <div className="mt-2 overflow-auto h-[550px] border border-stone-800 rounded-xl">
         {data ? (
           <>
             {data.map((item, index) => {
               return (
                 <div
                   key={item}
-                  className={`border border-slate-500 rounded-xl bg-black grid grid-flow-col gap-2 p-3 text-white ${index !== 0 ? `mt-2` : null}`}
+                  className={`border border-stone-800 rounded-xl bg-black grid grid-flow-col gap-2 p-3 text-white ${index !== 0 ? `mt-2` : null}`}
                 >
                   <div>
                     <Link
@@ -27,10 +27,10 @@ function TrendingFriends(props) {
                       <img
                         src={item?.ftPfpUrl}
                         alt=""
-                        className="w-10 h-10 rounded-full"
+                        className="w-8 h-8 rounded-full"
                       />
                       <h3
-                        className={`mt-2 ${item?.ftName.length >= 11 ? "text-[8px] text-center" : "text-[12px] text-center font-bold"}`}
+                        className={`mt-2 ${item?.ftName.length >= 11 ? "text-[8px] text-center" : "text-[10px] text-center font-bold"} hover:underline`}
                       >
                         {item?.ftName}
                       </h3>
@@ -41,7 +41,7 @@ function TrendingFriends(props) {
                       Share Price: {uintFormat(item?.displayPrice)} Ξ
                     </div>
                     <div className="mt-1">
-                      <div className="flex justify-center overflow-hidden text-[10px] me-2">
+                      <div className="flex justify-center overflow-hidden text-[8px] me-2">
                         Holders : {item?.holderCount}
                       </div>
                     </div>
@@ -50,9 +50,9 @@ function TrendingFriends(props) {
                     <div className="flex justify-end text-white gap-2">
                       <Link
                         to={`/friend/${item?.address}`}
-                        className="border border-slate-500 rounded-xl p-2 flex h-[45px] grid grid-flow-col gap-1"
+                        className="border border-stone-700 rounded-lg p-0.5  flex h-[30px] w-[80px] grid grid-flow-col gap-1"
                       >
-                        <div className="text-[8px] mt-2 ">Mint / Burn</div>
+                        <div className="text-[8px] mt-2 ms-1 ">Mint / Burn</div>
                         <div>
                           <img
                             src="https://www.friend.tech/keysIcon3d.png"

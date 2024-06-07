@@ -5,6 +5,7 @@ import TrendingFriends from "./TrendingFriends";
 import NotableFriends from "./NotableFriends";
 import GlobalActivity from "./GlobalActivity";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import RecentTx from "./RecentTx";
 function Home() {
   const [loading, setLoading] = useState(true);
@@ -23,19 +24,8 @@ function Home() {
   }, []);
   return (
     <div className="">
-      <center className="flex justify-center">
-        <RecentTx />
-      </center>
-      <div className="text-[30px] text-center p-5  flex justify-center">
-        <img
-          src="https://ivory-accurate-pig-375.mypinata.cloud/ipfs/QmNfe9547vPVgd8qqdCFeH81yHos1n1CoQZu1D9n5Nrjvp?pinataGatewayToken=DdSIfjJJunjBBaGpRA4VE7rw9Q3bNil3avaM8VrHQkPRh_2vaSMuwGFYGbn9Xzt2"
-          alt=""
-          style={{ maxWidth: "80%" }}
-        />
-      </div>
-
       {loading ? (
-        <div className="flex justify-center mt-20 mb-10">
+        <div className="flex justify-center mb-10 mt-[300px]">
           <img
             src="https://www.friend.tech/friendtechlogo.png"
             alt=""
@@ -44,6 +34,67 @@ function Home() {
         </div>
       ) : (
         <>
+          <center className="flex justify-center">
+            <RecentTx />
+          </center>
+          <div className=" text-center p-2 mt-5">
+            <h3 className="text-white font-mono font-bold">
+              Socialfi in the palm of your hands
+            </h3>
+            <div className="flex justify-center">
+              <h3 className="text-stone-600 text-[8px] font-mono font-bold text-center  w-[300px] ">
+                Trade thoushands of friend.tech users instantly on frenmint and
+                increase your liquidity at the same time
+              </h3>
+            </div>
+
+            <motion.div
+              className="flex justify-center"
+              style={{
+                width: 410,
+                height: 200,
+                borderRadius: 8,
+
+                align: "center",
+                cursor: "pointer",
+              }}
+              animate={["initial"]}
+              whileHover={["grow"]}
+              variants={{
+                grow: {
+                  scale: 1.1,
+                },
+                rotate: {
+                  rotate: [null, -5, 5, 0],
+                  transition: {
+                    // delay,
+                    duration: 10,
+                    // repeat: Infinity,
+                    // repeatDelay: 0.2,
+                    // repeatType: "reverse"
+                  },
+                },
+                initial: {
+                  y: [-20, 20],
+                  rotate: 0,
+                  transition: {
+                    delay: 0.6,
+                    duration: 2,
+                    repeat: Infinity,
+                    // repeatDelay: 0.2,
+                    repeatType: "reverse",
+                  },
+                },
+              }}
+            >
+              <img
+                src="https://i.ibb.co/wzQ9PG5/719shots-so.png"
+                alt=""
+                style={{ width: "60%" }}
+              />
+            </motion.div>
+          </div>
+
           <div className="flex justify-center">
             <NotableFriends data={notableTrendingFriends} />
           </div>

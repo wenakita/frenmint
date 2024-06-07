@@ -42,16 +42,16 @@ function RecentTx(props) {
   return (
     <>
       {displayTx ? (
-        <div className="shake-little  shake-constant absolute ">
-          <center className="  text-[8px] text-white animate-fade border border-slate-500  rounded-xl w-[300px] h-[50px] bg-black p-2 grid grid-cols-4">
-            <div className="flex justify-center mt-1">
+        <div className="toast toast-end flex justify-end">
+          <center className="  text-[8px] text-white animate-fade border border-stone-800 bg-black  rounded-xl w-[300px] h-[50px] bg-black p-2.5 grid grid-flow-col">
+            <div className="flex justify-start mt-1 border border-transparent w-[20px] ms-2">
               <img
                 src="https://i.postimg.cc/qqhQyJgK/friendmint-removebg-preview.png"
                 alt=""
-                className="w-5 h-5 rounded-full"
+                className="w-4 h-4 mt-0.5 rounded-full"
               />
             </div>
-            <div className="mt-2 flex justify-start ">
+            <div className="mt-[8px] flex justify-start  ">
               <div className="text-white flex gap-1">
                 <img
                   src="https://www.candlepowerforums.com/media/pepe-hype-png.1887/full"
@@ -61,8 +61,8 @@ function RecentTx(props) {
                 {liveTxData.frenmint_username}
               </div>
             </div>
-            <div className="mt-2 flex-justify-start">
-              <div className="flex justify-center gap-1">
+            <div className=" flex-justify-start">
+              <div className="flex justify-start gap-1 mt-[8px] ">
                 <h3 className="text-white">
                   {liveTxData.is_buy
                     ? `Bought ${liveTxData.purchase_amount}`
@@ -78,12 +78,12 @@ function RecentTx(props) {
             </div>
             <Link
               to={`/friend/${liveTxData.share_address}`}
-              className="flex justify-center gap-1 mt-1 hover:underline"
+              className="flex justify-start gap-1 mt-1 hover:underline"
             >
               <img
                 src={liveTxData.share_pfp}
                 alt=""
-                className="w-5 h-5 rounded-full"
+                className="w-4 h-4 rounded-full"
               />
               <h3 className="text-white mt-1">{liveTxData.share_name}</h3>
             </Link>

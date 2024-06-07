@@ -30,7 +30,7 @@ function NavBar() {
   });
   return (
     <div
-      className={`w-[440px] border border-slate-500 p-2 rounded-xl text-[8px] ${authenticated && wallet ? "flex justify-between" : null}`}
+      className={`mt-1 w-[440px] border border-stone-800 p-2 rounded-xl text-[8px] ${authenticated && wallet ? "flex justify-between" : null}`}
     >
       {authenticated && ready ? (
         <>
@@ -54,9 +54,9 @@ function NavBar() {
           >
             Home
           </Link>
-          <Link to="*" className="text-white text-center p-5 mt-2 font-bold ">
+          {/* <Link to="*" className="text-white text-center p-5 mt-2 font-bold ">
             Notion
-          </Link>
+          </Link> */}
 
           <Link
             to="/pools"
@@ -77,14 +77,12 @@ function NavBar() {
               <img
                 src="https://enterprisefilmsllc.com/wp-content/uploads/2018/07/white-down-arrow-png-2.png"
                 alt=""
-                className="w-3 h-4 me-2"
+                className="w-3 h-3 me-2"
               />
             </MenuButton>
             <MenuItems
               anchor="bottom"
-              className={
-                "border border-slate-500 rounded-lg p-2 bg-black grid grid-flow-row m"
-              }
+              className={`border border-stone-800 rounded-lg p-2 bg-black grid grid-flow-row hover:${console.log("hoveed")}`}
             >
               <MenuItem className="text-white text-center p-1 mt-1 font-bold text-[8px]">
                 <Link
@@ -116,7 +114,7 @@ function NavBar() {
 
           <div className="grid grid-flow-row me-3">
             <button
-              className="text-white p-2 h-[30px]  mt-[19.5px] border border-slate-500 rounded-xl"
+              className="text-white p-2 h-[30px]  mt-[19.5px] border border-stone-700 rounded-xl"
               onClick={logout}
             >
               <div>Logout</div>

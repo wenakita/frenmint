@@ -226,7 +226,7 @@ function FriendSwap(props) {
   }
 
   return (
-    <div className="border border-slate-500 rounded-xl p-3 mt-3">
+    <div className="border border-stone-700 rounded-xl p-3 mt-3">
       {alert.message !== null ? (
         <div className="mb-2 mt-3">
           <h3 className={`text-white text-center text-[10px]`}>
@@ -300,7 +300,7 @@ function FriendSwap(props) {
         </div>
         <div className="mt-3 flex justify-center">
           <button
-            className="border border-slate-500 bg-black rounded-xl text-white p-3"
+            className="border border-stone-700 bg-black rounded-xl text-white p-3 hover:bg-stone-900"
             onClick={() => {
               commenceTx();
             }}
