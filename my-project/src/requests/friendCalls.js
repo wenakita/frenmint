@@ -12,7 +12,7 @@ const debankOptions = {
   method: "GET",
   headers: {
     accept: "application/json",
-    AccessKey: "ff780c99533c7de9d82cc0b5826e8fc1ca114207",
+    AccessKey: "533a2166f29ab81d9b2a1148c77bd513939b1211",
   },
 };
 

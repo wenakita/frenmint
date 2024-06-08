@@ -167,7 +167,7 @@ function MyPools() {
         String(w0?.address), // assetRecipient
         2, // poolType (assuming this should be uint8 and is 1)
         ethers.BigNumber.from("4"), // delta(the change in slope, change in price per purchase)
-        ethers.BigNumber.from(fee).mul(ethers.BigNumber.from("10").pow(16)), // fee
+        "69000000000000000", // fee
         ethers.BigNumber.from(input).mul(ethers.BigNumber.from("10").pow(18)), // spotPrice this is the price in goddog for the nft
         shareInfo.id, // nftId (uint256)
         ethers.BigNumber.from(shareAmount), // initialNFTBalance (uint256)

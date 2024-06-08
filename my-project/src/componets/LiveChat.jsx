@@ -107,6 +107,7 @@ function LiveChat() {
                 />
                 Live Chat With frenmint users
               </DialogTitle>
+
               <div className="border overflow-y-auto h-[390px] scroll-snap-y-container bg-stone-900 border-stone-800 rounded-lg text-[10px]">
                 {messagesData !== null || messagesData ? (
                   <div className="grid grid-flow-row">

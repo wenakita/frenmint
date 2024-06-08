@@ -19,6 +19,7 @@ import { findId } from "../requests/friendCalls";
 import SwapChart from "./SwapChart.jsx";
 import { Link } from "react-router-dom";
 import { base } from "wagmi/chains";
+import CreatePoolSwap from "./CreatePoolSwap.jsx";
 import {
   getSingleBuyNftPrice,
   getSingleSellNftPrice,
@@ -47,6 +48,7 @@ function UniversalSwap() {
   const [recievedShares, setRecievedShares] = useState(null);
   const [showSwap, setShowSwap] = useState(true);
   const [showChart, setShowChart] = useState(false);
+  const [showCreatePool, setShowCreatePool] = useState(false);
   const [goddogPools, setGoddogPools] = useState(null);
   const [shareInput, setShareInput] = useState(null);
   const [txCallCompleted, setTxCallCompleted] = useState(false);
@@ -407,8 +409,9 @@ function UniversalSwap() {
             <button
               className=" p-1 rounded-lg border border-transparent hover:bg-stone-800 font-bold"
               onClick={() => {
-                setShowSwap(true);
                 setShowChart(false);
+                setShowCreatePool(false);
+                setShowSwap(true);
               }}
             >
               Swap
@@ -417,22 +420,33 @@ function UniversalSwap() {
               className=" p-1 rounded-lg border border-transparent hover:bg-stone-800 font-bold"
               onClick={() => {
                 setShowSwap(false);
+                setShowCreatePool(false);
                 setShowChart(true);
               }}
             >
               Chart
             </button>
-            <button className=" p-1 rounded-lg border border-transparent hover:bg-stone-800 font-bold">
+            <button
+              className=" p-1 rounded-lg border border-transparent hover:bg-stone-800 font-bold"
+              onClick={() => {
+                setShowSwap(false);
+                setShowChart(false);
+                setShowCreatePool(true);
+              }}
+            >
               Create Pool
             </button>
           </div>
         </div>
       </center>
+      {showCreatePool ? (
+        <CreatePoolSwap setOpenTokenPairs={setOpenTokenPairs} />
+      ) : null}
       {showSwap ? (
         <>
           <div className="flex justify-center">
             <div className="border border-stone-700 bg-stone-900 rounded-lg w-[400px] mt-3 text-white p-2">
-              <div className="flex justify-start">Swap</div>
+              <div className="flex justify-start font-bold">Swap</div>
               <div className="border border-slate-500 bg-stone-800 rounded-lg p-2 mt-3">
                 <div className="flex justify-between">
                   <h3 className="text-white text-[14px] font-mono font-bold">
