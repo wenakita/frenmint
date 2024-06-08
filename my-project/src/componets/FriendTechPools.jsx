@@ -434,7 +434,7 @@ function FriendTechPools() {
                             {" "}
                             {Number(
                               uintFormat(item?.sudoSwapData?.fee) * 100
-                            ).toFixed()}
+                            ).toFixed(1)}
                             %
                           </td>
                           <td className="whitespace-nowrap flex justify-center ">
