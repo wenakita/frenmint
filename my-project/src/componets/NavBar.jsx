@@ -55,11 +55,8 @@ function NavBar() {
             Home
           </Link>
 
-          <Link
-            to="/new"
-            className="text-white text-center p-5 mt-2 font-bold"
-          >
-            1
+          <Link to="/new" className="text-white text-center p-5 mt-2 font-bold">
+            Wallet
           </Link>
           {/* <Link to="*" className="text-white text-center p-5 mt-2 font-bold ">
             Notion
@@ -92,12 +89,12 @@ function NavBar() {
               className={`border border-stone-800 rounded-lg p-2 bg-black grid grid-flow-row hover:${console.log("hoveed")}`}
             >
               <MenuItem className="text-white text-center p-1 mt-1 font-bold text-[8px]">
-                <Link
+                {/* <Link
                   to={"/balances"}
                   className="text-white text-center p-1 mt-2 font-bold"
                 >
                   Balance
-                </Link>
+                </Link> */}
               </MenuItem>
               <MenuItem>
                 <Link
