@@ -371,7 +371,7 @@ function FriendTechPools() {
           <div
             className={
               displayPools
-                ? `border border-stone-800 p-2 rounded-md overflow-auto overflow-x-auto h-[300px] w-[400px] md:w-[800px] mt-10 me-auto`
+                ? `border border-stone-800  rounded-md overflow-auto overflow-x-auto h-[300px] w-screen mt-10  `
                 : null
             }
           >

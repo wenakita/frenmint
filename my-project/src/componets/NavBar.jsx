@@ -54,6 +54,13 @@ function NavBar() {
           >
             Home
           </Link>
+
+          <Link
+            to="/new"
+            className="text-white text-center p-5 mt-2 font-bold"
+          >
+            1
+          </Link>
           {/* <Link to="*" className="text-white text-center p-5 mt-2 font-bold ">
             Notion
           </Link> */}

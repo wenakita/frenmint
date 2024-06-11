@@ -27,6 +27,21 @@ export async function wrapToken(
   }
 }
 
+export async function getShareSupply(readContract, config, abi, shareAddress) {
+  try {
+    const supply = await readContract(config, {
+      address: "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+      abi: abi,
+      functionName: "totalSupply",
+      args: [shareAddress],
+    });
+    console.log(supply);
+    return Number(supply);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function getShareBalance(readContract, config, abi, owner, nftId) {
   try {
     const balance = await readContract(config, {

@@ -867,7 +867,7 @@ function UniversalSwap() {
                               return (
                                 <button
                                   key={item}
-                                  className="border border-slate-500 mt-1 rounded-lg p-2 grid grid-cols-4"
+                                  className="border border-slate-500 mt-1 rounded-lg p-2 grid grid-cols-4 "
                                   onClick={() => {
                                     setCurrentShare(item);
                                     setIsOpen(false);

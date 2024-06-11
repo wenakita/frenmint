@@ -47,8 +47,16 @@ function Home() {
                 increase your liquidity at the same time
               </h3>
             </div>
+            <div className="flex justify-center">
+              <img
+                src="https://i.ibb.co/wzQ9PG5/719shots-so.png"
+                alt=""
+                style={{ width: "70%" }}
+                className=""
+              />
+            </div>
 
-            <motion.div
+            {/* <motion.div
               className="flex justify-center"
               style={{
                 width: 700,
@@ -88,18 +96,14 @@ function Home() {
                 },
               }}
             >
-              <img
-                src="https://i.ibb.co/wzQ9PG5/719shots-so.png"
-                alt=""
-                style={{ width: "60%" }}
-              />
-            </motion.div>
+            
+            </motion.div> */}
           </div>
 
           <div className="flex justify-center">
             <NotableFriends data={notableTrendingFriends} />
           </div>
-          <div className="flex justify-center mt-10 mb-10">
+          <div className="overflow-x-hidden mt-10 mb-10">
             <TrendingFriends data={trendingFriends} />
           </div>
           {/* <div className="flex justify-center mt-10">

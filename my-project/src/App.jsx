@@ -11,6 +11,7 @@ import FriendTechPools from "./componets/FriendTechPools";
 import Pool from "./componets/Pool";
 import UniversalSwap from "./componets/UniversalSwap";
 import NotFound from "./componets/NotFound";
+import NewBalances from "./componets/NewBalances";
 function App() {
   return (
     <HashRouter>
@@ -23,6 +24,7 @@ function App() {
           <Route path="/my-pools" element={<MyPools />} />
           <Route path="/pools" element={<FriendTechPools />} />
           <Route path="/swap" element={<UniversalSwap />} />
+          <Route path="/new" element={<NewBalances />} />
 
           <Route path="/pool/:id" element={<Pool />} />
 
