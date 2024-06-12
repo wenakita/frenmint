@@ -55,9 +55,6 @@ function NavBar() {
             Home
           </Link>
 
-          <Link to="/new" className="text-white text-center p-5 mt-2 font-bold">
-            Wallet
-          </Link>
           {/* <Link to="*" className="text-white text-center p-5 mt-2 font-bold ">
             Notion
           </Link> */}
@@ -69,9 +66,15 @@ function NavBar() {
             Pools
           </Link>
 
-          <Link
+          {/* <Link
             to="/swap"
             className="text-white text-center p-5 mt-2 font-bold "
+          >
+            Swap
+          </Link> */}
+          <Link
+            to={"/newswap"}
+            className="text-white text-center p-5 mt-2 font-bold text-[8px]"
           >
             Swap
           </Link>
@@ -95,6 +98,12 @@ function NavBar() {
                 >
                   Balance
                 </Link> */}
+                <Link
+                  to="/new"
+                  className="text-white text-center mt-2 font-bold"
+                >
+                  Wallet
+                </Link>
               </MenuItem>
               <MenuItem>
                 <Link

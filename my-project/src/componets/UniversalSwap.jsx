@@ -36,6 +36,8 @@ import { Contract } from "ethers";
 import { parseEther } from "viem";
 import friendTechABI from "../abi/FriendTechABi";
 import SudoSwapPoolABI from "../abi/SudoSwapPoolABI.js";
+import YouSend from "./YouSend.jsx";
+import YouRecieve from "./YouRecieve.jsx";
 function UniversalSwap() {
   let [isOpen, setIsOpen] = useState(false);
   const [ethPrice, setEthPrice] = useState(null);
@@ -57,6 +59,9 @@ function UniversalSwap() {
 
   const [shareSearchResults, setShareSearchResults] = useState(null);
   const [shareResultType, setShareResultType] = useState("user");
+  const [shouldBuy, setShouldBuy] = useState(false);
+  const [buyFromPool, setBuyFromPool] = useState(false);
+  const [shareSellAmount, setShareSellAmount] = useState(null);
 
   const [currentPairToken, setCurrentPairToken] = useState({
     name: "Ethereum",
@@ -70,6 +75,7 @@ function UniversalSwap() {
   const [txCompleted, setTxCompleted] = useState(false);
   const [shouldWrap, setShouldWrap] = useState(true);
   const [shouldPoolSwap, setShouldPoolSwap] = useState(false);
+  const [recievedEth, setRecievedEth] = useState(null);
   const { wallets } = useWallets();
   const w0 = wallets[0];
   const userEthBalance = useBalance({
@@ -447,152 +453,63 @@ function UniversalSwap() {
           <div className="flex justify-center">
             <div className="border border-stone-700 bg-stone-900 rounded-lg w-[400px] mt-3 text-white p-2">
               <div className="flex justify-start font-bold">Swap</div>
-              <div className="border border-slate-500 bg-stone-800 rounded-lg p-2 mt-3">
-                <div className="flex justify-between">
-                  <h3 className="text-white text-[14px] font-mono font-bold">
-                    You Send:
-                  </h3>
-                  <h3 className="text-white text-[10px] text-stone-400">
-                    Balance:{" "}
-                    {uintFormat(userEthBalance?.data?.value).toFixed(4)} | Max
-                  </h3>
-                </div>
-                <div className="mt-2 absolute">
-                  <input
-                    type="text"
-                    className="w-[350px] bg-transparent border border-transparent outline-none text-stone"
-                    style={{ "-moz-apperance": "textfield" }}
-                    placeholder="0"
-                    onChange={(e) => {
-                      setPairTokenInput(e.target.value);
-                    }}
-                    value={pairTokenInput}
-                  />
-                </div>
-                <div className="flex justify-between mt-10">
-                  <button
-                    className="border border-slate-500 bg-stone-900 p-1 rounded-lg"
-                    onClick={() => {
-                      setOpenTokenPairs(true);
-                    }}
-                  >
-                    <span className="flex justify-center gap-2">
-                      <img
-                        src={currentPairToken?.imgUrl}
-                        alt=""
-                        className={`${currentPairToken?.name === "Ethereum" ? "w-4 h-4" : "w-5 h-5"} rounded-full mt-[2px]`}
-                      />
-                      <h3 className="text-white text-[12px] mt-[2px]">
-                        {currentPairToken.name}
-                      </h3>
-                      <img
-                        src="https://enterprisefilmsllc.com/wp-content/uploads/2018/07/white-down-arrow-png-2.png"
-                        alt=""
-                        className="w-3 h-3 mt-[6px]"
-                      />
-                    </span>
-                  </button>
-                  <div className="grid grid-rows-2 text-[10px]">
-                    <div className="text-white">
-                      ${Number(pairTokenInput).toFixed(2)}
-                    </div>
-                    <div className="text-white">
-                      ≈{Number(pairTokenInput) * ethPrice} USD
-                    </div>
-                  </div>
-                </div>
-                <div className="ms-[155px] absolute">
-                  <button
-                    className="flex justify-center border p-2 gap-[2px]  border-slate-500 rounded-lg bg-stone-900 w-[40px]"
-                    onClick={() => {
-                      console.log("clicked");
-                    }}
-                  >
-                    <FaArrowUp className="w-[8px]" />
-                    <FaArrowDown className="w-[8px]" />
-                  </button>
-                </div>
+              {shouldBuy ? (
+                <YouSend
+                  pairTokenInput={pairTokenInput}
+                  setOpenTokenPairs={setOpenTokenPairs}
+                  currentPairToken={currentPairToken}
+                  userEthBalance={userEthBalance}
+                  ethPrice={ethPrice}
+                  shouldBuy={shouldBuy}
+                />
+              ) : (
+                <YouRecieve
+                  currentShare={currentShare}
+                  recievedShares={recievedShares}
+                  setIsOpen={setIsOpen}
+                  currentPoolShareSelected={currentPoolShareSelected}
+                  currentPairToken={currentPairToken}
+                  ethPrice={ethPrice}
+                  shouldBuy={shouldBuy}
+                />
+              )}
+              <div className="ms-[25%] absolute">
+                <button
+                  className="flex justify-center border p-2 gap-[2px]  border-slate-500 rounded-lg bg-stone-900 w-[40px]"
+                  onClick={() => {
+                    console.log("clicked");
+                    if (shouldBuy) {
+                      setShouldBuy(false);
+                    } else {
+                      setShouldBuy(true);
+                    }
+                  }}
+                >
+                  <FaArrowUp className="w-[8px]" />
+                  <FaArrowDown className="w-[8px]" />
+                </button>
               </div>
+              {shouldBuy ? (
+                <YouRecieve
+                  currentShare={currentShare}
+                  recievedShares={recievedShares}
+                  setIsOpen={setIsOpen}
+                  currentPoolShareSelected={currentPoolShareSelected}
+                  currentPairToken={currentPairToken}
+                  ethPrice={ethPrice}
+                  shouldBuy={shouldBuy}
+                />
+              ) : (
+                <YouSend
+                  pairTokenInput={pairTokenInput}
+                  setOpenTokenPairs={setOpenTokenPairs}
+                  currentPairToken={currentPairToken}
+                  userEthBalance={userEthBalance}
+                  ethPrice={ethPrice}
+                  shouldBuy={shouldBuy}
+                />
+              )}
 
-              <div className="border border-slate-500 bg-stone-800 rounded-lg p-2 mt-5">
-                <div className="flex justify-between">
-                  <h3 className="text-white text-[14px] font-mono font-bold">
-                    You Receive:
-                  </h3>
-                  <h3 className="text-white text-[10px] text-stone-400">
-                    Balance: {currentShare.balance} | Max
-                  </h3>
-                </div>
-                <div className="mt-2 absolute">
-                  {isNaN(recievedShares) ? (
-                    <input
-                      type="text"
-                      disabled="true"
-                      className="w-[350px] bg-transparent border border-transparent outline-none"
-                      placeholder="0"
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      disabled="true"
-                      className="w-[350px] bg-transparent border border-transparent outline-none"
-                      placeholder="0"
-                      value={recievedShares}
-                    />
-                  )}
-                </div>
-                <div className="flex justify-between mt-10">
-                  <button
-                    className="border border-slate-500 bg-stone-900 p-1 rounded-lg"
-                    onClick={() => {
-                      setIsOpen(true);
-                    }}
-                  >
-                    <span className="flex justify-center gap-2">
-                      <img
-                        src={
-                          currentPairToken?.name === "Ethereum"
-                            ? currentShare?.ftPfpUrl
-                            : currentPoolShareSelected?.friendTehcData?.ftPfpUrl
-                        }
-                        alt=""
-                        className="w-4 h-4 rounded-full mt-1"
-                      />
-                      <h3 className="text-white text-[12px] mt-[3px]">
-                        {currentShare.ftName}
-                      </h3>
-                      <img
-                        src="https://enterprisefilmsllc.com/wp-content/uploads/2018/07/white-down-arrow-png-2.png"
-                        alt=""
-                        className="w-3 h-3 mt-2"
-                      />
-                    </span>
-                  </button>
-                  <div className="grid grid-rows-2 text-[10px]">
-                    <div className="text-white">
-                      {isNaN(recievedShares) ? (
-                        "0"
-                      ) : (
-                        <>
-                          {Number(
-                            Number(recievedShares) *
-                              uintFormat(currentShare?.displayPrice)
-                          ).toFixed(2)}
-                        </>
-                      )}{" "}
-                      Ξ
-                    </div>
-                    <div className="text-white">
-                      ≈
-                      {Number(
-                        Number(recievedShares) *
-                          (uintFormat(currentShare?.displayPrice) * ethPrice)
-                      ).toFixed(2)}
-                      USD
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div className="flex justify-between mt-2 p-1">
                 <div>
                   <h3 className="text-stone-400 font-bold text-[10px] hover:underline">
@@ -676,7 +593,7 @@ function UniversalSwap() {
                     setInitiateTx(true);
                   }}
                 >
-                  Swap Share
+                  {shouldBuy ? "Swap Share" : "Burn Share"}
                 </button>
               </div>
             </div>

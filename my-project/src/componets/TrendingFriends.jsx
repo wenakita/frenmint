@@ -53,8 +53,8 @@ function TrendingFriends(props) {
 
   return (
     <div className="overflow-x-hidden overflow-auto ">
-      <div className=" p-2 mb-2">
-        <h3 className="text-white font-mono font-bold text-[18px]">
+      <div className=" p-2 mb-2  w-[90%] mx-auto ">
+        <h3 className="text-white font-mono font-bold text-[18px] flex justify-start">
           Trending Frens
         </h3>
       </div>

@@ -11,15 +11,23 @@ import { useLocation } from "react-router-dom";
 import { getShareUri, getShareBalance } from "../requests/txRequests";
 import { SearchByContract } from "../requests/friendCalls";
 import { getEthPrice } from "../requests/priceCalls";
+import { supabase } from "../client";
+
 function NewBalances() {
   const [balanceData, setBalanceData] = useState(null);
   const [ethPrice, setEthPrice] = useState(null);
   const { wallets } = useWallets();
   const userAddress = wallets[0]?.address;
+  const [hasUserName, setHasUserName] = useState(null);
+  const [currentUserName, setCurrentuserName] = useState(null);
 
   useEffect(() => {
     getEthereumPrice();
     getShareHoldings();
+  }, []);
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
   let currentWidth;
 
@@ -58,10 +66,26 @@ function NewBalances() {
     }
     setBalanceData(userHoldingsFormatted);
   }
+
+  async function fetchUsers() {
+    const { data, error } = await supabase.from("usernames").select();
+    if (error) {
+      console.log(error);
+    }
+    if (data) {
+      console.log(data);
+      for (const key in data) {
+        if (data[key]?.user_address === userAddress) {
+          console.log(data[key]);
+          setCurrentuserName(data[key]?.username);
+        }
+      }
+    }
+  }
   return (
-    <div className="mt-5 ">
+    <div className="mt-1 ">
       <div
-        className={`border border-t-0 border-r-0 border-l-0 w-screen  border-stone-800 `}
+        className={`border border-t-0 border-r-0 border-l-0 w-screen  border-stone-800 p-4 `}
       >
         <div className="flex justify-start p-2 gap-2">
           <img
@@ -69,7 +93,7 @@ function NewBalances() {
             alt=""
             className="w-10 h-10 rounded-full border border-stone-700 bg-stone-500"
           />
-          <h3 className="text-white font-bold mt-2 ">IHuntJeegs</h3>
+          <h3 className="text-white font-bold mt-2 ">{currentUserName}</h3>
         </div>
         <div className="mt-2 p-2 flex gap-4">
           <div className="grid grid-rows-1">

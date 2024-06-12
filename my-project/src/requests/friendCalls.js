@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getShareBalance, getShareUri } from "./txRequests";
 const jwt = import.meta.env.VITE_FRIEND_TECH_JWT;
 console.log(jwt);
 const options = {
@@ -16,22 +17,17 @@ const debankOptions = {
   },
 };
 
-export function GetTrendingFriends() {
-  const [trendingUsers, setTrendingUsers] = useState([]);
-  useEffect(() => {
-    fetch("https://prod-api.kosetto.com/lists/top-by-price")
-      .then(function (results) {
-        return results.json();
-      })
-      .then(function (data) {
-        setTrendingUsers(data.users);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []);
+export async function GetTrendingFriends() {
+  try {
+    const res = await fetch("https://prod-api.kosetto.com/lists/top-by-price");
+    const trendingUsers = await res.json();
+    console.log(trendingUsers);
 
-  return trendingUsers;
+    return trendingUsers.users;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
 
 export async function getTrending() {
@@ -140,6 +136,41 @@ export async function findId(userAddress) {
     console.log(error);
     return null;
   }
+}
+
+export async function findHoldingsShareData(
+  readContract,
+  config,
+  FriendTechABi,
+  userAddress,
+  holdings
+) {
+  const formattedHoldings = [];
+  console.log(holdings);
+  for (const key in holdings) {
+    const currentShare = holdings[key];
+    const currentShareCA = await getShareUri(
+      readContract,
+      config,
+      FriendTechABi,
+      currentShare?.identifier
+    );
+    const currentShareFTData = await SearchByContract(currentShareCA);
+    const shareBalance = await getShareBalance(
+      readContract,
+      config,
+      FriendTechABi,
+      userAddress,
+      currentShare?.identifier
+    );
+    formattedHoldings.push({
+      nftID: currentShare?.identifier,
+      contract: currentShareCA,
+      balance: shareBalance,
+      FTData: currentShareFTData,
+    });
+  }
+  return formattedHoldings;
 }
 
 async function formatDebankResponse(data) {

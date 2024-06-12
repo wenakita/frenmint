@@ -150,7 +150,7 @@ function SearchBar() {
       </svg>
       <input
         type="text"
-        className="text-white border border-stone-800 bg-stone-900 rounded-xl w-[300px]"
+        className="text-white border border-stone-800 bg-stone-900 rounded-xl w-[300px] text-[10px] h-[70%] mt-0.5"
         value={input}
         onChange={(e) => {
           console.log(e.target.value);

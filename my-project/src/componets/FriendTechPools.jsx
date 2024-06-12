@@ -27,6 +27,7 @@ function FriendTechPools() {
   const [singleSellQuote, setSingleSellQuote] = useState(null);
   const [selectedPool, setSelectedPool] = useState(null);
   const [displayModal, setDisplayModal] = useState(false);
+  const [shouldPurchase, setShouldPurchase] = useState(false);
 
   useEffect(() => {
     getExistingPools();
@@ -346,44 +347,44 @@ function FriendTechPools() {
 
   return (
     <center className="mb-20">
-      <div className="text-[30px] text-center p-5  flex justify-center">
+      {/* <div className="text-[30px] text-center p-5  flex justify-center">
         <img
           src="https://ivory-accurate-pig-375.mypinata.cloud/ipfs/QmNfe9547vPVgd8qqdCFeH81yHos1n1CoQZu1D9n5Nrjvp?pinataGatewayToken=DdSIfjJJunjBBaGpRA4VE7rw9Q3bNil3avaM8VrHQkPRh_2vaSMuwGFYGbn9Xzt2"
           alt=""
           style={{ maxWidth: "80%" }}
         />
-      </div>
+      </div> */}
 
       {isLoading ? (
-        <div className="flex justify-center mt-10">
+        <div className="flex justify-center mt-5">
           <img
             src="https://www.friend.tech/friendtechlogo.png"
             className="w-20 h-20 animate-bounce"
           />
         </div>
       ) : (
-        <center className="mt-5 ms-5 ">
-          <div className="flex justify-center gap-2 mb-5">
+        <div className="mt-5">
+          <div className="flex justify-start gap-2 p-4 w-[75%]">
             <div className=" text-white text-center font-mono font-bold">
-              Friend.Tech Share Trading Pools :
+              Share Pools
             </div>
           </div>
           <div
             className={
               displayPools
-                ? `border border-stone-800  rounded-md overflow-auto overflow-x-auto h-[300px] w-screen mt-10  `
+                ? `border border-stone-800  rounded-md overflow-auto overflow-x-auto h-auto w-[75%] mt-2  `
                 : null
             }
           >
             {displayPools && poolsData ? (
-              <table className="table table-zebra-zebra text-white ">
+              <table className="table text-white rounded-lg bg-neutral-900 ">
                 <thead className=" text-[9px]">
                   <th>Pool</th>
                   <th>LP Provided</th>
-                  <th>Buy Price</th>
-                  <th>Sell Price</th>
+                  {/* <th className="hidden md:block">Buy Price</th>
+                  <th className="hidden md:block ">Sell Price</th> */}
                   <th>Fee</th>
-                  <th>Pool Balance</th>
+                  <th className="hidden md:block">Pool Balance</th>
                 </thead>
                 <tbody>
                   {poolsData.map((item) => {
@@ -391,8 +392,8 @@ function FriendTechPools() {
                       <>
                         <tr
                           key={item}
-                          type="button"
-                          className="text-[8px] hover:bg-stone-800 "
+                          role="button"
+                          className="text-[8px] hover:bg-stone-800 border border-stone-800"
                           onClick={() => {
                             setSelectedPool(item);
                             console.log(item);
@@ -424,12 +425,12 @@ function FriendTechPools() {
                             )}{" "}
                             $OOOooo
                           </td>
-                          <td className="whitespace-nowrap">
+                          {/* <td className="whitespace-nowrap hidden md:block">
                             {item?.buyPrice} $OOOooo
                           </td>
-                          <td className="whitespace-nowrap">
+                          <td className="whitespace-nowrap hidden md:block">
                             {item?.sellPrice} $OOOooo
-                          </td>
+                          </td> */}
                           <td className="whitespace-nowrap">
                             {" "}
                             {Number(
@@ -437,7 +438,7 @@ function FriendTechPools() {
                             ).toFixed(1)}
                             %
                           </td>
-                          <td className="whitespace-nowrap flex justify-center ">
+                          <td className="whitespace-nowrap flex justify-center hidden md:block">
                             {Number(item?.userShareBalance)}
                           </td>
                         </tr>
@@ -461,15 +462,17 @@ function FriendTechPools() {
           </div>
           <dialog id="my_modal_1" className="modal">
             {selectedPool !== null || selectedPool ? (
-              <div className="p-10 w-[410px] rounded-lg bg-stone-900 ">
-                <button
-                  className="text-white"
-                  onClick={() => {
-                    document.getElementById("my_modal_1").close();
-                  }}
-                >
-                  X
-                </button>
+              <div className="p-10 w-[75%] rounded-lg bg-stone-900 ">
+                <div className="flex justify-end">
+                  <button
+                    className="text-white"
+                    onClick={() => {
+                      document.getElementById("my_modal_1").close();
+                    }}
+                  >
+                    x
+                  </button>
+                </div>
                 <div className="flex gap-0.5 ">
                   <img
                     src={selectedPool?.friendTechData?.ftPfpUrl}
@@ -633,7 +636,7 @@ function FriendTechPools() {
               </div>
             ) : null}
           </dialog>
-        </center>
+        </div>
       )}
     </center>
   );

@@ -42,6 +42,50 @@ export async function getShareSupply(readContract, config, abi, shareAddress) {
   }
 }
 
+export async function getShareBuyTotal(
+  readContract,
+  config,
+  abi,
+  shareAddress,
+  amount
+) {
+  try {
+    const buyTotal = await readContract(config, {
+      address: "0xCF205808Ed36593aa40a44F10c7f7C2F67d4A4d4",
+      abi: abi,
+      functionName: "getBuyPriceAfterFee",
+      args: [shareAddress, amount],
+    });
+
+    console.log(Number(buyTotal) / 10 ** 18);
+    return Number(buyTotal) / 10 ** 18;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getShareSellTotal(
+  readContract,
+  config,
+  abi,
+  shareAddress,
+  amount
+) {
+  try {
+    const sellTotal = await readContract(config, {
+      address: "0xCF205808Ed36593aa40a44F10c7f7C2F67d4A4d4",
+      abi: abi,
+      functionName: "getSellPriceAfterFee",
+      args: [shareAddress, amount],
+    });
+    console.log(sellTotal);
+    console.log(Number(sellTotal) / 10 ** 18);
+    return Number(sellTotal) / 10 ** 18;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function getShareBalance(readContract, config, abi, owner, nftId) {
   try {
     const balance = await readContract(config, {
