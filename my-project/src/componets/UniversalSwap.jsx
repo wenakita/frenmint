@@ -461,6 +461,8 @@ function UniversalSwap() {
                   userEthBalance={userEthBalance}
                   ethPrice={ethPrice}
                   shouldBuy={shouldBuy}
+                  recievedEth={recievedEth}
+                  setRecievedEth={setRecievedEth}
                 />
               ) : (
                 <YouRecieve

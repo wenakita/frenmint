@@ -244,6 +244,30 @@ export async function fetchFollowers(userAddress) {
 //   return "1";
 // }
 
+export async function formatChartData(chartData) {
+  for (const key in chartData) {
+    const currentShare = chartData[key];
+    const currentDate = currentShare?.date;
+    const buyAmountEth = uintFormat(currentShare.ethAmount);
+    const sharesBought = currentShare.shareAmount;
+    console.log(buyAmountEth);
+    console.log(sharesBought);
+    console.log(currentDate);
+    const convertedDate = new Date(currentDate);
+    let month = convertedDate.toLocaleString("default", { month: "long" });
+    let day = convertedDate.getDate();
+    let year = convertedDate.getFullYear();
+    let formattedDate = `${month} ${day}, ${year}`;
+    console.log(formattedDate);
+    chartData[key].fullDate = formattedDate;
+    const calculatePriceAtTime = Number(buyAmountEth) / Number(sharesBought);
+    console.log(calculatePriceAtTime);
+    chartData[key].priceAtDate = calculatePriceAtTime;
+  }
+  console.log(chartData);
+  return chartData;
+}
+
 //if lapotop discharges we gotta finish these last two functions here we get all chart data for users
 
 export async function getShareChartData(shareAddress) {
@@ -340,11 +364,16 @@ export async function getShareChartData(shareAddress) {
         }
       }
     }
-    return shareChartData;
+    const formattedData = await formatChartData(shareChartData);
+    return formattedData;
   } catch (error) {
     console.log(error);
     return null;
   }
+}
+
+export function uintFormat(value) {
+  return Number(value) / 10 ** 18;
 }
 
 export async function continueFindingChartData(pageStart, shareAddress) {

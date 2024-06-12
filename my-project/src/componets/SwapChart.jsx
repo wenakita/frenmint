@@ -152,37 +152,8 @@ function SwapChart(props) {
                   {new Date().toString().slice(0, 16)}
                 </div>
               </div>
-
-              {/* <div className="p-2">
-                <div className="flex justify-start mt-2  ms-1">
-                  <h3 className="text-white font-mono font-bold text-[10px]">
-                    friend.tech profile
-                  </h3>
-                  <img
-                    src="https://freepngimg.com/thumb/twitter/108250-badge-twitter-verified-download-free-image-thumb.png"
-                    alt=""
-                    className="w-5 h-5"
-                  />
-                </div>
-                <div className="">
-                  <h3 className="text-white font-mono font-bold text-[9px] ms-1">
-                    CA: {currentShare?.address}
-                  </h3>
-                </div>
-                <div className="mt-1">
-                  <h3 className="text-white font-mono font-bold text-[9px] ms-1">
-                    Holders: {currentShare?.holderCount}
-                  </h3>
-                </div>
-                <div className="mt-1">
-                  <h3 className="text-white font-mono font-bold text-[9px] ms-1">
-                    Current Price: {uintFormat(currentShare?.displayPrice)} Ξ /
-                    share
-                  </h3>
-                </div>
-              </div> */}
             </div>
-            <div style={{ width: "400px", height: "400px" }} className="">
+            <div className="">
               <ResponsiveContainer width="94%" height={400}>
                 <AreaChart
                   data={newChartData}

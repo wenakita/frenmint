@@ -4,6 +4,7 @@ import {
   SearchByContract,
   findHoldingsShareData,
   findId,
+  formatChartData,
 } from "../../requests/friendCalls";
 import { readContract } from "@wagmi/core";
 import friendTechABI from "../../abi/FriendTechABi";
@@ -12,6 +13,11 @@ import { useWallets } from "@privy-io/react-auth";
 import { config } from "../../config";
 import SwapTabs from "./SwapTabs";
 import Swapper from "./Swapper";
+import { getShareChartData } from "../../requests/friendCalls";
+import SwapCharts from "./SwapCharts";
+import _ from "lodash";
+import { getEthPrice } from "../../requests/priceCalls";
+
 function NewSwap() {
   //these are used to switch between tabs
   const [viewSwap, setViewSwap] = useState(true);
@@ -20,7 +26,8 @@ function NewSwap() {
   const [viewPoolCreator, setViewPoolCreator] = useState(false);
   const [currentShare, setCurrentShare] = useState(null);
   const [currentSharePrice, setCurrentSharePrice] = useState(null);
-
+  const [currentPriceHistory, setCurrentPriceHistory] = useState(null);
+  const [shareTotalVolume, setShareTotalVolume] = useState(null);
   //////////////////
   const { wallets } = useWallets();
   const userAddress = wallets[0]?.address;
@@ -37,7 +44,9 @@ function NewSwap() {
 
   useEffect(() => {
     console.log(currentShare);
+    setCurrentPriceHistory(null);
     setCurrentSharePrice(uintFormat(currentShare?.displayPrice));
+    getChart();
   }, [currentShare]);
   async function getGoddogShareInfo() {
     const goddogShareInfo = await SearchByContract(
@@ -46,6 +55,25 @@ function NewSwap() {
     console.log(goddogShareInfo);
     setCurrentShare(goddogShareInfo);
   }
+
+  async function getChart() {
+    const ethPrice = await getEthPrice();
+    const priceHistory = await getShareChartData(currentShare?.address);
+    // const formattedPriceHistory = await formatChartData(priceHistory);
+    console.log(priceHistory);
+    const orderedPriceHistory = _.orderBy(priceHistory, ["date"]);
+    let totalVolume = 0;
+    for (const key in priceHistory) {
+      const currentData = priceHistory[key];
+      console.log(currentData?.priceAtDate);
+      console.log(Math.round(Number(currentData?.priceAtDate) * ethPrice));
+      totalVolume += Math.round(Number(currentData?.priceAtDate) * ethPrice);
+    }
+    setShareTotalVolume(totalVolume);
+
+    setCurrentPriceHistory(orderedPriceHistory);
+  }
+
   async function getTrending() {
     const trendingFriends = await GetTrendingFriends();
     setTrendingUsers(trendingFriends);
@@ -92,7 +120,12 @@ function NewSwap() {
         ) : (
           <>
             {viewChart ? (
-              <div>chart</div>
+              <SwapCharts
+                currentPriceHistory={currentPriceHistory}
+                currentShare={currentShare}
+                currentSharePrice={currentSharePrice}
+                shareTotalVolume={shareTotalVolume}
+              />
             ) : (
               <>
                 {viewPoolCreator ? (

@@ -141,7 +141,7 @@ function Swapper(props) {
 
   return (
     <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
-      <h3 className="text-white font-bold p-2">
+      <h3 className="text-white text-[12px] font-bold p-2">
         {shouldMint ? "Mint" : "Burn"}
       </h3>
       <div className="grid grid-rows-2 gap-y-4 p-1">
