@@ -8,7 +8,9 @@ import RecentTx from "./RecentTx";
 import FriendActivity from "./friend/FriendActivity";
 import FriendHolders from "./friend/FriendHolders";
 import { getShareChartData } from "../requests/friendCalls";
+import { useNavigate } from "react-router-dom";
 function Friend() {
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [followers, setFollowers] = useState(null);
   const [shareBalance, setShareBalance] = useState("0");
@@ -143,16 +145,19 @@ function Friend() {
                   >
                     Activity
                   </button>
-                  <Link
-                    to={`/newswap`}
+                  <button
                     onClick={() => {
                       setShowHolders(false);
-
                       setShowActivity(true);
+                      navigate("/newswap", {
+                        state: {
+                          data,
+                        },
+                      });
                     }}
                   >
                     Mint
-                  </Link>
+                  </button>
                 </div>
               </div>
               {showActivity ? (

@@ -19,8 +19,11 @@ import _ from "lodash";
 import { getEthPrice } from "../../requests/priceCalls";
 import PoolSwap from "./PoolSwap";
 import CreatePool from "./CreatePool";
+import { useLocation } from "react-router-dom";
 
 function NewSwap() {
+  const location = useLocation();
+  console.log(location?.state);
   //these are used to switch between tabs
   const [viewSwap, setViewSwap] = useState(true);
   const [viewPools, setViewPools] = useState(false);
@@ -39,7 +42,12 @@ function NewSwap() {
   const [holdingsData, setHoldingsData] = useState(null);
 
   useEffect(() => {
-    getGoddogShareInfo();
+    if (location?.state !== null) {
+      console.log(location?.state);
+      setCurrentShare(location?.state?.data);
+    } else if (location?.state === null) {
+      getGoddogShareInfo();
+    }
     getUserHoldings();
     getTrending();
   }, []);
