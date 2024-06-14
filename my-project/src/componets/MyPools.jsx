@@ -166,7 +166,7 @@ function MyPools() {
         "0xd0A2f4ae5E816ec09374c67F6532063B60dE037B", // bondingCurve
         String(w0?.address), // assetRecipient
         2, // poolType (assuming this should be uint8 and is 1)
-        ethers.BigNumber.from("10"), // delta(the change in slope, change in price per purchase)
+        ethers.BigNumber.from("45"), // delta(the change in slope, change in price per purchase)
         "69000000000000000", // fee
         ethers.BigNumber.from(input).mul(ethers.BigNumber.from("10").pow(18)), // spotPrice this is the price in goddog for the nft
         shareInfo.id, // nftId (uint256)
@@ -343,7 +343,7 @@ function MyPools() {
                               }}
                             />
                           </div>
-                          <div>
+                          {/* <div>
                             <h3 className="text-white text-[8px]">Fee</h3>
                             <input
                               type="text"
@@ -352,7 +352,7 @@ function MyPools() {
                                 setFee(e.target.value);
                               }}
                             />
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     </div>
