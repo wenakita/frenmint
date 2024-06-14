@@ -32,11 +32,13 @@ function TrendingFriends(props) {
     }
   });
 
-  data.map((item, index) => {
-    if (index < 10) {
-      topTen.push(item);
-    }
-  });
+  if (data) {
+    data.map((item, index) => {
+      if (index < 10) {
+        topTen.push(item);
+      }
+    });
+  }
 
   async function getSupply(shareAddress) {
     console.log(shareAddress);
@@ -60,7 +62,7 @@ function TrendingFriends(props) {
         </h3>
       </div>
 
-      {data || data !== null ? (
+      {data ? (
         <Swiper
           freeMode={true}
           slidesPerView={3}
