@@ -202,6 +202,8 @@ function FriendTechPools() {
   //when u sell a share to the pool the pool automatically deposits the shares to the pool
   async function sellShareFromPool(targetPoolId, TargetPoolAddress, spotPrice) {
     const nftBuyQuote = await getSellNftQuote(targetPoolId, TargetPoolAddress);
+    console.log(input, nftBuyQuote[3], spotPrice);
+
     await approveShareSpending();
 
     const provider = await w0?.getEthersProvider();
@@ -213,7 +215,6 @@ function FriendTechPools() {
       signer
     );
     //index 0 is the error (ignore), index 1, is the new spot price after the buy is complete, index 2 is the new delta, index 3 is the goddog price to buy the share currently, index 4 is the protocol fee charged, index 5 is the royalty amount is zero
-
     try {
       const parameters = [
         [],

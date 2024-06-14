@@ -144,18 +144,19 @@ export async function getSingleBuyNftPrice(
   config,
   abi,
   nftId,
-  poolAddress
+  poolAddress,
+  amount
 ) {
   try {
     const buyQuoteResult = await readContract(config, {
       address: poolAddress,
       abi: abi,
-      functionName: "getSellNFTQuote",
-      args: [nftId, "1"],
+      functionName: "getBuyNFTQuote",
+      args: [nftId, amount],
     });
     //index 0 is the error (ignore), index 1, is the new spot price after the buy is complete, index 2 is the new delta, index 3 is the goddog price to buy the share currently, index 4 is the protocol fee charged, index 5 is the royalty amount is zero
     const output = Number(buyQuoteResult[3]) / 10 ** 18;
-    return Number(output.toFixed(2));
+    return buyQuoteResult[3];
   } catch (error) {
     console.log(error);
     return null;
@@ -167,19 +168,20 @@ export async function getSingleSellNftPrice(
   config,
   abi,
   nftId,
-  poolAddress
+  poolAddress,
+  amount
 ) {
   try {
     const buyQuoteResult = await readContract(config, {
       address: poolAddress,
       abi: abi,
-      functionName: "getBuyNFTQuote",
-      args: [nftId, "1"],
+      functionName: "getSellNFTQuote",
+      args: [nftId, amount],
     });
     const output = Number(buyQuoteResult[3]) / 10 ** 18;
 
     //index 0 is the error (ignore), index 1, is the new spot price after the buy is complete, index 2 is the new delta, index 3 is the goddog price to buy the share currently, index 4 is the protocol fee charged, index 5 is the royalty amount is zero
-    return output.toFixed(2);
+    return buyQuoteResult[3];
   } catch (error) {
     console.log(error);
   }

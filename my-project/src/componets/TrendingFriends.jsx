@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { readContract } from "@wagmi/core";
 import { config } from "../config";
 import friendTechABI from "../abi/FriendTechABi";
+import "../App.css";
 
 function TrendingFriends(props) {
   const [carouselSpace, setCarouselSpace] = useState(null);

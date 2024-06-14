@@ -5,20 +5,41 @@ import { uintFormat } from "../formatters/format";
 import { fetchFollowers } from "../requests/friendCalls";
 import FriendSwap from "./FriendSwap";
 import RecentTx from "./RecentTx";
+import FriendActivity from "./friend/FriendActivity";
+import FriendHolders from "./friend/FriendHolders";
+import { getShareChartData } from "../requests/friendCalls";
 function Friend() {
   const [data, setData] = useState(null);
   const [followers, setFollowers] = useState(null);
   const [shareBalance, setShareBalance] = useState("0");
   const [loading, setLoading] = useState(true);
   const [getTxData, setGetTxData] = useState(false);
+  const [showHolders, setShowHolders] = useState(true);
+  const [showActivity, setShowActivity] = useState(false);
+  const [priceHistory, setPriceHistory] = useState(null);
+
   const { address } = useParams();
+  console.log(address);
   useEffect(() => {
+    setFollowers(null);
+    setPriceHistory(null);
     fetchInfo();
-    getFollowers();
+
     setTimeout(() => {
       setLoading(false);
     }, [1500]);
   }, [address]);
+
+  useEffect(() => {
+    getFollowers();
+    getChart();
+  }, [data]);
+
+  async function getChart() {
+    const priceChartData = await getShareChartData(address);
+    console.log(priceChartData);
+    setPriceHistory(priceChartData);
+  }
 
   async function fetchInfo() {
     const results = await SearchByContract(address);
@@ -27,11 +48,12 @@ function Friend() {
 
   async function getFollowers() {
     const response = await fetchFollowers(data?.address);
-    setFollowers(await response);
+    console.log(response);
+    setFollowers(response);
   }
 
   return (
-    <div className="container p-5 mb-10">
+    <div className=" mb-10">
       {loading ? (
         <div className="flex justify-center mt-56 mb-10">
           <img
@@ -42,83 +64,53 @@ function Friend() {
         </div>
       ) : (
         <>
-          <div className="mb-20">
-            <center className="flex justify-center">
-              <RecentTx getTxData={getTxData} />
-            </center>
+          <div className="">
+            <RecentTx getTxData={getTxData} />
           </div>
+
           {data !== null ? (
-            <div className="flex justify-center">
-              <div className="border border-stone-700 rounded-xl w-[400px] p-5 mb-20">
-                <div className="p-2">
-                  <img
-                    src={data?.ftPfpUrl}
-                    alt=""
-                    className="w-26 h-16 rounded-full"
-                  />
-                </div>
-                <div className="text-white text-[20px] p-2 flex justify-start gap-1">
-                  <img
-                    src="https://i.postimg.cc/qqhQyJgK/friendmint-removebg-preview.png"
-                    alt=""
-                    className="w-5 h-5 rounded-full mt-1"
-                  />
-                  {data?.ftName}
-                </div>
+            <div>
+              <div className="border w-screen border-t-0 border-r-0 border-l-0 border-stone-800">
+                <div className="p-3">
+                  <div className="flex justify-start gap-2">
+                    <img
+                      src={data?.ftPfpUrl}
+                      alt=""
+                      className="w-10 h-10 rounded-full"
+                    />
 
-                <div className=" p-2">
-                  <a
-                    href={`https://www.friend.tech/${data?.address}`}
-                    target="_blank"
+                    <h3 className="text-white mt-2 font-bold">
+                      {data?.ftName}
+                    </h3>
+                  </div>
+                </div>
+                <div className="flex justify-start p-3 gap-2 text-[10px]">
+                  <button
+                    onClick={() => {
+                      setShowActivity(false);
+                      setShowHolders(true);
+                    }}
                   >
-                    <div className="flex justify-start">
-                      <h3 className="text-white text-[12px] mt-2 hover:underline font-mono font-bold">
-                        Friend.tech profile
-                      </h3>
-                      <img
-                        src="https://freepngimg.com/thumb/twitter/108250-badge-twitter-verified-download-free-image-thumb.png"
-                        alt=""
-                        className="w-8 h-8 hover:underline"
-                      />
-                    </div>
-                  </a>
-                </div>
-                <a
-                  href={`https://basescan.org/address/${data?.address}`}
-                  target="_blank"
-                  className="flex justify-start text-[12px] text-white p-2 hover:underline font-mono font-bold"
-                >
-                  Ca: {data?.address}
-                </a>
+                    Holders
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowHolders(false);
 
-                <div className="ms-2 mt-1 mb-2 font-mono font-bold">
-                  <div className="flex justify-start">
-                    <h3 className="text-white text-[12px] mt-0.5">
-                      Followed by {data?.followerCount} users
-                    </h3>
-                  </div>
-                  <div className="flex justify-start mt-2">
-                    <h3 className="text-white text-[12px]">
-                      Holders: {data?.holderCount}
-                    </h3>
-                  </div>
-                </div>
-                <div className="p-2">
-                  <div className="flex justify-start text-[12px]">
-                    <h3 className="text-white font-bold">
-                      Price: {uintFormat(data?.displayPrice)} Ξ / Share
-                    </h3>
-                  </div>
-                </div>
-                <div className="">
-                  <FriendSwap
-                    shareAddress={data?.address}
-                    price={uintFormat(data?.displayPrice)}
-                    setGetTxData={setGetTxData}
-                    shareData={data}
-                  />
+                      setShowActivity(true);
+                    }}
+                  >
+                    Activity
+                  </button>
                 </div>
               </div>
+              {showActivity ? (
+                <FriendActivity priceHistory={priceHistory} />
+              ) : (
+                <>
+                  {showHolders ? <FriendHolders followers={followers} /> : null}
+                </>
+              )}
             </div>
           ) : null}
         </>
@@ -128,3 +120,10 @@ function Friend() {
 }
 
 export default Friend;
+
+// <FriendSwap
+// shareAddress={data?.address}
+// price={uintFormat(data?.displayPrice)}
+// setGetTxData={setGetTxData}
+// shareData={data}
+// />

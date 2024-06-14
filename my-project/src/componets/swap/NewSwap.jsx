@@ -17,6 +17,8 @@ import { getShareChartData } from "../../requests/friendCalls";
 import SwapCharts from "./SwapCharts";
 import _ from "lodash";
 import { getEthPrice } from "../../requests/priceCalls";
+import PoolSwap from "./PoolSwap";
+import CreatePool from "./CreatePool";
 
 function NewSwap() {
   //these are used to switch between tabs
@@ -129,11 +131,19 @@ function NewSwap() {
             ) : (
               <>
                 {viewPoolCreator ? (
-                  <>
-                    <h3>pool maker</h3>
-                  </>
+                  <CreatePool
+                    holdingsData={holdingsData}
+                    setCurrentShare={setCurrentShare}
+                  />
                 ) : (
-                  <>{viewPools ? <>pools</> : null}</>
+                  <>
+                    {viewPools ? (
+                      <PoolSwap
+                        currentShare={currentShare}
+                        setCurrentShare={setCurrentShare}
+                      />
+                    ) : null}
+                  </>
                 )}
               </>
             )}

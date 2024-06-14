@@ -88,6 +88,61 @@ function formatUserName(target) {
   return target;
 }
 
+export async function fetchFollowers(shareAddress) {
+  console.log(shareAddress);
+  try {
+    const followerData = [];
+    let currentPageStart;
+    const res = await fetch(
+      `https://prod-api.kosetto.com/users/${shareAddress}/token/holders?requester=${shareAddress}`
+    );
+    const data = await res.json();
+    console.log(data);
+    console.log(data.users.length);
+    followerData.push({
+      page: data.users,
+    });
+    currentPageStart = data?.nextPageStart;
+    if (data.nextPageStart !== null) {
+      console.log(currentPageStart);
+      while (currentPageStart !== null) {
+        const currentFollwerPage = await followerReccuring(
+          shareAddress,
+          currentPageStart
+        );
+
+        console.log(currentFollwerPage);
+        currentPageStart = currentFollwerPage.nextPageStart;
+        console.log(currentPageStart);
+        if (currentPageStart === null) {
+          break;
+        } else {
+          followerData.push({
+            page: currentFollwerPage.users,
+          });
+        }
+      }
+    }
+    return followerData;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+async function followerReccuring(userAdderss, pageStart) {
+  console.log("hello");
+  try {
+    const res = await fetch(
+      `https://prod-api.kosetto.com/users/${userAdderss}/token/holders?requester=${userAdderss}&pageStart=${pageStart}`
+    );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 // export async function findId(userAddress) {
 //   console.log(userAddress);
 //   try {
@@ -211,28 +266,28 @@ async function dissectBuyTypes(data) {
   }
 }
 
-export async function fetchFollowers(userAddress) {
-  console.log(userAddress);
-  try {
-    const response = await fetch(
-      `https://prod-api.kosetto.com/users/${userAddress}/following-list?requester=${userAddress}`,
-      {
-        headers: {
-          Authorization: import.meta.env.VITE_FRIEND_TECH_JWT,
-        },
-      }
-    );
-    const data = await response.json();
-    const result = await data.followingList;
-    if (result.length > 3) {
-      return [result[0], result[1], result[2]];
-    } else {
-      return [result[0]];
-    }
-  } catch (error) {
-    return null;
-  }
-}
+// export async function fetchFollowers(userAddress) {
+//   console.log(userAddress);
+//   try {
+//     const response = await fetch(
+//       `https://prod-api.kosetto.com/users/${userAddress}/following-list?requester=${userAddress}`,
+//       {
+//         headers: {
+//           Authorization: import.meta.env.VITE_FRIEND_TECH_JWT,
+//         },
+//       }
+//     );
+//     const data = await response.json();
+//     const result = await data.followingList;
+//     if (result.length > 3) {
+//       return [result[0], result[1], result[2]];
+//     } else {
+//       return [result[0]];
+//     }
+//   } catch (error) {
+//     return null;
+//   }
+// }
 // export async function GetTargetShareBalance(
 //   userAddress,
 //   targetAddress,
@@ -371,6 +426,8 @@ export async function getShareChartData(shareAddress) {
     return null;
   }
 }
+
+export async function formatSudoSwapPoolData(a) {}
 
 export function uintFormat(value) {
   return Number(value) / 10 ** 18;
