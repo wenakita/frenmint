@@ -22,11 +22,12 @@ function Friend() {
   const { address } = useParams();
   console.log(address);
   useEffect(() => {
+    setLoading(true);
     fetchInfo();
 
-    setTimeout(() => {
-      setLoading(false);
-    }, [1500]);
+    // setTimeout(() => {
+    //   setLoading(false);
+    // }, [2000]);
   }, [address]);
   // useEffect(() => {
   //   setFollowers(null);
@@ -38,6 +39,8 @@ function Friend() {
     getFollowers();
     getChart();
   }, [data]);
+
+  useEffect(() => {}, [totalVolume]);
 
   async function getChart() {
     let totalVolume = 0;
@@ -54,6 +57,7 @@ function Friend() {
       setTotalVolume(totalVolume);
       console.log(priceChartData[key]?.ethAmount);
     }
+    setLoading(false);
   }
 
   async function fetchInfo() {

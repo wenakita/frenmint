@@ -66,9 +66,12 @@ function FriendHolders(props) {
                             </div>
                             <div className="mt-3">
                               <div className="flex justify-start gap-2 mt-1">
-                                <button className="text-[10px] border p-1 w-full bg-blue-500 text-white border-stone-800 rounded-md hover:bg-blue-800">
+                                <Link
+                                  to={`/friend/${user?.address}`}
+                                  className="text-[10px] text-center border p-1 w-full bg-blue-500 text-white border-stone-800 rounded-md hover:bg-blue-800"
+                                >
                                   Mint
-                                </button>
+                                </Link>
                               </div>
                             </div>
                           </div>
