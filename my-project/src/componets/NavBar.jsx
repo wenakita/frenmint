@@ -2,7 +2,11 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { SearchByUser, SearchByContract } from "../requests/friendCalls";
+import {
+  SearchByUser,
+  SearchByContract,
+  GetTrendingFriends,
+} from "../requests/friendCalls";
 function NavBar() {
   const [oooPrice, setOooPrice] = useState(null);
   const [searchInput, setSearchInput] = useState(null);
@@ -32,7 +36,23 @@ function NavBar() {
       .catch(function (error) {
         console.log(error);
       });
+    getTrending();
   });
+
+  useEffect(() => {
+    searchUser();
+  }, [searchInput]);
+
+  async function getTrending() {
+    const trending = await GetTrendingFriends();
+    setTrendingUsers(trending);
+  }
+
+  async function searchUser() {
+    const result = await SearchByUser(searchInput);
+    console.log(result);
+    setSearchResults(result);
+  }
   return (
     <div
       className={`mt-1 w-[440px] border border-stone-800 p-2 rounded-xl text-[8px] ${authenticated && wallet ? "flex justify-between" : null}`}
@@ -166,7 +186,76 @@ function NavBar() {
             <div className="modal-box bg-stone-900">
               <h3 className="font-bold text-lg">Search users</h3>
               <div>
-                <input type="text" className="w-full rounded-lg" />
+                <input
+                  type="text"
+                  className="w-full rounded-lg"
+                  onChange={(e) => {
+                    setSearchInput(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="overflow-y-auto h-[200px] border border-neutral-700 border-b-0 border-r-0 border-l-0  p-2">
+                {searchResults ? (
+                  <>
+                    {searchResults.map((item) => {
+                      const slicedContract = `${item?.address.slice(0, 4)}...${item?.address.slice(item?.address.length - 4, item?.address.length)}`;
+                      return (
+                        <Link
+                          to={`/friend/${item?.address}`}
+                          key={item}
+                          className=" p-2 grid grid-flow-col whitespace-nowrap text-[10px] w-full hover:bg-stone-800"
+                          onClick={() => {
+                            document.getElementById("my_modal_3").close();
+                          }}
+                        >
+                          <div className="flex justify-start gap-2">
+                            <img
+                              src={item?.ftPfpUrl}
+                              alt=""
+                              className="w-5 h-5 rounded-full"
+                            />
+                            <h3 className="mt-1">{item?.ftName}</h3>
+                          </div>
+                          <div className="flex justify-end">
+                            {slicedContract}
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {trendingUsers ? (
+                      <>
+                        {trendingUsers.map((item) => {
+                          const slicedContract = `${item?.address.slice(0, 4)}...${item?.address.slice(item?.address.length - 4, item?.address.length)}`;
+                          return (
+                            <Link
+                              to={`/friend/${item?.address}`}
+                              key={item}
+                              className=" p-2 grid grid-flow-col whitespace-nowrap text-[10px] w-full hover:bg-stone-800"
+                              onClick={() =>
+                                document.getElementById("my_modal_3").close()
+                              }
+                            >
+                              <div className="flex justify-start gap-2">
+                                <img
+                                  src={item?.ftPfpUrl}
+                                  alt=""
+                                  className="w-5 h-5 rounded-full"
+                                />
+                                <h3 className="mt-1">{item?.ftName}</h3>
+                              </div>
+                              <div className="flex justify-end">
+                                {slicedContract}
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </>
+                    ) : null}
+                  </>
+                )}
               </div>
               <div className="modal-action">
                 <form method="dialog">
