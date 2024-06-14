@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { SearchByContract } from "../requests/friendCalls";
 import { uintFormat } from "../formatters/format";
 import { fetchFollowers } from "../requests/friendCalls";
@@ -139,6 +139,16 @@ function Friend() {
                   >
                     Activity
                   </button>
+                  <Link
+                    to={`/newswap`}
+                    onClick={() => {
+                      setShowHolders(false);
+
+                      setShowActivity(true);
+                    }}
+                  >
+                    Mint
+                  </Link>
                 </div>
               </div>
               {showActivity ? (

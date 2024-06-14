@@ -5,6 +5,9 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { SearchByUser, SearchByContract } from "../requests/friendCalls";
 function NavBar() {
   const [oooPrice, setOooPrice] = useState(null);
+  const [searchInput, setSearchInput] = useState(null);
+  const [searchResults, setSearchResults] = useState(null);
+  const [trendingUsers, setTrendingUsers] = useState(null);
   const navigate = useNavigate();
   const { logout, authenticated, user, ready } = usePrivy();
   const wallet = user?.wallet;
@@ -48,16 +51,19 @@ function NavBar() {
               alt=""
               className="w-8 h-8"
             />
-            <h3 className="text-white mt-2 text-[10px]">{oooPrice}</h3>
+            {/* <h3 className="text-white mt-2 text-[10px]">{oooPrice}</h3> */}
           </Link>
-          <Link to="*" className="text-white text-center mt-0.5 p-5 font-bold ">
+          <button
+            className="text-white text-center  p-5 font-bold "
+            onClick={() => document.getElementById("my_modal_3").showModal()}
+          >
             <svg
               width="12"
               height="12"
               viewBox="0 0 15 15"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="mt-1.5"
+              className=""
             >
               <path
                 d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z"
@@ -66,7 +72,7 @@ function NavBar() {
                 clipRule="evenodd"
               ></path>
             </svg>
-          </Link>
+          </button>
           <Link
             to="/home"
             className="text-white text-center p-5 mt-2 font-bold"
@@ -153,6 +159,23 @@ function NavBar() {
                 address.slice(address.length - 3, address.length)}
             </div>
           </div>
+
+          {/* Open the modal using document.getElementById('ID').showModal() method */}
+
+          <dialog id="my_modal_3" className="modal">
+            <div className="modal-box bg-stone-900">
+              <h3 className="font-bold text-lg">Search users</h3>
+              <div>
+                <input type="text" className="w-full rounded-lg" />
+              </div>
+              <div className="modal-action">
+                <form method="dialog">
+                  {/* if there is a button in form, it will close the modal */}
+                  <button className="btn">Close</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </>
       ) : null}
     </div>
