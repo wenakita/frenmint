@@ -20,6 +20,7 @@ function CreatePool(props) {
   const [depositAmount, setDepositAmount] = useState(0);
   const [currentSpotPrice, setCurrentSpotPrice] = useState(0);
   const [currentDelta, setCurrentDelta] = useState(0);
+  const [initialTokenBalance, setIntitialTokenBalance] = useState(null);
   useEffect(() => {
     if (holdingsData) {
       setSelectedShare(holdingsData[0]);
@@ -49,6 +50,9 @@ function CreatePool(props) {
     console.log(finalSpotPrice);
     console.log(deltaEquation);
     console.log(sharePriceUSD);
+    setIntitialTokenBalance(
+      (preSpotPriceEquation.toFixed(2) * Math.pow(10, 18)).toString()
+    );
     setCurrentDelta(deltaEquation);
     console.log(roundedSpotPrice);
     setCurrentSpotPrice(roundedSpotPrice);
@@ -111,7 +115,7 @@ function CreatePool(props) {
       SudoSwapABI,
       signer
     );
-
+    //params not working as intended fix buy price not
     //the spot price has to be the shares current price calculate din goddog value
     try {
       const parameters = [
@@ -122,9 +126,7 @@ function CreatePool(props) {
         2, // poolType (assuming this should be uint8 and is 1)
         ethers.BigNumber.from(String(currentDelta)), // delta(the change in slope, change in price per purchase)
         "69000000000000000", // fee
-        ethers.BigNumber.from(currentSpotPrice).mul(
-          ethers.BigNumber.from("10").pow(18)
-        ), // spotPrice this is the price in goddog for the nft
+        ethers.BigNumber.from(initialTokenBalance), // spotPrice this is the price in goddog for the nft
         selectedShare.nftID, // nftId (uint256)
         ethers.BigNumber.from(depositAmount), // initialNFTBalance (uint256)
         ethers.BigNumber.from(currentSpotPrice)
