@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import friendTechABI from "../../abi/FriendTechABi";
 import { useWallets } from "@privy-io/react-auth";
+import { Contract } from "ethers";
 function ShareSender(props) {
+  const { wallets } = useWallets();
+  const w0 = wallets[0];
   const { holdingsData } = props;
   const [selectedShare, setSelectedShare] = useState(null);
+  const [walletInput, setWalletInput] = useState(null);
+  const [amountInput, setAmountInput] = useState(null);
+
   useEffect(() => {
     if (holdingsData) {
       setSelectedShare(holdingsData[0]);
@@ -11,7 +17,32 @@ function ShareSender(props) {
   }, []);
   console.log(holdingsData);
 
-  async function sendShare() {}
+  async function sendShare() {
+    const provider = await w0?.getEthersProvider();
+    const network = await provider.getNetwork();
+    const signer = await provider?.getSigner();
+    const wrapperCA = new Contract(
+      "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+      friendTechABI,
+      signer
+    );
+    try {
+      const res = await wrapperCA.safeTransferFrom(
+        w0?.address,
+        walletInput,
+        selectedShare?.nftID,
+        amountInput,
+        "0x",
+        {
+          gasLimit: 250000,
+        }
+      );
+      const reciept = await res;
+      console.log(await reciept);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
       <h3 className="text-[10px] p-2 text-white font-bold">Send Shares</h3>
@@ -43,11 +74,32 @@ function ShareSender(props) {
         </button>
       </div>
       <div className="mt-2 p-2.5  text-[10px] text-white">
+        <h3>Amount to send</h3>
+        <input
+          type="text"
+          className="w-full rounded-sm mt-1"
+          onChange={(e) => {
+            setAmountInput(e.target.value);
+          }}
+        />
+      </div>
+      <div className="mt-2 p-2.5  text-[10px] text-white">
         <h3>Wallet to send</h3>
-        <input type="text" className="w-full rounded-sm mt-1" />
+        <input
+          type="text"
+          className="w-full rounded-sm mt-1"
+          onChange={(e) => {
+            setWalletInput(e.target.value);
+          }}
+        />
       </div>
       <div className="mt-2">
-        <button className="border border-slate-700 rounded-md bg-blue-600 w-full text-[8px] hover:bg-blue-700 text-white font-bold p-1">
+        <button
+          className="border border-slate-700 rounded-md bg-blue-600 w-full text-[8px] hover:bg-blue-700 text-white font-bold p-1"
+          onClick={() => {
+            sendShare();
+          }}
+        >
           Confirm Send
         </button>
       </div>
@@ -76,7 +128,7 @@ function ShareSender(props) {
                       className=" p-2 grid grid-flow-col whitespace-nowrap text-[10px] w-full hover:bg-stone-800"
                       onClick={() => {
                         // setCurrentShare(item?.FTData);
-                        // setSelectedShare(item);
+                        setSelectedShare(item);
                         document.getElementById("my_modal_5").close();
                       }}
                     >
