@@ -17,12 +17,14 @@ function Friend() {
   const [showHolders, setShowHolders] = useState(true);
   const [showActivity, setShowActivity] = useState(false);
   const [priceHistory, setPriceHistory] = useState(null);
+  const [totalVolume, setTotalVolume] = useState(null);
 
   const { address } = useParams();
   console.log(address);
   useEffect(() => {
     setFollowers(null);
     setPriceHistory(null);
+    setTotalVolume(null);
     fetchInfo();
 
     setTimeout(() => {
@@ -36,9 +38,20 @@ function Friend() {
   }, [data]);
 
   async function getChart() {
+    let totalVolume = 0;
     const priceChartData = await getShareChartData(address);
     console.log(priceChartData);
     setPriceHistory(priceChartData);
+
+    for (const key in priceChartData) {
+      const currentAmount = uintFormat(Number(priceChartData[key]?.ethAmount));
+      console.log(currentAmount);
+      totalVolume += currentAmount;
+
+      console.log(totalVolume);
+      setTotalVolume(totalVolume);
+      console.log(priceChartData[key]?.ethAmount);
+    }
   }
 
   async function fetchInfo() {
@@ -82,6 +95,28 @@ function Friend() {
                     <h3 className="text-white mt-2 font-bold">
                       {data?.ftName}
                     </h3>
+                  </div>
+                </div>
+                <div className="p-3">
+                  <div className="flex justify-start gap-5">
+                    <div className="grid grid-rows-1">
+                      <div className="text-[10px]">Price</div>
+                      <div className="text-white font-bold text-[13px]">
+                        {uintFormat(data?.displayPrice).toFixed(2)} Ξ
+                      </div>
+                    </div>
+                    <div className="grid grid-rows-1">
+                      <div className="text-[10px]">Holders</div>
+                      <div className="text-white font-bold text-[13px]">
+                        {data?.holderCount}
+                      </div>
+                    </div>
+                    <div className="grid grid-rows-1">
+                      <div className="text-[10px]">Total Volume</div>
+                      <div className="text-white font-bold text-[13px]">
+                        {totalVolume.toFixed(2)} Ξ
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="flex justify-start p-3 gap-2 text-[10px]">

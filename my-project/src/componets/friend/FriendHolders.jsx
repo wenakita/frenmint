@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function FriendHolders(props) {
   const [showAsCard, setShowAsCard] = useState(true);
   const { followers } = props;
-
+  console.log(followers);
   return (
     <div className="mx-auto">
       <div className="flex justify-start p-3 gap-2 text-[12px] font-bold">
@@ -60,7 +60,8 @@ function FriendHolders(props) {
                             </div>
                             <div>
                               <h3 className="text-white text-[8px]">
-                                {uintFormat(user?.displayPrice)} / share
+                                Holds {user?.balance}{" "}
+                                {Number(user?.balance) > 1 ? "shares" : "share"}
                               </h3>
                             </div>
                             <div className="mt-3">
