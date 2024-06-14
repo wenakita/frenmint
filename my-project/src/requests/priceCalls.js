@@ -1,3 +1,11 @@
+const debankOptions = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    AccessKey: "533a2166f29ab81d9b2a1148c77bd513939b1211",
+  },
+};
+
 export async function getEthPrice() {
   try {
     const res = await fetch(
@@ -15,11 +23,12 @@ export async function getEthPrice() {
 export async function getGoddogPrice() {
   try {
     const res = await fetch(
-      "https://api.dexscreener.com/latest/dex/pairs/base/0x25E2DAe20f0b251a4cCF5AC1ff04C9A24E7c0140"
+      "https://pro-openapi.debank.com/v1/token?chain_id=base&id=0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
+      debankOptions
     );
     const data = await res.json();
-    console.log(data.pairs[0].priceUsd);
-    return Number(data.pairs[0].priceUsd);
+    console.log(data.price);
+    return data.price;
   } catch (error) {
     console.log(error);
     return null;

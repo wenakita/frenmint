@@ -10,6 +10,8 @@ function SwapTabs(props) {
     setViewSwap,
     viewPools,
     setViewPools,
+    viewSend,
+    setViewSend,
   } = props;
   console.log(viewSwap);
   return (
@@ -21,6 +23,7 @@ function SwapTabs(props) {
             setViewPoolCreator(false);
             setViewChart(false);
             setViewPools(false);
+            setViewSend(false);
             setViewSwap(true);
           }}
         >
@@ -33,10 +36,25 @@ function SwapTabs(props) {
             setViewSwap(false);
             setViewPoolCreator(false);
             setViewPools(false);
+            setViewSend(false);
+
             setViewChart(true);
           }}
         >
           Chart
+        </button>
+        <button
+          className={`${viewSend && `bg-stone-800 border border-transparent rounded-full text-center text-stone-300`} hover:text-stone-600 p-1`}
+          onClick={() => {
+            setViewSwap(false);
+            setViewPoolCreator(false);
+            setViewPools(false);
+            setViewChart(false);
+
+            setViewSend(true);
+          }}
+        >
+          Send
         </button>
 
         <button
@@ -45,6 +63,8 @@ function SwapTabs(props) {
             setViewChart(false);
             setViewSwap(false);
             setViewPools(false);
+            setViewSend(false);
+
             setViewPoolCreator(true);
           }}
         >
@@ -56,6 +76,8 @@ function SwapTabs(props) {
             setViewSwap(false);
             setViewPoolCreator(false);
             setViewChart(false);
+            setViewSend(false);
+
             setViewPools(true);
           }}
         >

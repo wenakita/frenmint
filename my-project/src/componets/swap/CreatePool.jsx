@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from "react";
-
+import { useWallets } from "@privy-io/react-auth";
+import { Contract } from "ethers";
+import SudoSwapABI from "../../abi/SudoSwapABI";
+import GodDogABI from "../../abi/GodDogABI";
+import friendTechABI from "../../abi/FriendTechABi";
+import { ethers } from "ethers";
+import { uintFormat } from "../../requests/friendCalls";
+import { getGoddogPrice, getEthPrice } from "../../requests/priceCalls";
+//remmm min nft to deposit is 4 no maximum
+//formula to caclculate delta => numNftDeposited * 11 + 1
+//spot price = spotprice * delta
+//spot price for above = sharePrice(in eth) / goddog price (in eth)
 function CreatePool(props) {
-  const [selectedShare, setSelectedShare] = useState(null);
+  const { wallets } = useWallets();
+  const w0 = wallets[0];
 
   const { holdingsData, setCurrentShare } = props;
+  const [selectedShare, setSelectedShare] = useState(null);
+  const [depositAmount, setDepositAmount] = useState(0);
+  const [currentSpotPrice, setCurrentSpotPrice] = useState(0);
+  const [currentDelta, setCurrentDelta] = useState(0);
   useEffect(() => {
     if (holdingsData) {
       setSelectedShare(holdingsData[0]);
@@ -12,6 +28,122 @@ function CreatePool(props) {
   useEffect(() => {
     console.log(selectedShare);
   }, [selectedShare]);
+
+  useEffect(() => {
+    console.log(depositAmount);
+    calculate();
+  }, [depositAmount]);
+
+  async function calculate() {
+    const ethPriceUSD = await getEthPrice();
+    const goddogPrice = await getGoddogPrice();
+    const goddogPriceUSD = goddogPrice * ethPriceUSD;
+    console.log(goddogPriceUSD);
+    const sharePrice = uintFormat(selectedShare.FTData?.displayPrice);
+    const sharePriceUSD =
+      uintFormat(selectedShare.FTData?.displayPrice) * ethPriceUSD;
+    const deltaEquation = depositAmount * 11 + 1;
+    const preSpotPriceEquation = sharePrice / goddogPrice;
+    const finalSpotPrice = preSpotPriceEquation * deltaEquation;
+    const roundedSpotPrice = Math.round(finalSpotPrice);
+    console.log(finalSpotPrice);
+    console.log(deltaEquation);
+    console.log(sharePriceUSD);
+    setCurrentDelta(deltaEquation);
+    console.log(roundedSpotPrice);
+    setCurrentSpotPrice(roundedSpotPrice);
+  }
+
+  async function goddogPermission() {
+    const provider = await w0?.getEthersProvider();
+    const network = await provider.getNetwork();
+    const signer = await provider?.getSigner();
+    const godDogContract = new Contract(
+      "0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
+      GodDogABI,
+      signer
+    );
+    try {
+      const res = await godDogContract.approve(
+        "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
+        "99999999999999999999999999999999"
+      );
+      const reciept = await res;
+      console.log(await reciept);
+    } catch (error) {
+      console.log(error);
+      // setMessage("Transaction Reverted");
+    }
+  }
+  async function friendTechSharePermission() {
+    try {
+      const provider = await w0?.getEthersProvider();
+      const network = await provider.getNetwork();
+      const signer = await provider?.getSigner();
+
+      const godDogContract = new Contract(
+        "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+        friendTechABI,
+        signer
+      );
+      const res = await godDogContract.setApprovalForAll(
+        "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
+        true
+      );
+      const reciept = await res;
+      console.log(await reciept);
+    } catch (error) {
+      console.log(error);
+      // setMessage("Transaction Reverted");
+    }
+  }
+
+  async function createPool() {
+    await goddogPermission();
+    await friendTechSharePermission();
+    const provider = await w0?.getEthersProvider();
+    const network = await provider.getNetwork();
+    const signer = await provider?.getSigner();
+    const address = await signer?.getAddress();
+
+    const SudoSwapContract = new Contract(
+      "0x605145D263482684590f630E9e581B21E4938eb8",
+      SudoSwapABI,
+      signer
+    );
+
+    //the spot price has to be the shares current price calculate din goddog value
+    try {
+      const parameters = [
+        "0xDDf7d080C82b8048BAAe54e376a3406572429b4e", // token
+        "0xbeea45F16D512a01f7E2a3785458D4a7089c8514", // nft
+        "0xd0A2f4ae5E816ec09374c67F6532063B60dE037B", // bondingCurve
+        String(w0?.address), // assetRecipient
+        2, // poolType (assuming this should be uint8 and is 1)
+        ethers.BigNumber.from(String(currentDelta)), // delta(the change in slope, change in price per purchase)
+        "69000000000000000", // fee
+        ethers.BigNumber.from(currentSpotPrice).mul(
+          ethers.BigNumber.from("10").pow(18)
+        ), // spotPrice this is the price in goddog for the nft
+        selectedShare.nftID, // nftId (uint256)
+        ethers.BigNumber.from(depositAmount), // initialNFTBalance (uint256)
+        ethers.BigNumber.from(currentSpotPrice)
+          .mul(ethers.BigNumber.from("10").pow(18))
+          .toString(), // initialTokenBalance (uint256)  the amount has to be multiplited by 1^18
+        "0x0000000000000000000000000000000000000000", // hookAddress
+        "0x0000000000000000000000000000000000000000",
+      ];
+      const res = await SudoSwapContract.createPairERC1155ERC20(parameters, {
+        gasLimit: 300000, // Adjust this value as needed
+      });
+      const reciept = await res.wait();
+      console.log(await reciept);
+      // acitvateLoading();
+      // setOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   console.log(holdingsData);
   //to add, goddog pair amount (liquidity tokens added), spot price , and how many shares to add
@@ -105,28 +237,57 @@ function CreatePool(props) {
                   type="text"
                   name=""
                   id=""
-                  className="w-[75%] bg-stone-800 rounded-lg text-[12px]"
+                  className="w-full bg-stone-800 rounded-lg text-[10px] text-white p-0.5"
+                  onChange={(e) => {
+                    if (!isNaN(Number(e.target.value))) {
+                      setDepositAmount(Number(e.target.value));
+                    }
+                  }}
+                  value={depositAmount || 0}
                 />
+                <div className="flex justify-end text-[8px]">
+                  Balance: {selectedShare?.balance}
+                </div>
               </div>
             </div>
           </div>
-          <div>
-            <div className="grid grid-rows-1">
-              <h3 className="text-white text-[8px] font-bold">Spot price</h3>
-              <div>
-                <input
-                  type="text"
-                  name=""
-                  id=""
-                  className="w-[75%] bg-stone-800 rounded-lg text-[12px]"
-                />
+        </div>
+
+        <div className=" p-1  text-[10px] mb-4">
+          <div className="flex justify-start p-1 text-[10px] font-bold">
+            Initial Pool
+          </div>
+          <div className="grid grid-cols-3 p-1">
+            <div className="border border-neutral-700 bg-neutral-800 rounded-md">
+              <div className="grid grid-rows-1 p-2">
+                <div className="font-bold text-stone-400">Pool fee</div>
+                <div className="font-bold text-white ">6.9%</div>
+              </div>
+            </div>
+            <div className="border border-neutral-700 bg-neutral-800 rounded-sm">
+              <div className="grid grid-rows-1 p-2">
+                <div className="font-bold text-stone-400">$OOOooo LP</div>
+                <div className="font-bold text-white text-[10px] ">
+                  {currentSpotPrice.toFixed(2)}
+                </div>
+              </div>
+            </div>
+            <div className="border border-neutral-700 bg-neutral-800 rounded-md">
+              <div className="grid grid-rows-1 p-2">
+                <div className="font-bold text-stone-400">Delta</div>
+                <div className="font-bold text-white ">{currentDelta}</div>
               </div>
             </div>
           </div>
         </div>
         <div>
-          <button className="w-full border text-[10px] border-neutral-700 p-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-bold">
-            Create Pool
+          <button
+            className="w-full border text-[10px] border-neutral-700 p-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-bold"
+            onClick={() => {
+              createPool();
+            }}
+          >
+            Provide Liquidity
           </button>
         </div>
 

@@ -20,6 +20,7 @@ import { getEthPrice } from "../../requests/priceCalls";
 import PoolSwap from "./PoolSwap";
 import CreatePool from "./CreatePool";
 import { useLocation } from "react-router-dom";
+import ShareSender from "./ShareSender";
 
 function NewSwap() {
   const location = useLocation();
@@ -29,6 +30,8 @@ function NewSwap() {
   const [viewPools, setViewPools] = useState(false);
   const [viewChart, setViewChart] = useState(false);
   const [viewPoolCreator, setViewPoolCreator] = useState(false);
+  const [viewSend, setViewSend] = useState(false);
+
   const [currentShare, setCurrentShare] = useState(null);
   const [currentSharePrice, setCurrentSharePrice] = useState(null);
   const [currentPriceHistory, setCurrentPriceHistory] = useState(null);
@@ -114,6 +117,8 @@ function NewSwap() {
           setViewSwap={setViewSwap}
           setViewPools={setViewPools}
           viewPools={viewPools}
+          setViewSend={setViewSend}
+          viewSend={viewSend}
         />
       </div>
       <div className="  mx-auto">
@@ -149,8 +154,15 @@ function NewSwap() {
                       <PoolSwap
                         currentShare={currentShare}
                         setCurrentShare={setCurrentShare}
+                        holdingsData={holdingsData}
                       />
-                    ) : null}
+                    ) : (
+                      <>
+                        {viewSend ? (
+                          <ShareSender holdingsData={holdingsData} />
+                        ) : null}
+                      </>
+                    )}
                   </>
                 )}
               </>
