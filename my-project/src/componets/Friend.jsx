@@ -22,15 +22,17 @@ function Friend() {
   const { address } = useParams();
   console.log(address);
   useEffect(() => {
-    setFollowers(null);
-    setPriceHistory(null);
-    setTotalVolume(null);
     fetchInfo();
 
     setTimeout(() => {
       setLoading(false);
     }, [1500]);
   }, [address]);
+  // useEffect(() => {
+  //   setFollowers(null);
+  //   setPriceHistory(null);
+  //   setTotalVolume(null);
+  // }, [address]);
 
   useEffect(() => {
     getFollowers();

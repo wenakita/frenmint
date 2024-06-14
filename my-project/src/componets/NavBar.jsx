@@ -2,6 +2,7 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { SearchByUser, SearchByContract } from "../requests/friendCalls";
 function NavBar() {
   const [oooPrice, setOooPrice] = useState(null);
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ function NavBar() {
         return response;
       })
       .then(function (data) {
+        console.log(data);
         setOooPrice(data.pairs[0].priceUsd);
       })
       .catch(function (error) {
@@ -48,16 +50,29 @@ function NavBar() {
             />
             <h3 className="text-white mt-2 text-[10px]">{oooPrice}</h3>
           </Link>
+          <Link to="*" className="text-white text-center mt-0.5 p-5 font-bold ">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 15 15"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="mt-1.5"
+            >
+              <path
+                d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z"
+                fill="white"
+                fillRule="evenodd"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+          </Link>
           <Link
             to="/home"
             className="text-white text-center p-5 mt-2 font-bold"
           >
             Home
           </Link>
-
-          {/* <Link to="*" className="text-white text-center p-5 mt-2 font-bold ">
-            Notion
-          </Link> */}
 
           <Link
             to="/pools"
