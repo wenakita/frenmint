@@ -202,14 +202,14 @@ function MyPools() {
           />
         </div>
       ) : (
-        <div className="">
-          <div className="text-[30px] text-center p-5  flex justify-center">
+        <div className="mt-20">
+          {/* <div className="text-[30px] text-center p-5  flex justify-center">
             <img
               src="https://ivory-accurate-pig-375.mypinata.cloud/ipfs/QmNfe9547vPVgd8qqdCFeH81yHos1n1CoQZu1D9n5Nrjvp?pinataGatewayToken=DdSIfjJJunjBBaGpRA4VE7rw9Q3bNil3avaM8VrHQkPRh_2vaSMuwGFYGbn9Xzt2"
               alt=""
               style={{ maxWidth: "80%" }}
             />
-          </div>
+          </div> */}
           <div className="text-center font-mono font-bold text-white text-[20px]">
             Shares Owned:
           </div>

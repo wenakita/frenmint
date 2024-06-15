@@ -399,11 +399,11 @@ function FriendTechPools() {
                             setSelectedPool(item);
                             console.log(item);
 
-                            document.getElementById("my_modal_1").showModal();
+                            // document.getElementById("my_modal_1").showModal();
                           }}
                         >
                           <td className="whitespace-nowrap">
-                            <div className="flex gap-0.5">
+                            <Link to={"/newswap"} className="flex gap-0.5">
                               <img
                                 src={item?.friendTechData?.ftPfpUrl}
                                 alt=""
@@ -417,7 +417,7 @@ function FriendTechPools() {
                               <h3 className="ms-1">
                                 {item?.friendTechData?.ftName}-oooOOO
                               </h3>
-                            </div>
+                            </Link>
                           </td>
 
                           <td className="whitespace-nowrap">
@@ -461,7 +461,7 @@ function FriendTechPools() {
               </div>
             )}
           </div>
-          <dialog id="my_modal_1" className="modal">
+          {/* <dialog id="my_modal_1" className="modal">
             {selectedPool !== null || selectedPool ? (
               <div className="p-10 w-[75%] rounded-lg bg-stone-900 ">
                 <div className="flex justify-end">
@@ -636,7 +636,7 @@ function FriendTechPools() {
                 </div>
               </div>
             ) : null}
-          </dialog>
+          </dialog> */}
         </div>
       )}
     </center>

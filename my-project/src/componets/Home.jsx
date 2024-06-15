@@ -92,13 +92,13 @@ function Home() {
             </h3>
             <div className="flex justify-center">
               <h3 className="text-stone-600 text-[8px] font-mono font-bold text-center  w-[300px] ">
-                Trade thoushands of friend.tech users instantly on frenmint and
+                Trade thousands of friend.tech users instantly on frenmint and
                 increase your liquidity at the same time
               </h3>
             </div>
             <div className="flex justify-center">
               <img
-                src="https://i.ibb.co/wzQ9PG5/719shots-so.png"
+                src="https://i.ibb.co/BcrZpVV/813shots-so.png"
                 alt=""
                 style={{ width: "70%" }}
                 className=""

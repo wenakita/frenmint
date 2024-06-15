@@ -21,10 +21,13 @@ import PoolSwap from "./PoolSwap";
 import CreatePool from "./CreatePool";
 import { useLocation } from "react-router-dom";
 import ShareSender from "./ShareSender";
+import { useBalance } from "wagmi";
+import { base } from "wagmi/chains";
 
 function NewSwap() {
   const location = useLocation();
   console.log(location?.state);
+
   //these are used to switch between tabs
   const [viewSwap, setViewSwap] = useState(true);
   const [viewPools, setViewPools] = useState(false);

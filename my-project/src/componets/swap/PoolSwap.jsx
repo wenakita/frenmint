@@ -18,19 +18,29 @@ import { useWallets } from "@privy-io/react-auth";
 import GodDogABI from "../../abi/GodDogABI";
 import SudoSwapPoolTXABI from "../../abi/SudoSwapPoolTXABI";
 import { uintFormat } from "../../formatters/format";
+import { useBalance } from "wagmi";
+import { base } from "wagmi/chains";
 
 function PoolSwap(props) {
   const { setCurrentShare, currentShare } = props;
   const { wallets } = useWallets();
   const w0 = wallets[0];
+  const goddogBalanceResult = useBalance({
+    address: w0?.address,
+    token: "0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
+    chainId: base.id,
+  });
+  const [goddogBalance, setGoddogBalance] = useState(null);
   const [availablePools, setAvailablePools] = useState(null);
   const [selectedPool, setSelectedPool] = useState(null);
   const [buyFromPool, setBuyFromPool] = useState(true);
   const [uintTotal, setUintTotal] = useState(null);
   const [input, setInput] = useState(null);
   const [total, setTotal] = useState(null);
+
   useEffect(() => {
     getExistingPools();
+    setGoddogBalance(uintFormat(goddogBalanceResult?.data?.value).toFixed(2));
   }, []);
   console.log(selectedPool);
   useEffect(() => {
@@ -363,8 +373,13 @@ function PoolSwap(props) {
         </div>
 
         <div className="border border-neutral-700 rounded-lg text-white font-mono font-bold text-[12px] p-2">
-          <h3>{buyFromPool ? "You pay" : "You recieve"}</h3>
+          <div className="flex justify-between">
+            <h3>{buyFromPool ? "You pay" : "You recieve"}</h3>
 
+            <h3 className="text-[8px]">
+              $oooOOO balance:{" " + goddogBalance || 0}
+            </h3>
+          </div>
           <input
             type="text"
             className="w-[350px] bg-transparent border border-transparent outline-none"

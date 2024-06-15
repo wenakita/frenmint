@@ -15,6 +15,9 @@ import FriendABI from "../../abi/FriendABI";
 import { config } from "../../config";
 import friendTechABI from "../../abi/FriendTechABi";
 import { parseEther } from "ethers/lib/utils";
+import { useBalance } from "wagmi";
+import { base } from "wagmi/chains";
+
 function Swapper(props) {
   const {
     trendingFriends,
@@ -25,6 +28,7 @@ function Swapper(props) {
     setCurrentShare,
     currentSharePrice,
   } = props;
+
   const { wallets } = useWallets();
   const userAddress = wallets[0]?.address;
   const [shouldMint, setShouldMint] = useState(true);
@@ -34,9 +38,15 @@ function Swapper(props) {
   const [currentTotal, setCurrentTotal] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const [currentFrenmintUser, setCurrentFrenmintUser] = useState(null);
-
+  const ethBal = useBalance({
+    address: userAddress,
+    chainId: base.id,
+  });
+  const [ethBalance, setEthBalance] = useState(null);
+  console.log(Number(ethBal?.data?.formatted).toFixed(6));
   useEffect(() => {
     fetchFrenmintUsers();
+    setEthBalance(Number(ethBal?.data?.formatted).toFixed(6));
   }, []);
   useEffect(() => {
     console.log(searchInput);
@@ -222,8 +232,11 @@ function Swapper(props) {
         </div>
 
         <div className="border border-neutral-700 rounded-lg text-white font-mono font-bold text-[12px] p-2">
-          <h3>{shouldMint ? "You Pay" : "You Recieve"}</h3>
+          <div className="flex justify-between">
+            <h3>{shouldMint ? "You Pay" : "You Recieve"}</h3>
 
+            <h3 className="text-[8px]">ETH balance:{" " + ethBalance || 0}</h3>
+          </div>
           <input
             type="text"
             className="w-[350px] bg-transparent border border-transparent outline-none"

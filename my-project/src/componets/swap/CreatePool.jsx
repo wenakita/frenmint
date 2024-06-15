@@ -7,6 +7,8 @@ import friendTechABI from "../../abi/FriendTechABi";
 import { ethers } from "ethers";
 import { uintFormat } from "../../requests/friendCalls";
 import { getGoddogPrice, getEthPrice } from "../../requests/priceCalls";
+import { useBalance } from "wagmi";
+import { base } from "wagmi/chains";
 //remmm min nft to deposit is 4 no maximum
 //formula to caclculate delta => numNftDeposited * 11 + 1
 //spot price = spotprice * delta
@@ -14,6 +16,18 @@ import { getGoddogPrice, getEthPrice } from "../../requests/priceCalls";
 function CreatePool(props) {
   const { wallets } = useWallets();
   const w0 = wallets[0];
+  const goddogBalanceResult = useBalance({
+    address: w0?.address,
+    token: "0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
+    chainId: base.id,
+  });
+  const ethBalance = useBalance({
+    address: w0?.address,
+    chainId: base.id,
+  });
+  console.log(Number(ethBalance?.data?.formatted).toFixed(6));
+  const [goddogBalance, setGoddogBalance] = useState(null);
+  const [ethbalance, setEthBalance] = useState(null);
 
   const { holdingsData, setCurrentShare } = props;
   const [selectedShare, setSelectedShare] = useState(null);
@@ -27,6 +41,8 @@ function CreatePool(props) {
     if (holdingsData) {
       setSelectedShare(holdingsData[0]);
     }
+    setGoddogBalance(uintFormat(goddogBalanceResult?.data?.value).toFixed(2));
+    setEthBalance(Number(ethBalance?.data?.formatted).toFixed(6));
   }, []);
   useEffect(() => {
     console.log(selectedShare);
@@ -206,6 +222,9 @@ function CreatePool(props) {
               /> */}
             </div>
           </button>
+          <div className="flex justify-end text-[8px]">
+            $oooOOO balance: {goddogBalance || 0}
+          </div>
         </div>
         <div>
           <h3 className="text-stone-300 text-center mt-1 font-bold">+</h3>
@@ -257,7 +276,7 @@ function CreatePool(props) {
                   value={depositAmount || 0}
                 />
                 <div className="flex justify-end text-[8px]">
-                  Balance: {selectedShare?.balance}
+                  Share Balance: {selectedShare?.balance || 0}
                 </div>
               </div>
             </div>
@@ -300,7 +319,8 @@ function CreatePool(props) {
             <div className="grid grid-rows-1 p-2">
               <div className="font-bold text-stone-400">Share price</div>
               <div className="font-bold text-white ">
-                {uintFormat(selectedShare?.FTData?.displayPrice)} {" Ξ / Share"}
+                {uintFormat(selectedShare?.FTData?.displayPrice) || 0}{" "}
+                {" Ξ / Share"}
               </div>
             </div>
           </div>
