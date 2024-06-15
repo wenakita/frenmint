@@ -26,7 +26,7 @@ function Layout() {
 
       {authenticated && wallet ? (
         <>
-          <div className="flex justify-end me-14 ">
+          <div className="flex justify-end me-[80px] sm:me-[120px] md:me-[200px] lg:me-[310px] xl:me-[440px]">
             <LiveChat />
           </div>
         </>
