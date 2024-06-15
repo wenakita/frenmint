@@ -106,7 +106,7 @@ function NewSwap() {
   }
 
   return (
-    <div className="   mx-auto">
+    <div className="mt-5   mx-auto">
       <div className="w-[400px] mx-auto">
         <SwapTabs
           viewSwap={viewSwap}
