@@ -188,7 +188,7 @@ function NavBar() {
               <div>
                 <input
                   type="text"
-                  className="w-full rounded-lg"
+                  className="w-full rounded-lg p-1"
                   onChange={(e) => {
                     setSearchInput(e.target.value);
                   }}

@@ -50,7 +50,7 @@ function Portal() {
               className="border border-slate-500 rounded-lg text-white p-2 text-[20px] hover:bg-white hover:text-black"
               onClick={login}
             >
-              FriendMint Login
+              FrenMint Login
             </button>
           </>
         )}

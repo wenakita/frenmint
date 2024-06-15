@@ -424,7 +424,7 @@ function FriendTechPools() {
                             {uintFormat(item?.sudoSwapData?.spotPrice).toFixed(
                               3
                             )}{" "}
-                            $OOOooo
+                            $oooOOO
                           </td>
                           {/* <td className="whitespace-nowrap hidden md:block">
                             {item?.buyPrice} $OOOooo
