@@ -177,6 +177,7 @@ function Swapper(props) {
                 setInput(Number(e.target.value));
               }
             }}
+            value={input || 0}
           />
           <button
             className="border w-[200px] rounded-md border-neutral-600 bg-stone-800 mt-1 hover:text-stone-500"
