@@ -82,7 +82,8 @@ function TrendingFriends(props) {
                       src={
                         "https://ivory-accurate-pig-375.mypinata.cloud/ipfs/QmNfe9547vPVgd8qqdCFeH81yHos1n1CoQZu1D9n5Nrjvp?pinataGatewayToken=DdSIfjJJunjBBaGpRA4VE7rw9Q3bNil3avaM8VrHQkPRh_2vaSMuwGFYGbn9Xzt2"
                       }
-                      alt="Shoes"
+                      alt=""
+                      loading="eager"
                     />
                   </figure>
                   <div className="p-3">
@@ -91,6 +92,7 @@ function TrendingFriends(props) {
                         src={item?.ftPfpUrl}
                         alt=""
                         className="rounded-full w-7 h-7"
+                        loading="eager"
                       />
                       <Link
                         to={`/friend/${item?.address}`}
