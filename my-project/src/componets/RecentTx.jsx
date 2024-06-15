@@ -5,6 +5,7 @@ function RecentTx(props) {
   const { getTxData } = props;
   const [liveTxData, setLiveTxData] = useState(null);
   const [displayTx, setDisplayTx] = useState(false);
+  const [currentRecentTx, setCurrentRecentTx] = useState(null);
   useEffect(() => {
     fetchLiveTxData();
   }, []);
@@ -42,7 +43,7 @@ function RecentTx(props) {
   return (
     <>
       {displayTx ? (
-        <div className="toast toast-end flex justify-end ">
+        <div className="toast toast-top toast-center flex justify-end ">
           <center className="  text-[8px] text-white animate-fade border border-stone-800 bg-black  rounded-xl w-[300px] h-[50px] bg-black p-2.5 grid grid-flow-col">
             <div className="flex justify-start mt-1 border border-transparent w-[20px] ms-2">
               <img

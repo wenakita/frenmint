@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import RecentTx from "./RecentTx";
 import { supabase } from "../client";
 import { postMessageData, createUserName } from "../requests/supaBaseHandler";
+
 import {
   Description,
   Dialog,
@@ -38,7 +39,7 @@ function Home() {
 
   useEffect(() => {
     fetchMessages();
-  }, []);
+  });
 
   async function getTrending() {
     const trending = await GetTrendingFriends();
@@ -64,13 +65,8 @@ function Home() {
         }
       }
 
-      if (isFound) {
-        console.log("found");
-        setOpenModal(false);
-      } else {
-        console.log(" not found");
-
-        setOpenModal(true);
+      if (!isFound) {
+        document.getElementById("my_modal_10").showModal();
       }
     }
   }
@@ -86,9 +82,10 @@ function Home() {
         </div>
       ) : (
         <>
-          <center className="flex justify-center">
+          {/* <div className="relative">
             <RecentTx />
-          </center>
+          </div> */}
+
           <div className=" text-center p-2 mt-5">
             <h3 className="text-white font-mono font-bold">
               Socialfi in the palm of your hands
@@ -118,7 +115,68 @@ function Home() {
           {/* <div className="flex justify-center mt-10">
             <GlobalActivity />
           </div> */}
-          <Dialog
+
+          <dialog id="my_modal_10" className="modal">
+            <div className="modal-box bg-neutral-900">
+              <div className="font-bold flex justify-start mb-5">
+                <img
+                  src="https://i.postimg.cc/qqhQyJgK/friendmint-removebg-preview.png"
+                  alt=""
+                  className="2-5 h-5 rounded-full"
+                />
+                Create a username
+              </div>
+              <label htmlFor="" className="text-[10px] ms-1">
+                Enter name
+              </label>
+              <div className="flex justify-center">
+                <input
+                  type="text"
+                  className="border-slate-500 bg-stone-800 w-full rounded-lg"
+                  onChange={(e) => {
+                    console.log(e.target.value);
+                    setUserNameInput(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="flex justify-center mt-2">
+                <button
+                  className="border border-neutral-700 rounded-lg p-2 text-white text-[10px] hover:bg-stone-950"
+                  onClick={async () => {
+                    const isCreated = await createUserName(
+                      supabase,
+                      userNameInput,
+                      w0?.address
+                    );
+                    if (isCreated) {
+                      document.getElementById("my_modal_10").close();
+
+                      setHasUserName(true);
+                      setCurrentuserName(userNameInput);
+                    }
+                  }}
+                >
+                  Create Username
+                </button>
+              </div>
+              <div className="modal-action">
+                <form method="dialog  ">
+                  {/* if there is a button in form, it will close the modal */}
+
+                  <button
+                    className="btn "
+                    onClick={() => {
+                      document.getElementById("my_modal_10").close();
+                    }}
+                  >
+                    Close
+                  </button>
+                </form>
+              </div>
+            </div>
+          </dialog>
+
+          {/* <Dialog
             open={openModal}
             onClose={() => setOpenModal(false)}
             className="relative z-50"
@@ -166,7 +224,7 @@ function Home() {
                 </div>
               </DialogPanel>
             </div>
-          </Dialog>
+          </Dialog> */}
         </>
       )}
     </div>

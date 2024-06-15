@@ -77,20 +77,22 @@ function LiveChat() {
   }, [hasUserName]);
 
   return (
-    <div>
-      <button
-        onClick={() => {
-          setIsOpen(true);
-        }}
-        className="border p-1 border-stone-700 text-white flex justify-center text-[8px] p-1 rounded-lg"
-      >
-        <img
-          src="https://i.postimg.cc/qqhQyJgK/friendmint-removebg-preview.png"
-          alt=""
-          className="w-3 h-3 rounded-full"
-        />
-        <h3 className="mt-0.5">Live Chat</h3>
-      </button>
+    <div className="">
+      <div className="fixed mt-2">
+        <button
+          onClick={() => {
+            setIsOpen(true);
+          }}
+          className="border p-1 border-neutral-800 bg-black rounded-full text-white flex justify-center text-[8px] p-1 hover:bg-stone-700  "
+        >
+          <img
+            src="https://i.postimg.cc/qqhQyJgK/friendmint-removebg-preview.png"
+            alt=""
+            className="w-5 h-5 rounded-full"
+          />
+          {/* <h3 className="mt-0.5">Live Chat</h3> */}
+        </button>
+      </div>
       {hasUserName ? (
         <Dialog
           open={isOpen}

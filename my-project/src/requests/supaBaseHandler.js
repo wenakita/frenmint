@@ -4,7 +4,8 @@ export async function postTransaction(
   shareAmount,
   buyer,
   isBuy,
-  ethValue
+  ethValue,
+  username
 ) {
   const currentDate = new Date();
   const stringDate = String(currentDate);
@@ -20,7 +21,7 @@ export async function postTransaction(
             share_address: shareData?.address,
             buyer_address: buyer,
             purchase_amount: shareAmount,
-            frenmint_username: "iHuntJeegs",
+            frenmint_username: username,
             share_pfp: shareData?.ftPfpUrl,
             share_name: shareData?.ftName,
             is_buy: true,
@@ -37,7 +38,7 @@ export async function postTransaction(
             share_address: shareData?.address,
             buyer_address: buyer,
             purchase_amount: shareAmount,
-            frenmint_username: "iHuntJeegs",
+            frenmint_username: username,
             share_pfp: shareData?.ftPfpUrl,
             share_name: shareData?.ftName,
             is_buy: false,

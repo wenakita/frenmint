@@ -26,12 +26,14 @@ function Layout() {
 
       {authenticated && wallet ? (
         <>
-          <div className="flex justify-center p-3 gap-2">
-            {/* <SearchBar />
-            <LiveChat /> */}
+          <div className="flex justify-end me-14 ">
+            <LiveChat />
           </div>
         </>
       ) : null}
+      <div className="">
+        <RecentTx />
+      </div>
 
       <div className="">
         <Outlet />

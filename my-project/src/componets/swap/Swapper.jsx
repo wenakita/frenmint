@@ -33,7 +33,11 @@ function Swapper(props) {
   const [input, setInput] = useState(null);
   const [currentTotal, setCurrentTotal] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
+  const [currentFrenmintUser, setCurrentFrenmintUser] = useState(null);
 
+  useEffect(() => {
+    fetchFrenmintUsers();
+  }, []);
   useEffect(() => {
     console.log(searchInput);
     if (searchInput) {
@@ -51,6 +55,22 @@ function Swapper(props) {
       calculateSellTotal();
     }
   }, [input]);
+
+  async function fetchFrenmintUsers() {
+    const { data, error } = await supabase.from("usernames").select();
+    if (error) {
+      console.log(error);
+    }
+    if (data) {
+      console.log(data);
+      for (const key in data) {
+        if (data[key]?.user_address === userAddress) {
+          console.log(data[key]?.username);
+          setCurrentFrenmintUser(data[key]?.username);
+        }
+      }
+    }
+  }
 
   async function calculateBuyTotal() {
     const buyTotal = await getShareBuyTotal(
@@ -103,7 +123,8 @@ function Swapper(props) {
         input,
         userAddress,
         true,
-        currentTotal
+        currentTotal,
+        currentFrenmintUser
       );
     } catch (error) {
       console.log(error);
@@ -132,7 +153,8 @@ function Swapper(props) {
         input,
         userAddress,
         false,
-        currentTotal
+        currentTotal,
+        currentFrenmintUser
       );
     } catch (error) {
       console.log(error);
