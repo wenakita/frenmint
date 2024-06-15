@@ -54,7 +54,7 @@ function SwapTabs(props) {
             setViewSend(true);
           }}
         >
-          Send
+          Transfer
         </button>
 
         <button
