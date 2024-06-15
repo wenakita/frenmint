@@ -281,7 +281,16 @@ function CreatePool(props) {
               </div>
             </div>
           </div>
+          <div className="border border-neutral-700 bg-neutral-800 rounded-md w-[98%] mx-auto">
+            <div className="grid grid-rows-1 p-2">
+              <div className="font-bold text-stone-400">Share price</div>
+              <div className="font-bold text-white ">
+                {uintFormat(selectedShare?.FTData?.displayPrice)} {" Ξ / Share"}
+              </div>
+            </div>
+          </div>
         </div>
+
         <div>
           <button
             className="w-full border text-[10px] border-neutral-700 p-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-bold"

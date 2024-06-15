@@ -32,7 +32,7 @@ function PoolSwap(props) {
   useEffect(() => {
     getExistingPools();
   }, []);
-
+  console.log(selectedPool);
   useEffect(() => {
     console.log(input);
     if (buyFromPool) {
@@ -394,7 +394,7 @@ function PoolSwap(props) {
           <div className="p-2 text-[8px] mb-2">
             <h3>Pool Ca: {selectedPool?.sudoSwapData?.address}</h3>
 
-            <h3>price goes here Ξ / Share</h3>
+            <h3>{uintFormat(currentShare?.displayPrice)} Ξ / Share</h3>
           </div>
 
           <button
