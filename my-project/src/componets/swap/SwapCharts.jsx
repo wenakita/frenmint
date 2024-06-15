@@ -43,7 +43,7 @@ function SwapCharts(props) {
   };
 
   return (
-    <>
+    <div className="mb-20">
       {currentPriceHistory ? (
         <div className="  w-[400px] mx-auto">
           <div className="mb-5 p-2 mt-1">
@@ -293,7 +293,7 @@ function SwapCharts(props) {
           />
         </div>
       )}
-    </>
+    </div>
   );
 }
 
