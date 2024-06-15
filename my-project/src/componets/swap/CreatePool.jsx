@@ -21,6 +21,7 @@ function CreatePool(props) {
   const [currentSpotPrice, setCurrentSpotPrice] = useState(0);
   const [currentDelta, setCurrentDelta] = useState(0);
   const [initialTokenBalance, setIntitialTokenBalance] = useState(null);
+  const [message, setMessgae] = useState(null);
   const [lp, setLp] = useState(0);
   useEffect(() => {
     if (holdingsData) {
@@ -264,9 +265,13 @@ function CreatePool(props) {
         </div>
 
         <div className=" p-1  text-[10px] mb-4">
+          <div className="flex justify-center">
+            <h3 className="text-red-500">{message ? message : null}</h3>
+          </div>
           <div className="flex justify-start p-1 text-[10px] font-bold">
             Initial Pool
           </div>
+
           <div className="grid grid-cols-3 p-1">
             <div className="border border-neutral-700 bg-neutral-800 rounded-md">
               <div className="grid grid-rows-1 p-2">
@@ -305,7 +310,13 @@ function CreatePool(props) {
           <button
             className="w-full border text-[10px] border-neutral-700 p-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-bold"
             onClick={() => {
-              createPool();
+              if (Number(depositAmount) >= 4) {
+                console.log("hey");
+                createPool();
+                setMessgae(null);
+              } else {
+                setMessgae("Minimum is 4 shares");
+              }
             }}
           >
             Provide Liquidity
