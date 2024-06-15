@@ -45,7 +45,7 @@ function ShareSender(props) {
   }
   return (
     <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
-      <h3 className="text-[10px] p-2 text-white font-bold">Send Shares</h3>
+      <h3 className="text-[10px] p-2 text-white font-bold">Transfer Shares</h3>
       <div className=" p-2">
         <div className="flex justify-start ">
           <h3 className="text-white text-[10px]">Share to send </h3>
