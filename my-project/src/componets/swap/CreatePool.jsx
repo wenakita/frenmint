@@ -271,19 +271,23 @@ function CreatePool(props) {
             <div className="border border-neutral-700 bg-neutral-800 rounded-md">
               <div className="grid grid-rows-1 p-2">
                 <div className="font-bold text-stone-400">Pool fee</div>
-                <div className="font-bold text-white ">6.9%</div>
+                <div className="font-bold text-white text-[8px] ">6.9%</div>
               </div>
             </div>
             <div className="border border-neutral-700 bg-neutral-800 rounded-sm">
               <div className="grid grid-rows-1 p-2">
                 <div className="font-bold text-stone-400">$OOOooo LP</div>
-                <div className="font-bold text-white text-[10px] ">{lp}</div>
+                <div className="font-bold text-white text-[8px] ">
+                  {lp.toFixed(0)}
+                </div>
               </div>
             </div>
             <div className="border border-neutral-700 bg-neutral-800 rounded-md">
               <div className="grid grid-rows-1 p-2">
                 <div className="font-bold text-stone-400">Delta</div>
-                <div className="font-bold text-white ">{currentDelta}</div>
+                <div className="font-bold text-white text-[8px] ">
+                  {currentDelta}
+                </div>
               </div>
             </div>
           </div>
