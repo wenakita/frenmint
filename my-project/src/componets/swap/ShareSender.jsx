@@ -82,6 +82,9 @@ function ShareSender(props) {
             setAmountInput(e.target.value);
           }}
         />
+        <div className="flex justify-end text-[8px] text-stone-400 mt-1">
+          Balance: {selectedShare?.balance}
+        </div>
       </div>
       <div className="mt-2 p-2.5  text-[10px] text-white">
         <h3>Wallet to send</h3>
