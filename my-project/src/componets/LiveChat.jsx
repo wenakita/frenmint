@@ -99,8 +99,8 @@ function LiveChat() {
           onClose={() => setIsOpen(false)}
           className="relative z-50"
         >
-          <div className="fixed inset-0 flex w-screen items-center justify-center p-4 bg-gradient-to-br from-stone-950">
-            <DialogPanel className="w-[350px] h-[500px] text-white border border-stone-800 rounded-lg bg-black p-3">
+          <div className="fixed inset-0 flex w-screen items-center justify-center p-4 bg-gradient-to-br from-stone-950  ">
+            <DialogPanel className="w-[350px] h-[500px] text-white border border-stone-800  rounded-lg bg-black p-3 ">
               <DialogTitle className="font-bold flex justify-start mb-2 mt-1">
                 <img
                   src="https://i.postimg.cc/qqhQyJgK/friendmint-removebg-preview.png"

@@ -21,6 +21,7 @@ function CreatePool(props) {
   const [currentSpotPrice, setCurrentSpotPrice] = useState(0);
   const [currentDelta, setCurrentDelta] = useState(0);
   const [initialTokenBalance, setIntitialTokenBalance] = useState(null);
+  const [lp, setLp] = useState(0);
   useEffect(() => {
     if (holdingsData) {
       setSelectedShare(holdingsData[0]);
@@ -39,23 +40,28 @@ function CreatePool(props) {
     const ethPriceUSD = await getEthPrice();
     const goddogPrice = await getGoddogPrice();
     const goddogPriceUSD = goddogPrice * ethPriceUSD;
-    console.log(goddogPriceUSD);
+    console.log(goddogPrice);
     const sharePrice = uintFormat(selectedShare.FTData?.displayPrice);
     const sharePriceUSD =
       uintFormat(selectedShare.FTData?.displayPrice) * ethPriceUSD;
+    console.log(sharePriceUSD);
     const deltaEquation = depositAmount * 11 + 1;
-    const preSpotPriceEquation = sharePrice / goddogPrice;
+    const preSpotPriceEquation =
+      (sharePrice * deltaEquation * ethPriceUSD) / goddogPrice;
     const finalSpotPrice = preSpotPriceEquation * deltaEquation;
     const roundedSpotPrice = Math.round(finalSpotPrice);
-    console.log(finalSpotPrice);
-    console.log(deltaEquation);
-    console.log(sharePriceUSD);
-    setIntitialTokenBalance(
-      (preSpotPriceEquation.toFixed(2) * Math.pow(10, 18)).toString()
-    );
+    const intialBalanceTest = sharePrice * depositAmount;
+    const finalDepositAmount = (intialBalanceTest * ethPriceUSD) / goddogPrice;
+    //pool price has to be per share in goddog
+    console.log(roundedSpotPrice);
+    console.log(preSpotPriceEquation);
+
+    setLp(finalDepositAmount);
+    console.log(finalDepositAmount.toFixed(0));
+    setIntitialTokenBalance(finalDepositAmount.toFixed(0));
     setCurrentDelta(deltaEquation);
     console.log(roundedSpotPrice);
-    setCurrentSpotPrice(roundedSpotPrice);
+    setCurrentSpotPrice(preSpotPriceEquation.toFixed(0));
   }
 
   async function goddogPermission() {
@@ -126,10 +132,12 @@ function CreatePool(props) {
         2, // poolType (assuming this should be uint8 and is 1)
         ethers.BigNumber.from(String(currentDelta)), // delta(the change in slope, change in price per purchase)
         "69000000000000000", // fee
-        ethers.BigNumber.from(initialTokenBalance), // spotPrice this is the price in goddog for the nft
+        ethers.BigNumber.from(currentSpotPrice).mul(
+          ethers.BigNumber.from("10").pow(18)
+        ), // spotPrice this is the price in goddog for the nft
         selectedShare.nftID, // nftId (uint256)
         ethers.BigNumber.from(depositAmount), // initialNFTBalance (uint256)
-        ethers.BigNumber.from(currentSpotPrice)
+        ethers.BigNumber.from(initialTokenBalance)
           .mul(ethers.BigNumber.from("10").pow(18))
           .toString(), // initialTokenBalance (uint256)  the amount has to be multiplited by 1^18
         "0x0000000000000000000000000000000000000000", // hookAddress
@@ -269,9 +277,7 @@ function CreatePool(props) {
             <div className="border border-neutral-700 bg-neutral-800 rounded-sm">
               <div className="grid grid-rows-1 p-2">
                 <div className="font-bold text-stone-400">$OOOooo LP</div>
-                <div className="font-bold text-white text-[10px] ">
-                  {currentSpotPrice.toFixed(2)}
-                </div>
+                <div className="font-bold text-white text-[10px] ">{lp}</div>
               </div>
             </div>
             <div className="border border-neutral-700 bg-neutral-800 rounded-md">

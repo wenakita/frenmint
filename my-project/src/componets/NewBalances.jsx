@@ -123,6 +123,12 @@ function NewBalances() {
             </div>
           </div>
         </div>
+        <div className="text-[10px] p-2">
+          <div className="flex justify-start gap-2">
+            <h3>Shares</h3>
+            <h3>Pools</h3>
+          </div>
+        </div>
         {/* <img
           src="https://cdn.pfps.gg/banners/5980-pepe.png"
           alt=""
