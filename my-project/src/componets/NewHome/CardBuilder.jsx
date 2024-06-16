@@ -21,7 +21,7 @@ function CardBuilder(props) {
     //we check to see if image url is valid if it valid we should get a 200 response if not we get 404 etc
     const res = await fetch(url);
     console.log(await res.status);
-    if (res.status === 200) {
+    if (res.status !== 404) {
       setUrl(imgUrl);
     } else {
       setUrl("https://sudoswap.xyz/assets/img/emptyProfile.svg");
