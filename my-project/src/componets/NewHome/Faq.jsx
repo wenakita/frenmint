@@ -2,7 +2,7 @@ import React from "react";
 
 function Faq() {
   return (
-    <div className=" w-screen">
+    <div className=" w-[80%] me-auto md:w-[80%] lg:w-[90%] xl:w-[80%] ms-auto ">
       <div className="collapse collapse-plus bg-neutral-950 border border-stone-900 ">
         <input type="radio" name="my-accordion-3" defaultChecked />
         <div className="collapse-title text-sm font-bold">What's Frenmint?</div>
