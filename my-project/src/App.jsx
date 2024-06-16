@@ -20,7 +20,7 @@ function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Portal />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<NewHomePage />} />
           <Route path="/friend/:address" element={<Friend />} />
           <Route path="/balances" element={<BalancesPage />} />
           <Route path="/my-pools" element={<MyPools />} />
@@ -28,7 +28,6 @@ function App() {
           <Route path="/swap" element={<UniversalSwap />} />
           <Route path="/new" element={<NewBalances />} />
           <Route path="/newswap" element={<NewSwap />} />
-          <Route path="/newhome" element={<NewHomePage />} />
 
           <Route path="/pool/:id" element={<Pool />} />
 
