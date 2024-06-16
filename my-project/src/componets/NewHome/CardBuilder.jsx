@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { uintFormat } from "../../requests/friendCalls";
 import { Link } from "react-router-dom";
 import { MdVerified } from "react-icons/md";
@@ -14,14 +14,19 @@ function CardBuilder(props) {
   const { data, isHero } = props;
   const [url, setUrl] = useState(null);
   console.log(data);
-  if (data) {
+  // if (data) {
+  //   test(data?.ftPfpUrl);
+  // }
+  useEffect(() => {
+    console.log(data);
     test(data?.ftPfpUrl);
-  }
+  }, [data]);
   async function test(imgUrl) {
+    console.log("here");
     //we check to see if image url is valid if it valid we should get a 200 response if not we get 404 etc
     const res = await fetch(url);
     console.log(await res.status);
-    if (res.status !== 404) {
+    if (res.status == 200) {
       setUrl(imgUrl);
     } else {
       setUrl("https://sudoswap.xyz/assets/img/emptyProfile.svg");
