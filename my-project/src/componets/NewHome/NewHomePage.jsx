@@ -52,7 +52,7 @@ function NewHomePage() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, [1500]);
+    }, [2500]);
   }, [recentTxs]);
   return (
     <div>
