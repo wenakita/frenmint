@@ -12,7 +12,7 @@ function Hero(props) {
   return (
     <div className=" p-2 md:w-screen w-screen">
       <div className="grid sm:grid-cols-2 gap-2 ">
-        <div className=" text-center font-bold font-mono mt-auto mb-auto p-5 lg:p-20 md:p-10">
+        <div className=" text-center font-bold font-mono mt-auto mb-auto  p-5 lg:p-20 md:p-10">
           <h3 className="text-white text-[18px] md:text-[25px] lg:text-[30px]">
             Empower Liquidity Through SocialFi
           </h3>

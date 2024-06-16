@@ -186,3 +186,28 @@ export async function getSingleSellNftPrice(
     console.log(error);
   }
 }
+
+export async function getSharePrice(
+  readContract,
+  config,
+  abi,
+  shareAddress,
+  amount
+) {
+  try {
+    const price = await readContract(config, {
+      address: "0xCF205808Ed36593aa40a44F10c7f7C2F67d4A4d4",
+      abi: abi,
+      functionName: "getBuyPrice",
+      args: [shareAddress, amount],
+    });
+    const answer = Number(price) / 10 ** 18;
+    //index 0 is the error (ignore), index 1, is the new spot price after the buy is complete, index 2 is the new delta, index 3 is the goddog price to buy the share currently, index 4 is the protocol fee charged, index 5 is the royalty amount is zero
+
+    setTimeout(() => {
+      return answer;
+    }, [1000]);
+  } catch (error) {
+    console.log(error);
+  }
+}

@@ -56,7 +56,13 @@ function FriendActivity(props) {
           </div>
         </>
       ) : (
-        <>empty</>
+        <div className="flex justify-center mt-56 mb-10">
+          <img
+            src="https://www.friend.tech/friendtechlogo.png"
+            alt=""
+            className="w-20 h-20 animate-bounce"
+          />
+        </div>
       )}
     </div>
   );
