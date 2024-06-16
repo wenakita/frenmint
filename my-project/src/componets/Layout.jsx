@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import RecentTx from "./RecentTx";
 import LiveChat from "./LiveChat";
+import NewNavigation from "./NewHome/NewNavigation";
+import TopSlider from "./NewHome/TopSlider";
 function Layout() {
   const navigate = useNavigate();
   const params = useParams();
@@ -20,15 +22,16 @@ function Layout() {
   }, [authenticated, wallet]);
   return (
     <div className="container">
-      <div className="flex justify-center">
-        {authenticated && wallet ? <NavBar /> : null}
+      <div className="">
+        <NewNavigation />
       </div>
+      {/* {authenticated && wallet ? <NavBar /> : null} */}
 
       {authenticated && wallet ? (
         <>
-          <div className="flex justify-end me-[80px] sm:me-[120px] md:me-[200px] lg:me-[310px] xl:me-[440px]">
+          {/* <div className="flex justify-end me-[80px] sm:me-[120px] md:me-[200px] lg:me-[310px] xl:me-[440px]">
             <LiveChat />
-          </div>
+          </div> */}
         </>
       ) : null}
       <div className="">
@@ -38,18 +41,6 @@ function Layout() {
       <div className="">
         <Outlet />
       </div>
-      {/* <footer className="mt-5 border border-slate-500 p-2">
-        <div className="flex justify-between">
-          <img
-            src="https://dd.dexscreener.com/ds-data/tokens/base/0xddf7d080c82b8048baae54e376a3406572429b4e.png?size=lg&key=18ea46"
-            alt=""
-            className="w-10 h-10"
-          />
-          <h3 className="text-white font-mono text-[10px] mt-3">
-            @2024 Goddog
-          </h3>
-        </div>
-      </footer> */}
     </div>
   );
 }
