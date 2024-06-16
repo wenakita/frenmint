@@ -44,7 +44,11 @@ function CardBuilder(props) {
             className={`relative ${isHero ? "md:w-full md:flex-shrink-0" : "w-full md:flex-shrink-0 md:mr-4 "}`}
           >
             <Link to={`/friend/${data?.address}`}>
-              <img src={url} alt="" className={`rounded-lg w-full h-full `} />
+              <img
+                src={data.ftPfpUrl}
+                alt=""
+                className={`rounded-lg w-full h-full `}
+              />
               <span
                 className={`absolute top-0 right-0  badge badge-dark rounded-sm border border-stone-700 text-[10px]`}
               >
