@@ -228,7 +228,6 @@ function NewNavigation() {
           </div>
         </div>
       </dialog>
-      ;
     </>
   );
 }
