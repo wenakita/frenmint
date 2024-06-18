@@ -50,7 +50,12 @@ function NewSwap() {
   useEffect(() => {
     if (location?.state !== null) {
       console.log(location?.state);
-      setCurrentShare(location?.state?.data);
+      if (location?.state?.data !== null) {
+        setCurrentShare(location?.state?.data);
+      }
+      if (location?.state?.userData !== null) {
+        setCurrentShare(location?.state?.userData);
+      }
     } else if (location?.state === null) {
       getGoddogShareInfo();
     }

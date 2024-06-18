@@ -5,3 +5,11 @@
 .swiper-pagination-bullets {
   display: none;
 }
+
+.custom-collapse .ant-collapse-content {
+  border-top-color: "black"; /* or use your specific color */
+}
+
+.custom-collapse .ant-collapse-header {
+  border-bottom-color: "black";
+}

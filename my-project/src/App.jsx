@@ -14,6 +14,7 @@ import NotFound from "./componets/NotFound";
 import NewBalances from "./componets/NewBalances";
 import NewSwap from "./componets/swap/NewSwap";
 import NewHomePage from "./componets/NewHome/NewHomePage";
+import NewFriend from "./componets/friend/NewFriend";
 function App() {
   return (
     <HashRouter>
@@ -21,13 +22,14 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Portal />} />
           <Route path="/home" element={<NewHomePage />} />
-          <Route path="/friend/:address" element={<Friend />} />
+          <Route path="/friend/:address" element={<NewFriend />} />
           <Route path="/balances" element={<BalancesPage />} />
           <Route path="/my-pools" element={<MyPools />} />
           <Route path="/pools" element={<FriendTechPools />} />
           <Route path="/swap" element={<UniversalSwap />} />
           <Route path="/new" element={<NewBalances />} />
           <Route path="/newswap" element={<NewSwap />} />
+          {/* <Route path="/newfriend/:address" element={<NewFriend />} /> */}
 
           <Route path="/pool/:id" element={<Pool />} />
 
