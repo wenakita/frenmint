@@ -17,7 +17,6 @@ import friendTechABI from "../../abi/FriendTechABi";
 import { parseEther } from "ethers/lib/utils";
 import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
-import { Button, Modal, Result } from "antd";
 
 function Swapper(props) {
   const {
@@ -380,31 +379,6 @@ function Swapper(props) {
           </div>
         </div>
       </dialog>
-      {/* <div className="bg-stone-900">
-        <Modal
-          title="Basic Modal"
-          open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          bodyProps={{
-            backgroundColor: "black",
-          }}
-        >
-          <Result
-            status="success"
-            title="Successfully Purchased Cloud Server ECS!"
-            subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
-            extra={[
-              <Button type="primary" key="console">
-                View Wallet
-              </Button>,
-              <Button key="buy" className="">
-                Buy Again
-              </Button>,
-            ]}
-          />
-        </Modal>
-      </div> */}
     </div>
   );
 }

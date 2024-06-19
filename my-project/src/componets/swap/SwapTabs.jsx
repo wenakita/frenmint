@@ -83,6 +83,19 @@ function SwapTabs(props) {
         >
           Swap
         </button>
+        {/* <button
+          className={`${viewPoolCreator && `bg-stone-800 border border-transparent rounded-full text-center text-stone-300 `} hover:text-stone-600 p-1`}
+          onClick={() => {
+            setViewChart(false);
+            setViewSwap(false);
+            setViewPools(false);
+            setViewSend(false);
+
+            setViewPoolCreator(true);
+          }}
+        >
+          Pods
+        </button> */}
       </div>
     </div>
   );
