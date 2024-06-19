@@ -44,19 +44,6 @@ function Swapper(props) {
   });
   const [ethBalance, setEthBalance] = useState(null);
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
   console.log(Number(ethBal?.data?.formatted).toFixed(6));
   useEffect(() => {
     fetchFrenmintUsers();
