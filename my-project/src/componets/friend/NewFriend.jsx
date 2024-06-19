@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { SearchByContract } from "../../requests/friendCalls";
 import { MdVerified } from "react-icons/md";
 import { uintFormat } from "../../requests/friendCalls";
-import { FaEthereum } from "react-icons/fa6";
+import { FaChartArea, FaEthereum } from "react-icons/fa6";
 import { FaUserFriends } from "react-icons/fa";
 import { IoIosHeart } from "react-icons/io";
 import { GrContactInfo } from "react-icons/gr";
@@ -37,8 +37,6 @@ function NewFriend() {
   const { address } = useParams();
 
   useEffect(() => {
-    setLoading(true);
-
     fetchUser();
     setTimeout(() => {
       setLoading(false);
@@ -245,8 +243,13 @@ function NewFriend() {
     return null;
   };
 
+  const [currentVW, setCurrentVW] = useState(null);
+  useEffect(() => {
+    console.log(currentVW);
+  }, [currentVW]);
+
   return (
-    <div className=" mb-10">
+    <div className={` mb-10`}>
       {loading ? (
         <div className="flex justify-center mt-56 mb-10">
           <img
@@ -289,13 +292,23 @@ function NewFriend() {
                     <FaUserFriends className="text-gray-400 mt-[2.3px]" />
                     <h3>{userData?.holderCount}</h3>
                   </div>
+                  <button
+                    className="border border-stone-800 border-[1.3px] flex justify-center gap-1 text-[10px] p-0.5 rounded-xl w-[70px]"
+                    onClick={() =>
+                      document.getElementById("my_modal_12").showModal()
+                    }
+                  >
+                    <FaChartArea className=" mt-[3px]" />
+
+                    <h3 className="text-[10px] font-semibold">Chart</h3>
+                  </button>
                 </div>
               </div>
               <div className=" w-full p-2 md:p-0 md:mt-0 ">
                 <img
                   src={userData?.ftPfpUrl}
                   alt=""
-                  className="ms-auto me-auto w-[80%] md:w-[340px] lg:w-[380px] border border-transparent rounded-lg"
+                  className="ms-auto me-auto w-[80%] md:w-[300px] lg:w-[380px] border border-transparent rounded-lg"
                 />
                 <div className="hidden md:block mt-3 w-full md:w-[380px] lg:w-[420px] ms-auto me-auto text-[10px] bg-stone-950 border border-neutral-800 rounded-lg">
                   <Collapse
@@ -312,97 +325,120 @@ function NewFriend() {
                   />
                 </div>
               </div>
-              <div className=" p-2 ">
-                <div className="hidden md:block">
-                  <div className="grid grid-flow-row mb-2 p-2">
-                    <div className=" ">
-                      <div className="gap-1 flex justify-start text-white font-bold text-[11px]">
+              <div className="p-2 ">
+                <div className="hidden md:block  p-4">
+                  <div className="flex font-bold gap-1">
+                    <img
+                      src="https://nft-media.defined.fi/contract/image/d90167bb7bd067e39f2d3fdaaf1220c3.png"
+                      alt=""
+                      className=" size-5"
+                    />
+                    <h3 className="text-white text-[12px] mt-0.5">
+                      Friend.tech share
+                    </h3>
+                    <MdVerified className="text-blue-500 size-4.5 mt-0.5" />
+                  </div>
+                  <div className="mt-2 text-[17px]">
+                    <div className="flex gap-1">
+                      <h3 className="text-white font-bold ">
                         {userData?.ftName}
-                        <MdVerified className="text-blue-500 size-4" />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-start  text-[11px] font-light">
-                        <h3 className="text-gray-400 font-light text-[10px] mt-[0.8px]">
-                          Share Price
-                        </h3>
-                        <span className="ms-0.5 flex">
-                          <FaEthereum className="mt-1 text-gray-500 text-[10px]" />
-                          <h3 className="text-[10px] mt-[1px]">
-                            {uintFormat(userData?.displayPrice).toFixed(3)}
-                          </h3>
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex justify-start mt-2 gap-2">
-                      <button className="border border-stone-800 border-[1.3px] flex justify-center gap-1 text-[10px] p-0.5 rounded-xl w-[70px]">
-                        <IoIosHeart className="text-red-300 mt-[2.3px]" />
-                        <h3>{userData?.followerCount}</h3>
-                      </button>
-
-                      <div className="border border-stone-800 border-[1.3px] flex justify-center gap-1 text-[10px] p-0.5 rounded-xl w-[70px]">
-                        <FaUserFriends className="text-gray-400 mt-[2.3px]" />
-                        <h3>{userData?.holderCount}</h3>
-                      </div>
-                    </div>
-                    <div className="p-2 mt-2">
-                      <div className="flex justify-start text-white font-bold text-[20px]">
-                        {hoverPrice !== null
-                          ? `${hoverPrice} Ξ`
-                          : `${uintFormat(userData?.displayPrice)} Ξ`}
-                      </div>
-                      <div className="flex justify-start text-stone-400 font-bold text-[10px]">
-                        {hoverDate
-                          ? hoverDate
-                          : new Date().toString().slice(0, 16)}
-                      </div>
+                      </h3>
+                      <h3 className="text-white font-bold">#{userData?.id}</h3>
                     </div>
                   </div>
-                  <div>
-                    <ResponsiveContainer height={380} className={"mx-auto"}>
-                      <AreaChart
-                        data={txData}
-                        margin={{ top: 10, right: 30, bottom: 20, left: 20 }}
-                      >
-                        <defs>
-                          <linearGradient
-                            id="chartColor"
-                            x1="0"
-                            y1="0"
-                            x2="0"
-                            y2="1"
-                          >
-                            <stop
-                              offset="5%"
-                              stopColor={"#32e81"}
-                              stopOpacity={0.8}
-                            />
-                            <stop
-                              offset="95%"
-                              stopColor={"#312e81"}
-                              stopOpacity={0}
-                            />
-                          </linearGradient>
-                        </defs>
-                        <XAxis dataKey="fullDate" tick={false} />
+                  <div className="mt-4">
+                    <div className="flex justify-between">
+                      <div className="flex gap-3">
+                        <div className="indicator">
+                          <span className="indicator-item indicator-bottom">
+                            <MdVerified className="text-blue-600 size-3 mb-3" />
+                          </span>
+                          <img
+                            src={userData?.twitterPfpUrl}
+                            alt=""
+                            className="size-8 rounded-full"
+                          />
+                        </div>
+                        {userData?.twitterUsername ? (
+                          <div className="grid grid-rows-1 text-[12px]">
+                            <div className="font-bold">Creator</div>
+                            <div className="text-white font-bold">
+                              {userData?.twitterUsername}
+                            </div>
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="flex gap-2 me-7">
+                        <div className="border border-transparent rounded-full bg-gradient-to-r from-pink-500 to-rose-500 p-4 h-3"></div>
+                        <div className="grid grid-rows-1 text-[12px]">
+                          <div className="font-bold">Contract</div>
+                          <div className="text-white font-bold">
+                            {userData?.address.slice(0, 2) +
+                              "..." +
+                              userData?.address.slice(
+                                userData?.address?.length - 4,
+                                userData?.address.length
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex justify-start gap-3">
+                      <div className="flex text-[14px] gap-1 mt-1 border border-stone-800 rounded-full w-[70px] place-content-center">
+                        <IoIosHeart className="text-red-300 mt-[2.3px]" />
 
-                        <Tooltip
-                          content={<CustomTooltip />}
-                          contentStyle={{ backgroundColor: "#111827" }}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="priceAtDate"
-                          stroke="#312e81"
-                          fill="url(#chartColor)"
-                          fillOpacity={1}
-                          strokeWidth={1}
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                        <h3 className="text-[12px] font-semibold">
+                          {userData?.followerCount}
+                        </h3>
+                      </div>
+                      <div className="flex text-[14px] gap-1 mt-1  border border-stone-800 rounded-full w-[70px] place-content-center">
+                        <FaUserFriends className=" mt-[2.3px]" />
+
+                        <h3 className="text-[12px] font-semibold">
+                          {userData?.holderCount}
+                        </h3>
+                      </div>
+                      <button
+                        className="flex text-[10px] gap-1 mt-1  border border-stone-800 rounded-full w-[70px] place-content-center"
+                        onClick={() =>
+                          document.getElementById("my_modal_12").showModal()
+                        }
+                      >
+                        <FaChartArea className=" mt-[4px]" />
+
+                        <h3 className="text-[12px] font-semibold">Chart</h3>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="mt-10 border border-transparent bg-neutral-900 rounded-lg p-3">
+                    <div className="border border-transparent rounded-lg bg-neutral-900 p-2">
+                      <div className="text-[12px] font-semibold">
+                        <h3>Price</h3>
+                        <div className="flex gap-1">
+                          <div className="flex">
+                            <FaEthereum className="mt-1 text-[18px] text-gray-500" />
+                            <h3 className="text-gray-200 font-bold mt-[3px] text-[14px]">
+                              {uintFormat(userData?.displayPrice).toFixed(3)}
+                            </h3>
+                          </div>
+                          <h3 className="text-[8px] mt-[9px] ms-0.5">
+                            {"($" +
+                              Number(
+                                uintFormat(userData?.displayPrice) * ethPrice
+                              ).toFixed(2) +
+                              ")"}
+                          </h3>
+                        </div>
+                      </div>
+                      <div className="mt-2">
+                        <button className="text-[12px] border w-full bg-white hover:bg-stone-400 text-black font-bold rounded-lg border-stone-700 h-[30px]">
+                          Mint
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="border border-stone-800 bg-gradient-to-r from-stone-950 to-neutral-900 rounded-lg p-3 w-full md:w-[370px] lg:w-[500px] ms-auto me-auto">
+                <div className="md:hidden border border-stone-800 bg-gradient-to-r from-stone-950 to-neutral-900 rounded-lg p-3 w-full md:w-[370px] lg:w-[500px] ms-auto me-auto">
                   <div className="flex gap-1">
                     <img
                       src={userData?.ftPfpUrl}
@@ -471,6 +507,58 @@ function NewFriend() {
           )}
         </>
       )}
+      <dialog id="my_modal_12" className="modal">
+        <div className="modal-box bg-stone-950">
+          <h3 className="font-bold text-lg">{userData?.ftName}</h3>
+          <div>
+            <div className="p-2 mt-2">
+              <div className="flex justify-start text-white font-bold text-[20px]">
+                {hoverPrice !== null
+                  ? `${hoverPrice} Ξ`
+                  : `${uintFormat(userData?.displayPrice)} Ξ`}
+              </div>
+              <div className="flex justify-start text-stone-400 font-bold text-[10px]">
+                {hoverDate ? hoverDate : new Date().toString().slice(0, 16)}
+              </div>
+            </div>
+            <ResponsiveContainer height={300} className={"mx-auto"}>
+              <AreaChart
+                data={txData}
+                margin={{
+                  top: 10,
+                  right: 30,
+                  bottom: 20,
+                  left: 20,
+                }}
+              >
+                <defs>
+                  <linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={"#32e81"} stopOpacity={0.8} />
+                    <stop offset="95%" stopColor={"#312e81"} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="fullDate" className="text-[8px]" />
+
+                <Tooltip
+                  content={<CustomTooltip />}
+                  contentStyle={{ backgroundColor: "#111827" }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="priceAtDate"
+                  stroke="#312e81"
+                  fill="url(#chartColor)"
+                  fillOpacity={1}
+                  strokeWidth={1}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     </div>
   );
 }
@@ -478,40 +566,60 @@ function NewFriend() {
 export default NewFriend;
 
 {
-  /* <ResponsiveContainer height={400} className={"mx-auto"}>
-                <AreaChart
-                  data={txData}
-                  margin={{ top: 10, right: 30, bottom: 20, left: 20 }}
-                >
-                  <defs>
-                    <linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="5%"
-                        stopColor={"#312e81"}
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor={"#312e81"}
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <XAxis
-                    dataKey="fullDate"
-                    tick={false}
-                    className="font-bold"
-                  />
+  /* <div className="p-2 mt-2">
+                      <div className="flex justify-start text-white font-bold text-[20px]">
+                        {hoverPrice !== null
+                          ? `${hoverPrice} Ξ`
+                          : `${uintFormat(userData?.displayPrice)} Ξ`}
+                      </div>
+                      <div className="flex justify-start text-stone-400 font-bold text-[10px]">
+                        {hoverDate
+                          ? hoverDate
+                          : new Date().toString().slice(0, 16)}
+                      </div>
+                    </div> */
+}
 
-                  <Tooltip contentStyle={{ backgroundColor: "#111827" }} />
-                  <Area
-                    type="monotone"
-                    dataKey="priceAtDate"
-                    stroke="#312e81"
-                    fill="url(#chartColor)"
-                    fillOpacity={1}
-                    strokeWidth={0.5}
-                  />
-                </AreaChart>
-              </ResponsiveContainer> */
+{
+  /* <ResponsiveContainer height={300} className={"mx-auto"}>
+                      <AreaChart
+                        data={txData}
+                        margin={{ top: 10, right: 30, bottom: 20, left: 20 }}
+                      >
+                        <defs>
+                          <linearGradient
+                            id="chartColor"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
+                            <stop
+                              offset="5%"
+                              stopColor={"#32e81"}
+                              stopOpacity={0.8}
+                            />
+                            <stop
+                              offset="95%"
+                              stopColor={"#312e81"}
+                              stopOpacity={0}
+                            />
+                          </linearGradient>
+                        </defs>
+                        <XAxis dataKey="fullDate" tick={false} />
+
+                        <Tooltip
+                          content={<CustomTooltip />}
+                          contentStyle={{ backgroundColor: "#111827" }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="priceAtDate"
+                          stroke="#312e81"
+                          fill="url(#chartColor)"
+                          fillOpacity={1}
+                          strokeWidth={1}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer> */
 }
