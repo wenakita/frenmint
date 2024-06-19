@@ -380,7 +380,7 @@ function Swapper(props) {
           </div>
         </div>
       </dialog>
-      <div className="bg-stone-900">
+      {/* <div className="bg-stone-900">
         <Modal
           title="Basic Modal"
           open={isModalOpen}
@@ -404,7 +404,7 @@ function Swapper(props) {
             ]}
           />
         </Modal>
-      </div>
+      </div> */}
     </div>
   );
 }
