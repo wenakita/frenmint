@@ -10,6 +10,8 @@ import { GrContactInfo } from "react-icons/gr";
 import { Collapse, theme } from "antd";
 import { GoLinkExternal } from "react-icons/go";
 import { getShareChartData } from "../../requests/friendCalls";
+import _ from "lodash";
+
 import {
   ResponsiveContainer,
   AreaChart,
@@ -50,7 +52,9 @@ function NewFriend() {
     const txs = await getShareChartData(address);
     console.log(txs);
     console.log(res);
-    setTxData(txs);
+    const orderedPriceHistory = _.orderBy(txs, ["date"]);
+
+    setTxData(orderedPriceHistory);
     setUserData(res);
   }
 
@@ -509,7 +513,14 @@ function NewFriend() {
       )}
       <dialog id="my_modal_12" className="modal">
         <div className="modal-box bg-stone-950">
-          <h3 className="font-bold text-lg">{userData?.ftName}</h3>
+          <div className="flex gap-1">
+            <img
+              src={userData?.ftPfpUrl}
+              alt=""
+              className="size-5 rounded-full mt-1"
+            />
+            <h3 className="font-bold text-lg">{userData?.ftName}</h3>
+          </div>
           <div>
             <div className="p-2 mt-2">
               <div className="flex justify-start text-white font-bold text-[20px]">
