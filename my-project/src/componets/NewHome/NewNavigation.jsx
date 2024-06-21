@@ -72,6 +72,9 @@ function NewNavigation() {
                   Whitepaper
                 </Link>
               </li>
+              <li className="">
+                <Link to={"/my-pools"}>my pool</Link>
+              </li>
               <li>
                 <Link
                   to={"https://telegra.ph/What-is-FrenMint-06-03"}
@@ -79,6 +82,9 @@ function NewNavigation() {
                 >
                   Frenmint docs
                 </Link>
+              </li>
+              <li>
+                <Link to={"/my-pools"}>Manage Pools</Link>
               </li>
 
               <li>

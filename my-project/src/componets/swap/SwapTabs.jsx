@@ -12,6 +12,10 @@ function SwapTabs(props) {
     setViewPools,
     viewSend,
     setViewSend,
+    setViewPods,
+    viewPods,
+    viewLending,
+    setViewLending,
   } = props;
   console.log(viewSwap);
   return (
@@ -83,19 +87,19 @@ function SwapTabs(props) {
         >
           Swap
         </button>
-        {/* <button
-          className={`${viewPoolCreator && `bg-stone-800 border border-transparent rounded-full text-center text-stone-300 `} hover:text-stone-600 p-1`}
+        <button
+          className={`${viewPods && `bg-stone-800 border border-transparent rounded-full text-center text-stone-300 `} hover:text-stone-600 p-1`}
           onClick={() => {
             setViewChart(false);
             setViewSwap(false);
             setViewPools(false);
             setViewSend(false);
-
-            setViewPoolCreator(true);
+            setViewPoolCreator(false);
+            setViewPods(true);
           }}
         >
           Pods
-        </button> */}
+        </button>
       </div>
     </div>
   );

@@ -1,3 +1,31 @@
+import { readContract } from "@wagmi/core";
+import { config } from "../config";
+import PodsPoolABI from "../abi/PodsPoolABI";
+const podsPoolCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
+const podsIndexFundCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
+const goddogTokenCA = "0xddf7d080c82b8048baae54e376a3406572429b4e";
+const dogGodCA = "0xB846dc079E2A0eEad8A3173Eeaa0f1607b67E27a";
+const bondMinAmount = "21700";
+const exhangeRate = 1.035043; // price per poooOOO to caluclate divide amount to deposit by goddog price to find usd value then
+//deposit amount in usd/ exchange rate
+export async function getPoolFees() {
+  try {
+    const feeResults = await readContract(config, {
+      address: podsPoolCA,
+      abi: PodsPoolABI,
+      functionName: "fees",
+      args: [],
+    });
+    console.log(feeResults);
+    return feeResults;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function bondGoddog() {}
+export async function unBondGoddog() {}
+
 export async function aprroveGoddog() {}
 
 export async function wrapToken(

@@ -23,6 +23,7 @@ import { useLocation } from "react-router-dom";
 import ShareSender from "./ShareSender";
 import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
+import Pods from "./Pods";
 
 function NewSwap() {
   const location = useLocation();
@@ -34,6 +35,8 @@ function NewSwap() {
   const [viewChart, setViewChart] = useState(false);
   const [viewPoolCreator, setViewPoolCreator] = useState(false);
   const [viewSend, setViewSend] = useState(false);
+  const [viewPods, setViewPods] = useState(false);
+  const [viewLending, setViewLending] = useState(false);
 
   const [currentShare, setCurrentShare] = useState(null);
   const [currentSharePrice, setCurrentSharePrice] = useState(null);
@@ -127,6 +130,10 @@ function NewSwap() {
           viewPools={viewPools}
           setViewSend={setViewSend}
           viewSend={viewSend}
+          viewLending={viewLending}
+          setViewLending={setViewLending}
+          setViewPods={setViewPods}
+          viewPods={viewPods}
         />
       </div>
       <div className="  mx-auto">
@@ -168,7 +175,9 @@ function NewSwap() {
                       <>
                         {viewSend ? (
                           <ShareSender holdingsData={holdingsData} />
-                        ) : null}
+                        ) : (
+                          <>{viewPods ? <Pods /> : null}</>
+                        )}
                       </>
                     )}
                   </>

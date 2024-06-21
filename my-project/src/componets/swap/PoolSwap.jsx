@@ -318,9 +318,16 @@ function PoolSwap(props) {
   }
   return (
     <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
-      <h3 className="text-white text-[12px] font-bold p-2">
-        {buyFromPool ? "Buy" : "Sell"}
-      </h3>
+      <div className="flex p-2 gap-1">
+        <img
+          src="https://avatars.githubusercontent.com/u/94413972?s=280&v=4"
+          alt=""
+          className="size-5 "
+        />
+        <h3 className="text-white text-[12px] font-bold">
+          {buyFromPool ? "Buy" : "Sell"}
+        </h3>
+      </div>
       <div className="grid grid-rows-2 gap-y-4 p-1">
         <div className="border p-2 rounded-lg border-neutral-700 text-white font-mono font-bold text-[12px]">
           <h3>{buyFromPool ? "You buy" : "You Sell"}</h3>

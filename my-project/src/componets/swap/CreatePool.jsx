@@ -330,13 +330,9 @@ function CreatePool(props) {
           <button
             className="w-full border text-[10px] border-neutral-700 p-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-bold"
             onClick={() => {
-              if (Number(depositAmount) >= 4) {
-                console.log("hey");
-                createPool();
-                setMessgae(null);
-              } else {
-                setMessgae("Minimum is 4 shares");
-              }
+              console.log("hey");
+              createPool();
+              setMessgae(null);
             }}
           >
             Provide Liquidity

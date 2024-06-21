@@ -10,8 +10,10 @@ import {
   FaRankingStar,
 } from "react-icons/fa6";
 import { FaUserFriends } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 function CardBuilder(props) {
-  const { data, isHero } = props;
+  const navigate = useNavigate();
+  const { data, isHero, isBalance } = props;
   const [url, setUrl] = useState(null);
   console.log(data);
   // if (data) {
@@ -40,7 +42,7 @@ function CardBuilder(props) {
     <>
       {data ? (
         <div
-          className={` card ${isHero ? "w-[200px] md:w-[205px] lg:w-[250px] mx-auto shadow-lg " : "w-full"} shadow-xl  md:mt-0 bg-gradient-to-tr from-stone-950 to-neutral-950 border border-stone-900 `}
+          className={` card ${isHero ? "w-[200px] md:w-[205px] lg:w-[250px] mx-auto shadow-lg " : isBalance ? "w-full h-[250px]" : "w-full"} shadow-xl  md:mt-0 bg-gradient-to-tr from-stone-950 to-neutral-950 border border-stone-900 `}
         >
           <div className=" w-full card-body rounded-lg mx-auto p-2">
             <figure
@@ -60,7 +62,7 @@ function CardBuilder(props) {
               </Link>
             </figure>
 
-            <div className="p-3 rounded-lg">
+            <div className={isBalance ? `p-2 rounded-lg` : `p-3 rounded-lg`}>
               <div className="flex justify-start gap-1 md:p-2">
                 <Link
                   to={`/friend/${data?.address}`}
@@ -77,6 +79,16 @@ function CardBuilder(props) {
                 </h3>
               </div>
             </div>
+            {isBalance ? (
+              <div className="">
+                <button
+                  onClick={() => navigate(`/newswap`, { state: data })}
+                  className=" text-[9px] font-bold p-1 w-full border bg-gray-200 text-black border-neutral-900 rounded-lg hover:bg-stone-400"
+                >
+                  Mint
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
       ) : null}{" "}

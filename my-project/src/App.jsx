@@ -29,6 +29,7 @@ function App() {
           <Route path="/swap" element={<UniversalSwap />} />
           <Route path="/new" element={<NewBalances />} />
           <Route path="/newswap" element={<NewSwap />} />
+
           {/* <Route path="/newfriend/:address" element={<NewFriend />} /> */}
 
           <Route path="/pool/:id" element={<Pool />} />

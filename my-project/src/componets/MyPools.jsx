@@ -210,16 +210,7 @@ function MyPools() {
               style={{ maxWidth: "80%" }}
             />
           </div> */}
-          <div className="text-center font-mono font-bold text-white text-[20px]">
-            Shares Owned:
-          </div>
-          <center className="mt-10 mb-10">
-            <Balances
-              setter={setSelectedShare}
-              setOpen={setOpen}
-              info={setShareInfo}
-            />
-          </center>
+
           <div className="text-center font-mono font-bold text-white text-[20px]">
             Pools Owned:
           </div>

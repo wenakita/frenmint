@@ -28,8 +28,10 @@ import {
 } from "@heroicons/react/16/solid";
 import { parseEther } from "viem";
 import { Link } from "react-router-dom";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 function Pools(props) {
+  const [currentPool, setCurrentPool] = useState(null);
   const [poolData, setPoolData] = useState([]);
   const friendWrapperContract = "0xbeea45F16D512a01f7E2a3785458D4a7089c8514";
   const goddogContract = "0xddf7d080c82b8048baae54e376a3406572429b4e";
@@ -307,7 +309,7 @@ function Pools(props) {
     <center
       className={
         displayPools
-          ? `overflow-auto h-[270px] w-[410px] border border-slate-500 rounded-xl p-3 ms-[10px] me-5 mb-10`
+          ? `grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center`
           : null
       }
     >
@@ -317,391 +319,103 @@ function Pools(props) {
             return (
               <div
                 key={item}
-                className="border border-slate-500 p-2 w-[320px] rounded-xl mt-3"
+                className="w-[180px] md:w-[200px] card rounded-lg mx-auto p-2 border border-neutral-800 bg-gradient-to-tr from-stone-950 to-neutral-950 rounded-xl mt-3"
               >
-                <div className="p-2">
-                  <div>
-                    <div className=" text-white gap-2">
+                <div className="">
+                  <div className=" text-white gap-2">
+                    <figure className={`relative "w-full}`}>
                       <Link
                         to={`/friend/${item?.poolData?.shareData?.address}`}
-                        className="text-white text-[10px] mt-2 hover:underline flex justify-start gap-2"
+                        className="text-white text-[10px] hover:underline  "
                       >
                         <img
                           src={item?.poolData?.shareData?.ftPfpUrl}
                           alt=""
-                          className="w-8 h-8 rounded-full"
+                          className="w-full h-full rounded-lg  "
                         />
-                        <h3 className="mt-2">
-                          {item?.poolData?.shareData?.ftName}
-                        </h3>
                       </Link>
+                      <span
+                        className={`absolute top-0 right-0 badge badge-dark rounded-sm border border-stone-700 text-[10px]`}
+                      >
+                        #{item?.poolData?.shareData?.id}
+                      </span>
+                    </figure>
+                  </div>
+                  <div className="text-start p-2 font-mono text-[9px] card-body ">
+                    <div>
+                      {" "}
+                      <Link
+                        to={`https://sudoswap.xyz/#/manage/base/${item?.poolData?.sharePoolData?.address}`}
+                        className="font-mono hover:underline hover:text-gray-300 font-bold"
+                      >
+                        <div className="flex gap-1 ms-0.5">
+                          <FaExternalLinkAlt className="text-gray-400 mt-0.5" />
+                          {item?.poolData?.sharePoolData?.address.slice(0, 4) +
+                            "..." +
+                            item?.poolData?.sharePoolData?.address.slice(
+                              item?.poolData?.sharePoolData?.address.length - 4,
+                              item?.poolData?.sharePoolData?.address.length
+                            )}
+                        </div>
+                      </Link>{" "}
                     </div>
-                  </div>
-                  <div className="text-white text-[8px] mt-4">
-                    <Link
-                      to={`https://sudoswap.xyz/#/manage/base/${item?.poolData?.sharePoolData?.address}`}
-                      className="font-mono hover:underline hover:text-gray-300 font-bold"
-                    >
-                      Pool Ca: {item?.poolData?.sharePoolData?.address}
-                    </Link>
-                  </div>
-                  <div className="text-white text-[10px] font-mono font-bold mt-2">
-                    <h3>
-                      Share Price:{" "}
-                      {uintFormat(item?.poolData?.shareData?.displayPrice)}
-                    </h3>
-                  </div>
-                  <div className="text-white text-[10px] mt-2 font-mono font-bold">
-                    <h3>
-                      Swap Fee: %{" "}
+                    <div className="flex gap-0.5">
+                      <img
+                        src="https://dd.dexscreener.com/ds-data/tokens/base/0xddf7d080c82b8048baae54e376a3406572429b4e.png?size=lg&key=18ea46"
+                        alt=""
+                        className="size-4"
+                      />
+                      <h3 className="mt-[1px]">
+                        {uintFormat(
+                          item?.poolData?.sharePoolData?.spotPrice
+                        ).toFixed(2)}{" "}
+                      </h3>
+                    </div>
+                    <div className="ms-1">
                       {Number(
                         uintFormat(item?.poolData?.sharePoolData?.fee) * 100
-                      ).toFixed(2)}
-                    </h3>
+                      ).toFixed(1)}{" "}
+                      % Fee
+                    </div>
                   </div>
-                  <div className="text-white text-[10px] mt-2 font-mono font-bold">
-                    Bonding Curve:{" "}
-                    {item?.poolData?.sharePoolData?.bondingCurveAddress ===
-                    "0x9506c0e5cee9ad1dee65b3539268d61ccb25afb6"
-                      ? "XYK"
-                      : null}
-                  </div>
-                  <div className="mt-3 flex justify-start text-[8px] gap-2">
-                    <Menu>
-                      <MenuButton
-                        className="border text-center p-1 bg-black rounded-xl border-slate-500 "
-                        onClick={() => {
-                          getShareBalance(
-                            item?.poolData?.sharePoolData?.erc1155Id
-                          );
-                          setMessage(null);
-                        }}
-                      >
-                        Deposit Shares
-                      </MenuButton>
-                      <MenuItems anchor="top" className={"w-[170px]"}>
-                        <MenuItem className=" border border-slate-500 text-white bg-black rounded-lg ">
-                          <div>
-                            <div className="flex justify-start">
-                              <h3 className="text-[8px] text-white p-2">
-                                Deposit {item?.poolData?.shareData?.ftName}{" "}
-                                shares
-                              </h3>
-                            </div>
-                            {message ? (
-                              <div className="flex justify-center text-red-500 text-[8px]">
-                                {message}
-                              </div>
-                            ) : null}
-                            <div className="p-4">
-                              <input
-                                type="text"
-                                className="bg-stone-800 rounded-lg w-[135px] text-white text-[10px] p-0.5"
-                                onClick={(e) => {
-                                  //this prevents from th emenu closing automatically when the user clicks th einput element
-                                  e.stopPropagation();
-                                }}
-                                onChange={(e) => {
-                                  setMessage(null);
-
-                                  setSharesToDeposit(e.target.value);
-                                }}
-                              />
-                              <div className="flex justify-end">
-                                <h3 className="text-white text-[7px]">
-                                  Share Balance: {currentShareBalance}
-                                </h3>
-                              </div>
-                            </div>
-                            <div className="mt-3 flex justify-center mb-3">
-                              <button
-                                className="border text-center p-1 bg-black rounded-lg border-slate-500 text-[10px]"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-
-                                  if (
-                                    Number(sharesToDeposit) >
-                                      Number(currentShareBalance) ||
-                                    !Number(sharesToDeposit)
-                                  ) {
-                                    setMessage("Invalid Input");
-                                  } else {
-                                    depositSpecificShares(
-                                      item?.poolData?.sharePoolData?.erc1155Id,
-                                      item?.poolData?.sharePoolData?.address
-                                    );
-                                  }
-                                }}
-                              >
-                                Deposit Shares
-                              </button>
-                            </div>
-                          </div>
-                        </MenuItem>
-                      </MenuItems>
-                    </Menu>
-
-                    <Menu>
-                      <MenuButton
-                        className="border text-center p-1 bg-black rounded-xl border-slate-500 "
-                        onClick={() => {
-                          setMessage(null);
-                        }}
-                      >
-                        Deposit Goddog
-                      </MenuButton>
-                      <MenuItems anchor="top" className={"w-[170px]"}>
-                        <MenuItem className=" border border-slate-500 text-white bg-black rounded-lg ">
-                          <div>
-                            <div className="flex justify-start">
-                              <h3 className="text-[8px] text-white p-2">
-                                Deposit Goddog
-                              </h3>
-                            </div>
-                            {message ? (
-                              <div className="flex justify-center text-red-500 text-[8px]">
-                                {message}
-                              </div>
-                            ) : null}
-                            <div className="p-4">
-                              <input
-                                type="text"
-                                className="bg-stone-800 rounded-lg w-[135px] text-white text-[10px] p-0.5"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                }}
-                                onChange={(e) => {
-                                  setMessage(null);
-                                  setGoddogToDeposit(e.target.value);
-                                }}
-                              />
-                              <div className="flex justify-end">
-                                <h3 className="text-white text-[6px]">
-                                  $OOOooo Balance:{" "}
-                                  {Number(goddogBalance).toFixed(2)}
-                                </h3>
-                              </div>
-                            </div>
-                            <div className="mt-3 flex justify-center mb-3">
-                              <button
-                                className="border text-center p-1 bg-black rounded-lg border-slate-500 text-[10px]"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-
-                                  if (
-                                    Number(goddogToDeposit) >
-                                      Number(goddogBalance) ||
-                                    !Number(goddogToDeposit)
-                                  ) {
-                                    setMessage("Invalid Input");
-                                  } else {
-                                    depositGoddog(
-                                      item?.poolData?.sharePoolData?.address
-                                    );
-                                  }
-                                }}
-                              >
-                                Deposit Goddog
-                              </button>
-                            </div>
-                          </div>
-                        </MenuItem>
-                      </MenuItems>
-                    </Menu>
-                    <Menu>
-                      <MenuButton
-                        className="border text-center p-1 bg-black rounded-xl border-slate-500 "
-                        onClick={() => {
-                          setMessage(null);
-                        }}
-                      >
-                        Withdraw Shares
-                      </MenuButton>
-                      <MenuItems anchor="top" className={"w-[170px]"}>
-                        <MenuItem className=" border border-slate-500 text-white bg-black rounded-lg ">
-                          <div>
-                            <div className="flex justify-start">
-                              <h3 className="text-[8px] text-white p-2">
-                                Withdraw {item?.poolData?.shareData?.ftName}{" "}
-                                shares
-                              </h3>
-                            </div>
-                            {message ? (
-                              <div className="flex justify-center text-red-500 text-[8px]">
-                                {message}
-                              </div>
-                            ) : null}
-                            <div className="p-4">
-                              <input
-                                type="text"
-                                className="bg-stone-800 rounded-lg w-[135px] text-white text-[10px] p-0.5"
-                                onClick={(e) => {
-                                  //this prevents from th emenu closing automatically when the user clicks th einput element
-                                  e.stopPropagation();
-                                }}
-                                onChange={(e) => {
-                                  setMessage(null);
-                                  setSharesToWithdraw(e.target.value);
-                                }}
-                              />
-                              <div className="flex justify-end">
-                                <h3 className="text-white text-[7px]">
-                                  Pool Share Balance:{" "}
-                                  {Number(
-                                    item?.poolData?.sharePoolData?.nftBalance
-                                  )}
-                                </h3>
-                              </div>
-                            </div>
-                            <div className="mt-3 flex justify-center mb-3">
-                              <button
-                                className="border text-center p-1 bg-black rounded-lg border-slate-500 text-[10px]"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-
-                                  if (
-                                    Number(sharesToWithdraw) >
-                                      Number(
-                                        item?.poolData?.sharePoolData
-                                          ?.nftBalance
-                                      ) ||
-                                    !Number(sharesToWithdraw)
-                                  ) {
-                                    setMessage("Invalid Input");
-                                  } else {
-                                    withdrawSpecificShares(
-                                      item?.poolData?.sharePoolData?.erc1155Id,
-                                      item?.poolData?.sharePoolData?.address
-                                    );
-                                  }
-                                }}
-                              >
-                                Withdraw Shares
-                              </button>
-                            </div>
-                          </div>
-                        </MenuItem>
-                      </MenuItems>
-                    </Menu>
-                    <Menu>
-                      <MenuButton
-                        className="border text-center p-1 bg-black rounded-xl border-slate-500 "
-                        onClick={() => {
-                          setMessage(null);
-                        }}
-                      >
-                        Withdraw Goddog
-                      </MenuButton>
-                      <MenuItems anchor="top" className={"w-[170px]"}>
-                        <MenuItem className=" border border-slate-500 text-white bg-black rounded-lg ">
-                          <div>
-                            <div className="flex justify-start">
-                              <h3 className="text-[8px] text-white p-2">
-                                Withdraw Goddog
-                              </h3>
-                            </div>
-                            {message ? (
-                              <div className="flex justify-center text-red-500 text-[8px]">
-                                {message}
-                              </div>
-                            ) : null}
-                            <div className="p-4">
-                              <input
-                                type="text"
-                                className="bg-stone-800 rounded-lg w-[135px] text-white text-[10px] p-0.5"
-                                onClick={(e) => {
-                                  //this prevents from th emenu closing automatically when the user clicks th einput element
-                                  e.stopPropagation();
-                                }}
-                                onChange={(e) => {
-                                  setMessage(null);
-                                  setGoddogToWithdraw(e.target.value);
-                                }}
-                              />
-                              <div className="flex justify-end">
-                                <h3 className="text-white text-[7px]">
-                                  $OOOooo pool Balance:{" "}
-                                  {uintFormat(
-                                    item?.poolData?.sharePoolData?.spotPrice
-                                  ).toFixed(2)}
-                                </h3>
-                              </div>
-                            </div>
-                            <div className="mt-3 flex justify-center mb-3">
-                              <button
-                                className="border text-center p-1 bg-black rounded-lg border-slate-500 text-[10px]"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-
-                                  if (
-                                    Number(goddogToWithdraw) >
-                                      uintFormat(
-                                        item?.poolData?.sharePoolData?.spotPrice
-                                      ) ||
-                                    !Number(goddogToWithdraw)
-                                  ) {
-                                    setMessage("Invalid Input");
-                                  } else {
-                                    withdrawGoddog(
-                                      item?.poolData?.sharePoolData?.address
-                                    );
-                                  }
-                                }}
-                              >
-                                Withdraw Goddog
-                              </button>
-                            </div>
-                          </div>
-                        </MenuItem>
-                      </MenuItems>
-                    </Menu>
-                  </div>
-                  <div className="mt-2 flex justify-center text-[10px] gap-2">
-                    <Menu>
-                      <MenuButton className="border text-center p-1 bg-black rounded-lg border-slate-500 ">
-                        Transfer Ownership
-                      </MenuButton>
-                      <MenuItems anchor="top" className={"w-[170px]"}>
-                        <MenuItem className=" border border-slate-500 text-white bg-black rounded-lg ">
-                          <div>
-                            <div className="flex justify-start">
-                              <h3 className="text-[8px] text-white p-2">
-                                Transfer Pool Ownership
-                              </h3>
-                            </div>
-                            <div className="p-4">
-                              <input
-                                type="text"
-                                className="bg-stone-800 rounded-lg w-[135px] text-white text-[10px] p-0.5"
-                                onClick={(e) => {
-                                  //this prevents from th emenu closing automatically when the user clicks th einput element
-                                  e.stopPropagation();
-                                }}
-                                onChange={(e) => {
-                                  console.log(e.target.value);
-                                  setNewOwner(e.target.value);
-                                }}
-                              />
-                            </div>
-                            <div className="mt-3 flex justify-center mb-3">
-                              <button
-                                className="border text-center p-1 bg-black rounded-lg border-slate-500 text-[10px]"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  transferOwnership(
-                                    item?.poolData?.sharePoolData?.address
-                                  );
-                                }}
-                              >
-                                Transfer Ownership
-                              </button>
-                            </div>
-                          </div>
-                        </MenuItem>
-                      </MenuItems>
-                    </Menu>
+                  <div>
+                    <button
+                      className=" text-[9px] font-bold p-1 w-full border bg-gray-200 text-black border-neutral-900 rounded-lg hover:bg-stone-400"
+                      onClick={() => {
+                        setCurrentPool(item);
+                        document.getElementById("my_modal_1").showModal();
+                      }}
+                    >
+                      Manage
+                    </button>
                   </div>
                 </div>
+                <dialog id="my_modal_1" className="modal">
+                  <div className="modal-box bg-neutral-900">
+                    <h3 className="font-bold text-lg text-start">
+                      {currentPool?.poolData?.shareData?.ftName}
+                    </h3>
+                    <h3 className="text-white mt-5 mb-2 text-[8px] font-bold">
+                      Manage Pool
+                    </h3>
+                    <select
+                      name="h"
+                      id=""
+                      className="text-sm p-1 rounded-md bg-stone-950 border border-transparent hover:border-blue-500"
+                    >
+                      <option value="h">Withdraw shares</option>
+                      <option value="h">Withdraw goddog</option>
+                      <option value="h">Deposit goddog</option>
+                      <option value="h">Deposit shares</option>
+                    </select>
+                    <div className="modal-action">
+                      <form method="dialog">
+                        {/* if there is a button in form, it will close the modal */}
+                        <button className="btn">Close</button>
+                      </form>
+                    </div>
+                  </div>
+                </dialog>
               </div>
             );
           })}

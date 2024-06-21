@@ -17,6 +17,7 @@ import friendTechABI from "../../abi/FriendTechABi";
 import { parseEther } from "ethers/lib/utils";
 import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
+import { Button, Modal, Result } from "antd";
 
 function Swapper(props) {
   const {
@@ -44,6 +45,19 @@ function Swapper(props) {
   });
   const [ethBalance, setEthBalance] = useState(null);
 
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   console.log(Number(ethBal?.data?.formatted).toFixed(6));
   useEffect(() => {
     fetchFrenmintUsers();
