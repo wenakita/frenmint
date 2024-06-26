@@ -350,6 +350,13 @@ function PoolSwap(props) {
             }}
             value={input || 0}
           />
+          <div>
+            <h3 className="text-[7px]">
+              {"≈ " +
+                Number(total?.toFixed(2) * goddogPrice).toFixed(2) +
+                " USD"}
+            </h3>
+          </div>
           <button
             className="border w-[200px] rounded-md border-neutral-600 bg-stone-800 mt-1 hover:text-stone-500"
             onClick={() => document.getElementById("my_modal_1").showModal()}
