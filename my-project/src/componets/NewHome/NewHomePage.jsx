@@ -10,8 +10,10 @@ import { supabase } from "../../client";
 import Hero from "./Hero";
 import Faq from "./Faq";
 import Socials from "./Socials";
-
+import { useWalletData } from "../hooks/useWalletData";
 function NewHomePage() {
+  const testing = useWalletData();
+  console.log(testing);
   const [loading, setLoading] = useState(true);
   const [heroData, setHeroData] = useState(null);
   const [trending, setTrending] = useState(null);

@@ -47,6 +47,7 @@ function Pools(props) {
   const [sharesToWithdraw, setSharesToWithdraw] = useState(null);
   const [goddogToWithdraw, setGoddogToWithdraw] = useState(null);
   const [displayPools, setDisplayPools] = useState(false);
+  const [manageOption, setManageOption] = useState(null);
   const goddogBalanceResult = useBalance({
     address: w0?.address,
     token: "0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
@@ -393,10 +394,10 @@ function Pools(props) {
                 <dialog id="my_modal_1" className="modal">
                   <div className="modal-box bg-neutral-900">
                     <h3 className="font-bold text-lg text-start">
-                      {currentPool?.poolData?.shareData?.ftName}
+                      Manage {currentPool?.poolData?.shareData?.ftName}
                     </h3>
                     <h3 className="text-white mt-5 mb-2 text-[8px] font-bold">
-                      Manage Pool
+                      Select an option
                     </h3>
                     <select
                       name="h"
@@ -408,6 +409,7 @@ function Pools(props) {
                       <option value="h">Deposit goddog</option>
                       <option value="h">Deposit shares</option>
                     </select>
+                    <div className="text-start">hello</div>
                     <div className="modal-action">
                       <form method="dialog">
                         {/* if there is a button in form, it will close the modal */}

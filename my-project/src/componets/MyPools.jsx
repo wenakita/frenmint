@@ -251,6 +251,7 @@ function MyPools() {
                               alt=""
                               className="w-10 h-10 mb-3"
                             />{" "}
+                            https://assets.debank.com/static/media/default-avatar.a09f73f0bd88b246ceaaa182f333d440.svg
                             <img
                               src={selectedShare?.ftPfpUrl}
                               alt=""

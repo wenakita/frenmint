@@ -87,7 +87,7 @@ function SwapTabs(props) {
         >
           Swap
         </button>
-        <button
+        {/* <button
           className={`${viewPods && `bg-stone-800 border border-transparent rounded-full text-center text-stone-300 `} hover:text-stone-600 p-1`}
           onClick={() => {
             setViewChart(false);
@@ -99,7 +99,7 @@ function SwapTabs(props) {
           }}
         >
           Pods
-        </button>
+        </button> */}
       </div>
     </div>
   );

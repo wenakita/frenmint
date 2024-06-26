@@ -239,3 +239,15 @@ export async function getSharePrice(
     console.log(error);
   }
 }
+
+// async function checkGoddogApporval() {
+//   try {
+//     cosnt approvalStatus = readContract(config, {
+
+//     })
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
+
+async function checkShareAprroval() {}

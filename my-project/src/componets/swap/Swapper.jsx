@@ -18,7 +18,6 @@ import { parseEther } from "ethers/lib/utils";
 import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
 import { Button, Modal, Result } from "antd";
-
 function Swapper(props) {
   const {
     trendingFriends,
@@ -39,6 +38,7 @@ function Swapper(props) {
   const [currentTotal, setCurrentTotal] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const [currentFrenmintUser, setCurrentFrenmintUser] = useState(null);
+  const [ethPrice, setEthPrice] = useState(null);
   const ethBal = useBalance({
     address: userAddress,
     chainId: base.id,
@@ -60,6 +60,7 @@ function Swapper(props) {
   };
   console.log(Number(ethBal?.data?.formatted).toFixed(6));
   useEffect(() => {
+    getprice();
     fetchFrenmintUsers();
     setEthBalance(Number(ethBal?.data?.formatted).toFixed(6));
   }, []);
@@ -80,6 +81,11 @@ function Swapper(props) {
       calculateSellTotal();
     }
   }, [input]);
+
+  async function getprice() {
+    const res = await getEthPrice();
+    setEthPrice(res);
+  }
 
   async function fetchFrenmintUsers() {
     const { data, error } = await supabase.from("usernames").select();
@@ -257,6 +263,11 @@ function Swapper(props) {
             className="w-[350px] bg-transparent border border-transparent outline-none"
             value={currentTotal || 0}
           />
+          <div>
+            <h3 className="text-[7px]">
+              {"≈ " + Number(currentTotal * ethPrice).toFixed(2) + " USD"}
+            </h3>
+          </div>
           <button className="border w-[200px] rounded-md border-neutral-600 bg-stone-800 mt-1 hover:text-stone-500">
             <div className="flex justify-between gap-1 p-0.5">
               <div className="flex justify-start gap-1">

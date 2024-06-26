@@ -20,6 +20,7 @@ import SudoSwapPoolTXABI from "../../abi/SudoSwapPoolTXABI";
 import { uintFormat } from "../../formatters/format";
 import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
+import { getGoddogPrice } from "../../requests/priceCalls";
 
 function PoolSwap(props) {
   const { setCurrentShare, currentShare } = props;
@@ -35,10 +36,12 @@ function PoolSwap(props) {
   const [selectedPool, setSelectedPool] = useState(null);
   const [buyFromPool, setBuyFromPool] = useState(true);
   const [uintTotal, setUintTotal] = useState(null);
+  const [goddogPrice, setGoddogPrice] = useState(null);
   const [input, setInput] = useState(null);
   const [total, setTotal] = useState(null);
 
   useEffect(() => {
+    getPrice();
     getExistingPools();
     setGoddogBalance(uintFormat(goddogBalanceResult?.data?.value).toFixed(2));
   }, []);
@@ -53,6 +56,12 @@ function PoolSwap(props) {
       getSellNftQuote();
     }
   }, [input]);
+
+  async function getPrice() {
+    const res = await getGoddogPrice();
+    console.log(res);
+    setGoddogPrice(res);
+  }
 
   async function approveGoddog() {
     const provider = await w0?.getEthersProvider();
@@ -389,9 +398,17 @@ function PoolSwap(props) {
           </div>
           <input
             type="text"
+            disabled="true"
             className="w-[350px] bg-transparent border border-transparent outline-none"
             value={total ? total.toFixed(2) : 0}
           />
+          <div>
+            <h3 className="text-[7px]">
+              {"≈ " +
+                Number(total?.toFixed(2) * goddogPrice).toFixed(2) +
+                " USD"}
+            </h3>
+          </div>
           <button className="border w-[200px] rounded-md border-neutral-600 bg-stone-800 mt-1 hover:text-stone-500">
             <div className="flex justify-between gap-1 p-0.5">
               <div className="flex justify-start gap-1">
