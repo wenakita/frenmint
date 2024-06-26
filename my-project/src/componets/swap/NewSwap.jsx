@@ -24,6 +24,7 @@ import ShareSender from "./ShareSender";
 import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
 import Pods from "./Pods";
+import MdSwapperSide from "./MdSwapperSide";
 
 function NewSwap() {
   const location = useLocation();
@@ -138,15 +139,21 @@ function NewSwap() {
       </div>
       <div className="  mx-auto">
         {viewSwap ? (
-          <Swapper
-            trendingFriends={trendingUsers}
-            holdingsData={holdingsData}
-            getUserHoldings={getUserHoldings}
-            getTrending={getTrending}
-            currentShare={currentShare}
-            setCurrentShare={setCurrentShare}
-            currentSharePrice={currentSharePrice}
-          />
+          <div className="">
+            <div>
+              <Swapper
+                trendingFriends={trendingUsers}
+                holdingsData={holdingsData}
+                getUserHoldings={getUserHoldings}
+                getTrending={getTrending}
+                currentShare={currentShare}
+                setCurrentShare={setCurrentShare}
+                currentSharePrice={currentSharePrice}
+                currentPriceHistory={currentPriceHistory}
+                shareTotalVolume={shareTotalVolume}
+              />
+            </div>
+          </div>
         ) : (
           <>
             {viewChart ? (
@@ -170,6 +177,8 @@ function NewSwap() {
                         currentShare={currentShare}
                         setCurrentShare={setCurrentShare}
                         holdingsData={holdingsData}
+                        currentPriceHistory={currentPriceHistory}
+                        shareTotalVolume={shareTotalVolume}
                       />
                     ) : (
                       <>

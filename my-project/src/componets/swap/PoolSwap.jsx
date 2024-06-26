@@ -21,9 +21,15 @@ import { uintFormat } from "../../formatters/format";
 import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
 import { getGoddogPrice } from "../../requests/priceCalls";
+import ChartButton from "./ChartButton";
 
 function PoolSwap(props) {
-  const { setCurrentShare, currentShare } = props;
+  const {
+    setCurrentShare,
+    currentShare,
+    currentPriceHistory,
+    shareTotalVolume,
+  } = props;
   const { wallets } = useWallets();
   const w0 = wallets[0];
   const goddogBalanceResult = useBalance({
@@ -327,17 +333,24 @@ function PoolSwap(props) {
   }
   return (
     <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
-      <div className="flex p-2 gap-1">
-        <img
-          src="https://avatars.githubusercontent.com/u/94413972?s=280&v=4"
-          alt=""
-          className="size-5 "
-        />
-        <h3 className="text-white text-[12px] font-bold">
-          {buyFromPool ? "Buy" : "Sell"}
-        </h3>
+      <div className="flex justify-between text-white text-[12px] font-bold p-2">
+        <div className="flex gap-1">
+          <img
+            src="https://avatars.githubusercontent.com/u/94413972?s=280&v=4"
+            alt=""
+            className="size-5 "
+          />
+          <h3 className="">{buyFromPool ? "Buy" : "Sell"}</h3>
+        </div>
+        <div>
+          <ChartButton
+            shareTotalVolume={shareTotalVolume}
+            currentPriceHistory={currentPriceHistory}
+            currentShare={currentShare}
+          />
+        </div>
       </div>
-      <div className="grid grid-rows-2 gap-y-4 p-1">
+      <div className="grid grid-rows-1 gap-y-1 p-1">
         <div className="border p-2 rounded-lg border-neutral-700 text-white font-mono font-bold text-[12px]">
           <h3>{buyFromPool ? "You buy" : "You Sell"}</h3>
           <input
@@ -380,7 +393,7 @@ function PoolSwap(props) {
             </div>
           </button>
         </div>
-        <div className="fixed mt-20 ms-[170px]  ">
+        <div className=" ms-[170px]">
           <div
             className="border w-[40px] border-neutral-700 bg-stone-900 p-2 rounded-md flex justify-center text-[8px] text-stone-200 gap-1 hover:text-stone-800"
             onClick={() => {
@@ -392,6 +405,7 @@ function PoolSwap(props) {
             }}
           >
             <FaArrowUp />
+            <FaArrowDown />
           </div>
         </div>
 
@@ -510,7 +524,13 @@ function PoolSwap(props) {
                 })}
               </>
             ) : (
-              <>Loading</>
+              <div className="flex justify-center mb-10 mt-[100px]">
+                <img
+                  src="https://www.friend.tech/friendtechlogo.png"
+                  alt=""
+                  className="size-10 animate-bounce"
+                />
+              </div>
             )}
           </div>
           <div className="modal-action">

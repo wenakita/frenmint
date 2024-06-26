@@ -34,7 +34,7 @@ function SwapTabs(props) {
           Mint
         </button>
 
-        <button
+        {/* <button
           className={`${viewChart && `bg-stone-800 border border-transparent rounded-full text-center text-stone-300`} hover:text-stone-600 p-1`}
           onClick={() => {
             setViewSwap(false);
@@ -46,7 +46,7 @@ function SwapTabs(props) {
           }}
         >
           Chart
-        </button>
+        </button> */}
         <button
           className={`${viewSend && `bg-stone-800 border border-transparent rounded-full text-center text-stone-300`} hover:text-stone-600 p-1`}
           onClick={() => {

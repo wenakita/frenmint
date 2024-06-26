@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaChartArea } from "react-icons/fa";
 import AvaliablePairs from "./AvailablePairs";
 import { uintFormat } from "../../formatters/format";
 import { SearchByUser } from "../../requests/friendCalls";
@@ -18,6 +18,7 @@ import { parseEther } from "ethers/lib/utils";
 import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
 import { Button, Modal, Result } from "antd";
+import ChartButton from "./ChartButton";
 function Swapper(props) {
   const {
     trendingFriends,
@@ -27,6 +28,8 @@ function Swapper(props) {
     currentShare,
     setCurrentShare,
     currentSharePrice,
+    currentPriceHistory,
+    shareTotalVolume,
   } = props;
 
   const { wallets } = useWallets();
@@ -194,10 +197,15 @@ function Swapper(props) {
 
   return (
     <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
-      <h3 className="text-white text-[12px] font-bold p-2">
-        {shouldMint ? "Mint" : "Burn"}
-      </h3>
-      <div className="grid grid-rows-2 gap-y-4 p-1">
+      <div className="flex justify-between text-white text-[12px] font-bold p-2">
+        <h3 className="">{shouldMint ? "Mint" : "Burn"}</h3>
+        <ChartButton
+          currentPriceHistory={currentPriceHistory}
+          currentShare={currentShare}
+          shareTotalVolume={shareTotalVolume}
+        />
+      </div>
+      <div className="grid grid-rows-1 gap-y-1 p-1">
         <div className="border p-2 rounded-lg border-neutral-700 text-white font-mono font-bold text-[12px]">
           <h3>{shouldMint ? "You buy" : "You sell"}</h3>
           <input
@@ -238,7 +246,7 @@ function Swapper(props) {
             </div>
           </button>
         </div>
-        <div className="fixed mt-20 ms-[170px]  ">
+        <div className="flex justify-center">
           <div
             className="border w-[40px] border-neutral-700 bg-stone-900 p-2 rounded-md flex justify-center text-[8px] text-stone-200 gap-1 hover:text-stone-800"
             onClick={() => {
@@ -384,7 +392,15 @@ function Swapper(props) {
                       );
                     })}
                   </>
-                ) : null}
+                ) : (
+                  <div className="flex justify-center mb-10 mt-[100px]">
+                    <img
+                      src="https://www.friend.tech/friendtechlogo.png"
+                      alt=""
+                      className="size-10 animate-bounce"
+                    />
+                  </div>
+                )}
               </>
             )}
           </div>
