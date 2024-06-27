@@ -1,6 +1,8 @@
 import { readContract } from "@wagmi/core";
 import { config } from "../config";
 import PodsPoolABI from "../abi/PodsPoolABI";
+import { ethers } from "ethers";
+import { Contract } from "ethers";
 const podsPoolCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
 const podsIndexFundCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
 const goddogTokenCA = "0xddf7d080c82b8048baae54e376a3406572429b4e";
@@ -115,6 +117,7 @@ export async function getShareSellTotal(
 }
 
 export async function getShareBalance(readContract, config, abi, owner, nftId) {
+  console.log(owner, nftId);
   try {
     const balance = await readContract(config, {
       address: "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
@@ -250,4 +253,113 @@ export async function getSharePrice(
 //   }
 // }
 
-async function checkShareAprroval() {}
+export async function approveGoddogSpending() {}
+export async function approveShareSpending(signer, abi) {
+  const friendTechWrapperContract = new Contract(
+    "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+    abi,
+    signer
+  );
+  try {
+    console.log("running");
+    const res = await friendTechWrapperContract.setApprovalForAll(
+      "0x605145D263482684590f630E9e581B21E4938eb8",
+      true
+    );
+    const reciept = await res.wait();
+    console.log(await reciept);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function withdrawGoddog(signer, abi, targetPool, withdrawAmount) {
+  console.log(signer);
+  console.log(withdrawAmount);
+  const SudoSwapPoolContract = new Contract(targetPool, abi, signer);
+  try {
+    const res = await SudoSwapPoolContract.withdrawERC20(
+      goddogTokenCA,
+      ethers.BigNumber.from(withdrawAmount)
+        .mul(ethers.BigNumber.from("10").pow(18))
+        .toString()
+    );
+    const reciept = await res.wait();
+    console.log(await reciept);
+    return { failed: false, receipt: reciept, type: "withdraw" };
+  } catch (error) {
+    console.log(error);
+    return { failed: true, receipt: null, type: "withdraw" };
+  }
+}
+
+export async function withdrawShares(
+  signer,
+  abi,
+  targetPool,
+  withdrawAmount,
+  nftId
+) {
+  const SudoSwapPoolContract = new Contract(targetPool, abi, signer);
+  try {
+    const res = await SudoSwapPoolContract.withdrawERC1155(
+      "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+      [nftId],
+      [withdrawAmount]
+    );
+    const reciept = await res.wait();
+    console.log(await reciept);
+    return { failed: false, receipt: reciept, type: "withdraw" };
+  } catch (error) {
+    console.log(error);
+    return { failed: true, receipt: null, type: "withdraw" };
+  }
+}
+export async function depositShares(
+  signer,
+  abi,
+  targetPool,
+  nftId,
+  depositAmount
+) {
+  await approveShareSpending(abi, signer);
+  const SudoSwapContract = new Contract(
+    "0x605145D263482684590f630E9e581B21E4938eb8",
+    abi,
+    signer
+  );
+  try {
+    const res = await SudoSwapContract.depositERC1155(
+      "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+      nftId,
+      targetPool,
+      depositAmount
+    );
+    const reciept = await res.wait();
+    return { failed: false, receipt: reciept, type: "deposit" };
+  } catch (error) {
+    console.log(error);
+    return { failed: true, receipt: null, type: "deposit" };
+  }
+}
+export async function depositGoddog(signer, abi, targetPool, depositAmount) {
+  const SudoSwapContract = new Contract(
+    "0x605145D263482684590f630E9e581B21E4938eb8",
+    abi,
+    signer
+  );
+  try {
+    const res = await SudoSwapContract.depositERC20(
+      goddogTokenCA,
+      targetPool,
+      ethers.BigNumber.from(depositAmount)
+        .mul(ethers.BigNumber.from("10").pow(18))
+        .toString()
+    );
+    const reciept = await res.wait();
+    return { failed: false, receipt: reciept, type: "deposit" };
+  } catch (error) {
+    console.log(error);
+    return { failed: true, receipt: null, type: "deposit" };
+  }
+}

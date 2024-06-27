@@ -29,13 +29,14 @@ import {
 import { parseEther } from "viem";
 import { Link } from "react-router-dom";
 import { FaExternalLinkAlt } from "react-icons/fa";
+import PoolsManageDialoge from "./PoolsManageDialoge";
 
 function Pools(props) {
   const [currentPool, setCurrentPool] = useState(null);
   const [poolData, setPoolData] = useState([]);
   const friendWrapperContract = "0xbeea45F16D512a01f7E2a3785458D4a7089c8514";
   const goddogContract = "0xddf7d080c82b8048baae54e376a3406572429b4e";
-  const { userPools, activateLoading } = props;
+  const { userPools, activateLoading, getActivePools } = props;
 
   console.log(userPools);
   const { wallets } = useWallets();
@@ -48,11 +49,13 @@ function Pools(props) {
   const [goddogToWithdraw, setGoddogToWithdraw] = useState(null);
   const [displayPools, setDisplayPools] = useState(false);
   const [manageOption, setManageOption] = useState(null);
+
   const goddogBalanceResult = useBalance({
     address: w0?.address,
     token: "0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
     chainId: base.id,
   });
+
   const [message, setMessage] = useState(null);
 
   const goddogBalance = Number(goddogBalanceResult?.data?.value) / 10 ** 18;
@@ -382,7 +385,8 @@ function Pools(props) {
                   <div>
                     <button
                       className=" text-[9px] font-bold p-1 w-full border bg-gray-200 text-black border-neutral-900 rounded-lg hover:bg-stone-400"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
                         setCurrentPool(item);
                         document.getElementById("my_modal_1").showModal();
                       }}
@@ -392,48 +396,23 @@ function Pools(props) {
                   </div>
                 </div>
                 <dialog id="my_modal_1" className="modal">
-                  <div className="modal-box bg-neutral-900">
-                    <h3 className="font-bold text-lg text-start">
-                      Manage {currentPool?.poolData?.shareData?.ftName}
-                    </h3>
-                    <h3 className="text-white mt-5 mb-2 text-[8px] font-bold">
-                      Select an option
-                    </h3>
-                    <select
-                      name="h"
-                      id=""
-                      className="text-sm p-1 rounded-md bg-stone-950 border border-transparent hover:border-blue-500"
-                    >
-                      <option value="h">Withdraw shares</option>
-                      <option value="h">Withdraw goddog</option>
-                      <option value="h">Deposit goddog</option>
-                      <option value="h">Deposit shares</option>
-                    </select>
-                    <div className="text-start">hello</div>
-                    <div className="modal-action">
-                      <form method="dialog">
-                        {/* if there is a button in form, it will close the modal */}
-                        <button className="btn">Close</button>
-                      </form>
+                  <div className="modal-box bg-neutral-950">
+                    <div className="text-start mt-4">
+                      <PoolsManageDialoge
+                        currentPool={currentPool}
+                        getActivePools={getActivePools}
+                      />
                     </div>
                   </div>
+                  <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                  </form>
                 </dialog>
               </div>
             );
           })}
         </>
-      ) : (
-        <div className="flex justify-center gap-2 mt-[50pxx]">
-          <img
-            src="https://forums.frontier.co.uk/attachments/1000012145-png.391294/"
-            alt=""
-            className="w-7 h-7"
-          />
-          <h3 className="text-white font-mono font-bold text-[10px] mt-2">
-            There are currently no pools for this share
-          </h3>
-        </div>
-      )}
+      ) : null}
     </center>
   );
 }

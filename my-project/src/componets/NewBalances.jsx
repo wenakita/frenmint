@@ -26,6 +26,7 @@ function NewBalances() {
   const [currentUserName, setCurrentuserName] = useState(null);
   const [userPools, setUserPools] = useState(null);
   const [viewShareHoldings, setViewShareHoldings] = useState(true);
+  const [transferShares, setTransferShares] = useState(null);
 
   useEffect(() => {
     getEthereumPrice();
@@ -37,6 +38,8 @@ function NewBalances() {
     fetchUsers();
   }, []);
   async function getActivePools() {
+    setUserPools(null);
+
     let usersFoundPools = [];
     let q = new Quoter(API_KEY, 8453);
     let a = await q.getPoolsForCollection(
@@ -121,10 +124,11 @@ function NewBalances() {
             <button
               onClick={() => {
                 setViewShareHoldings(true);
+                setTransferShares(false);
               }}
-              className={`hover:border hover:border-t-0 hover:border-r-0 hover:border-l-0  font-bold ${
+              className={`hover:border hover:border-t-0 hover:border-r-0 p-1 hover:border-l-0  font-bold ${
                 viewShareHoldings === true &&
-                `border  p-1 border-t-0 border-r-0 border-l-0 text-white font-bold`
+                `border border-t-0 border-r-0 border-l-0 text-white font-bold`
               }`}
             >
               Shares
@@ -132,13 +136,26 @@ function NewBalances() {
             <button
               onClick={() => {
                 setViewShareHoldings(false);
+                setTransferShares(false);
               }}
-              className={` hover:border hover:border-t-0 hover:border-r-0 hover:border-l-0  font-bold ${
+              className={` hover:border hover:border-t-0 hover:border-r-0 hover:border-l-0  p-1  font-bold ${
                 viewShareHoldings === false &&
-                `border  p-1 border-t-0 border-r-0 border-l-0 text-white font-bold`
+                `border  border-t-0 border-r-0 border-l-0 text-white font-bold`
               }`}
             >
               Pools
+            </button>
+            <button
+              onClick={() => {
+                setTransferShares(true);
+                setViewShareHoldings(false);
+              }}
+              className={` hover:border hover:border-t-0 hover:border-r-0  p-1 hover:border-l-0  font-bold ${
+                transferShares === true &&
+                `border  border-t-0 border-r-0 border-l-0 text-white font-bold`
+              }`}
+            >
+              Transfer
             </button>
           </div>
         </div>
@@ -147,11 +164,6 @@ function NewBalances() {
           alt=""
           className=" rounded-lg  w-full h-full"
         /> */}
-        <div>
-          <div className="flex justify-start">
-            <img src="" alt="" />
-          </div>
-        </div>
       </div>
 
       {viewShareHoldings ? (
@@ -181,7 +193,17 @@ function NewBalances() {
         </>
       ) : (
         <div>
-          <Pools userPools={userPools} />
+          {userPools ? (
+            <Pools userPools={userPools} getActivePools={getActivePools} />
+          ) : (
+            <div className="flex justify-center mb-10 mt-[200px]">
+              <img
+                src="https://www.friend.tech/friendtechlogo.png"
+                alt=""
+                className="w-20 h-20 animate-bounce"
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
