@@ -592,7 +592,6 @@ function Swapper(props) {
           </form>
         </dialog>
       </div>
-      <Test data={currentPriceHistory} />
     </>
   );
 }
