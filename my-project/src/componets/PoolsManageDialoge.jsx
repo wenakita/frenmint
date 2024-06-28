@@ -185,52 +185,44 @@ function PoolsManageDialoge(props) {
         name="h"
         id=""
         className="text-[8px] p-1 rounded-md bg-stone-950 border border-transparent hover:border-blue-500 w-full mb-4"
+        onChange={(e) => {
+          const value = e.target.value;
+          switch (value) {
+            case "withdraw-shares":
+              setShowDepositGoddog(false);
+              setShowWithdrawGoddog(false);
+              setShowDepositShare(false);
+              setShowWithdrawShare(true);
+              break;
+            case "withdraw-goddog":
+              setShowWithdrawShare(false);
+              setShowDepositGoddog(false);
+              setShowDepositShare(false);
+              setShowWithdrawGoddog(true);
+              break;
+            case "deposit-goddog":
+              setShowWithdrawShare(false);
+              setShowWithdrawGoddog(false);
+              setShowDepositShare(false);
+              setShowDepositGoddog(true);
+              break;
+            case "deposit-shares":
+              setShowWithdrawShare(false);
+              setShowDepositGoddog(false);
+              setShowWithdrawGoddog(false);
+              setShowDepositShare(true);
+              break;
+            default:
+              break;
+          }
+        }}
       >
-        <option
-          value="h"
-          selected
-          onClick={() => {
-            setShowDepositGoddog(false);
-            setShowWithdrawGoddog(false);
-            setShowDepositShare(false);
-            setShowWithdrawShare(true);
-          }}
-        >
+        <option value="withdraw-shares" selected>
           Withdraw shares
         </option>
-        <option
-          value="h"
-          onClick={() => {
-            setShowWithdrawShare(false);
-            setShowDepositGoddog(false);
-            setShowDepositShare(false);
-            setShowWithdrawGoddog(true);
-          }}
-        >
-          Withdraw goddog
-        </option>
-        <option
-          value="h"
-          onClick={() => {
-            setShowWithdrawShare(false);
-            setShowWithdrawGoddog(false);
-            setShowDepositShare(false);
-            setShowDepositGoddog(true);
-          }}
-        >
-          Deposit goddog
-        </option>
-        <option
-          value="h"
-          onClick={() => {
-            setShowWithdrawShare(false);
-            setShowDepositGoddog(false);
-            setShowWithdrawGoddog(false);
-            setShowDepositShare(true);
-          }}
-        >
-          Deposit shares
-        </option>
+        <option value="withdraw-goddog">Withdraw goddog</option>
+        <option value="deposit-goddog">Deposit goddog</option>
+        <option value="deposit-shares">Deposit shares</option>
       </select>
 
       <div className="flex justify-between text-[8px]">
