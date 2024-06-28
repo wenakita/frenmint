@@ -15,6 +15,7 @@ import NewBalances from "./componets/NewBalances";
 import NewSwap from "./componets/swap/NewSwap";
 import NewHomePage from "./componets/NewHome/NewHomePage";
 import NewFriend from "./componets/friend/NewFriend";
+import Analytics from "./componets/Analytics";
 function App() {
   return (
     <HashRouter>
@@ -29,6 +30,7 @@ function App() {
           <Route path="/swap" element={<UniversalSwap />} />
           <Route path="/new" element={<NewBalances />} />
           <Route path="/newswap" element={<NewSwap />} />
+          <Route path="/analytics" element={<Analytics />} />
 
           {/* <Route path="/newfriend/:address" element={<NewFriend />} /> */}
 

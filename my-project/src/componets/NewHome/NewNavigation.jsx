@@ -65,6 +65,9 @@ function NewNavigation() {
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-neutral-900 rounded-box w-52 font-bold"
             >
               <li className="">
+                <Link to={"/analytics"}>Analytics</Link>
+              </li>
+              <li className="">
                 <Link
                   to={"https://telegra.ph/GODDOG-Official-Whitepaper-06-01"}
                   target="_blank"
