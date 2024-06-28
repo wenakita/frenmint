@@ -56,8 +56,10 @@ function PoolSwap(props) {
   useEffect(() => {
     getPrice();
     getExistingPools();
-    setGoddogBalance(uintFormat(goddogBalanceResult?.data?.value).toFixed(2));
   }, []);
+  useEffect(() => {
+    setGoddogBalance(uintFormat(goddogBalanceResult?.data?.value).toFixed(2));
+  });
 
   useEffect(() => {
     getBalance();

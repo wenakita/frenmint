@@ -62,8 +62,10 @@ function Swapper(props) {
   useEffect(() => {
     getprice();
     fetchFrenmintUsers();
-    setEthBalance(Number(ethBal?.data?.formatted).toFixed(6));
   }, []);
+  useEffect(() => {
+    setEthBalance(Number(ethBal?.data?.formatted).toFixed(6));
+  });
   useEffect(() => {
     console.log(searchInput);
     if (searchInput) {
