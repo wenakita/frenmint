@@ -23,7 +23,7 @@ function NewBalances() {
   const { wallets } = useWallets();
   const userAddress = wallets[0]?.address;
   const [hasUserName, setHasUserName] = useState(null);
-  const [currentUserName, setCurrentuserName] = useState(null);
+  const [currentUserName, setCurrentUserName] = useState(null);
   const [userPools, setUserPools] = useState(null);
   const [viewShareHoldings, setViewShareHoldings] = useState(true);
   const [transferShares, setTransferShares] = useState(null);
@@ -113,11 +113,13 @@ function NewBalances() {
           console.log(data[key]);
           userName = data[key]?.username;
           hasUserName = true;
+          break;
         }
       }
     }
+    console.log("userName, ", userName);
     if (hasUserName) {
-      setCurrentuserName(userName);
+      setCurrentUserName(userName);
     }
   }
   return (
