@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import { Contract } from "ethers";
 import friendTechABI from "../abi/FriendTechABi";
 import GodDogABI from "../abi/GodDogABI";
+import { parseEther } from "viem";
 const podsPoolCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
 const podsIndexFundCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
 const goddogTokenCA = "0xddf7d080c82b8048baae54e376a3406572429b4e";
@@ -27,22 +28,16 @@ export async function getPoolFees() {
   }
 }
 
-export async function bondGoddog() {}
-export async function unBondGoddog() {}
-
-export async function aprroveGoddog() {}
-
-export async function wrapToken(
-  shareContract,
-  amountToBuy,
-  finalAmount,
-  shareAddress,
-  parseEther
-) {
+export async function wrap(signer, amountToBuy, finalAmount, shareAddress) {
+  const shareWrapperContract = new Contract(
+    "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+    friendTechABI,
+    signer
+  );
   try {
     console.log(amountToBuy, shareAddress, finalAmount);
 
-    const res = await shareContract.wrap(
+    const res = await shareWrapperContract.wrap(
       shareAddress,
       Number(amountToBuy),
       "0x",
@@ -52,10 +47,30 @@ export async function wrapToken(
     );
     const receipt = await res.wait();
     console.log(await receipt);
-    return receipt;
+    return { failed: false, receipt: receipt, type: "Wrap" };
   } catch (error) {
     console.log(error);
-    return null;
+    return { failed: true, receipt: null, type: "Wrap" };
+  }
+}
+
+export async function unwrap(signer, amountToSell, finalAmount, shareAddress) {
+  const shareWrapperContract = new Contract(
+    "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+    friendTechABI,
+    signer
+  );
+  try {
+    console.log(amountToSell, shareAddress, finalAmount);
+
+    const res = await shareWrapperContract.unwrap(shareAddress, amountToSell);
+    const receipt = await res.wait();
+    console.log(await receipt);
+
+    return { failed: false, receipt: receipt, type: "Unwrap" };
+  } catch (error) {
+    console.log(error);
+    return { failed: true, receipt: null, type: "Unwrap" };
   }
 }
 

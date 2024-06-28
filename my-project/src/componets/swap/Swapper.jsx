@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import { FaArrowUp, FaArrowDown, FaChartArea } from "react-icons/fa";
+import {
+  FaArrowUp,
+  FaArrowDown,
+  FaChartArea,
+  FaExternalLinkAlt,
+  FaCheckCircle,
+} from "react-icons/fa";
 import AvaliablePairs from "./AvailablePairs";
 import { uintFormat } from "../../formatters/format";
 import { SearchByUser } from "../../requests/friendCalls";
@@ -9,6 +15,8 @@ import {
   getShareSellTotal,
   getShareBuyTotal,
   getShareBalance,
+  wrap,
+  unwrap,
 } from "../../requests/txRequests";
 import { readContract } from "@wagmi/core";
 import { Contract } from "ethers";
@@ -25,6 +33,9 @@ import { Button, Modal, Result } from "antd";
 import ChartButton from "./ChartButton";
 import { getBalance } from "viem/actions";
 import { BsArrowRepeat } from "react-icons/bs";
+import { Link } from "react-router-dom";
+import { MdError } from "react-icons/md";
+import { CiWallet } from "react-icons/ci";
 function Swapper(props) {
   const {
     trendingFriends,
@@ -49,25 +60,14 @@ function Swapper(props) {
   const [currentFrenmintUser, setCurrentFrenmintUser] = useState(null);
   const [shareBalance, setShareBalance] = useState(null);
   const [ethPrice, setEthPrice] = useState(null);
+  const [modalMessage, setModalMessage] = useState(null);
+
   const ethBal = useBalance({
     address: userAddress,
     chainId: base.id,
   });
   const [ethBalance, setEthBalance] = useState(null);
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
   console.log(Number(ethBal?.data?.formatted).toFixed(6));
   useEffect(() => {
     getprice();
@@ -155,72 +155,139 @@ function Swapper(props) {
   }
   async function wrapToken() {
     const provider = await wallets[0]?.getEthersProvider();
-    const network = await provider.getNetwork();
     const signer = await provider?.getSigner();
-    const shareWrapperContract = new Contract(
-      "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
-      friendTechABI,
-      signer
+
+    const txRes = await wrap(
+      signer,
+      input,
+      currentTotal,
+      currentShare?.address
     );
-    try {
-      const res = await shareWrapperContract.wrap(
-        currentShare?.address,
-        input,
-        "0x",
-        {
-          value: parseEther(String(currentTotal)),
-        }
-      );
-      const receipt = await res.wait();
-      console.log(await receipt.events);
-      await postTransaction(
-        supabase,
-        currentShare,
-        input,
-        userAddress,
-        true,
-        currentTotal,
-        currentFrenmintUser
-      );
-      getBalance();
-    } catch (error) {
-      console.log(error);
-    }
+    finalizedModal(txRes);
+
+    await postTransaction(
+      supabase,
+      currentShare,
+      input,
+      userAddress,
+      true,
+      currentTotal,
+      currentFrenmintUser
+    );
   }
 
   async function unwrapToken() {
     const provider = await wallets[0]?.getEthersProvider();
     const network = await provider.getNetwork();
     const signer = await provider?.getSigner();
-    const shareWrapperContract = new Contract(
-      "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
-      friendTechABI,
-      signer
+
+    const txRes = await unwrap(
+      signer,
+      input,
+      currentTotal,
+      currentShare?.address
     );
-    try {
-      const res = await shareWrapperContract.unwrap(
-        currentShare?.address,
-        input
-      );
-      const receipt = await res.wait();
-      console.log(await receipt.events);
-      await postTransaction(
-        supabase,
-        currentShare,
-        input,
-        userAddress,
-        false,
-        currentTotal,
-        currentFrenmintUser
-      );
-      getBalance();
-    } catch (error) {
-      console.log(error);
+    finalizedModal(txRes);
+
+    await postTransaction(
+      supabase,
+      currentShare,
+      input,
+      userAddress,
+      false,
+      currentTotal,
+      currentFrenmintUser
+    );
+  }
+
+  function finalizedModal(res) {
+    if (res.failed === false) {
+      setModalMessage({
+        message: `${res.type} successful!`,
+        variant: "green",
+        failed: res.failed,
+        hash: res?.receipt?.transactionHash,
+      });
+    } else if (res.failed === true) {
+      console.log("failed tx");
+      setModalMessage({
+        message: `${res.type} unexpectedly failed`,
+        variant: "red",
+        failed: res.failed,
+        hash: null,
+      });
     }
+    document.getElementById("my_modal_25").showModal();
   }
 
   return (
     <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
+      <dialog id="my_modal_25" className="modal">
+        <div className="modal-box bg-neutral-900">
+          <div className="mb-3">
+            {modalMessage?.failed ? (
+              <MdError
+                className={`text-[100px] text-${modalMessage?.variant}-500 ms-auto me-auto`}
+              />
+            ) : (
+              <FaCheckCircle className="text-[100px] text-green-500 ms-auto me-auto " />
+            )}
+          </div>
+          <h3 className="font-bold text-[10px] font-mono text-center">
+            {modalMessage?.message}
+          </h3>
+
+          {modalMessage?.failed ? (
+            <h3 className="text-[8px] text-center mt-1">
+              Please make sure you have enough to cover gas and tokens as well
+            </h3>
+          ) : (
+            <div className="text-center text-[10px] mt-2">
+              <Link
+                to={`https://basescan.org/tx/${modalMessage?.hash}`}
+                target="_blank"
+                className=""
+              >
+                <div className="flex justify-center gap-2">
+                  <div className="flex gap-1 hover:text-stone-800">
+                    <FaExternalLinkAlt className="text-[13px] mt-1" />
+                    <h3 className="mt-1">Tx Hash</h3>
+                  </div>
+                  <Link
+                    to={"/new"}
+                    className="flex gap-1 mt-0.5 hover:text-stone-800"
+                  >
+                    <CiWallet className="text-[18px]" />
+                    <h3 className="mt-0.5">wallet</h3>
+                  </Link>
+                </div>
+              </Link>
+            </div>
+          )}
+          <div className="mt-2">
+            <button
+              onClick={() => {
+                document.getElementById("my_modal_25").close();
+              }}
+              className="border w-full rounded-md text-[12px] border-stone-900 bg-blue-500 text-white font-mono font-bold p-1 hover:bg-stone-800"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button
+            onClick={() => {
+              if (!modalMessage?.failed) {
+                // getActivePools();
+                // getExistingPools();
+              }
+            }}
+          >
+            close
+          </button>
+        </form>
+      </dialog>
       <div className="flex justify-between text-white text-[12px] font-bold p-2">
         <h3 className="">{shouldMint ? "Mint" : "Burn"}</h3>
         <ChartButton
