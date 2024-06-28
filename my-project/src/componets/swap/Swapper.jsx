@@ -162,6 +162,9 @@ function Swapper(props) {
     finalizedModal(txRes);
 
     if (!txRes?.failed) {
+      getBalance();
+      getUserHoldings();
+
       await postTransaction(
         supabase,
         currentShare,
@@ -189,6 +192,9 @@ function Swapper(props) {
     finalizedModal(txRes);
 
     if (!txRes?.failed) {
+      getBalance();
+      getUserHoldings();
+
       await postTransaction(
         supabase,
         currentShare,
