@@ -181,6 +181,7 @@ function Swapper(props) {
         currentTotal,
         currentFrenmintUser
       );
+      getBalance();
     } catch (error) {
       console.log(error);
     }
@@ -211,6 +212,7 @@ function Swapper(props) {
         currentTotal,
         currentFrenmintUser
       );
+      getBalance();
     } catch (error) {
       console.log(error);
     }
