@@ -339,8 +339,8 @@ function CreatePool(props) {
           </button>
         </div>
 
-        <dialog id="my_modal_1" className="modal">
-          <div className="modal-box bg-neutral-900">
+        <dialog id="my_modal_1" className="modal modal-bottom md:modal-middle">
+          <div className="modal-box bg-neutral-900  h-[400px]">
             <h3 className="font-bold text-lg mb-2">Select a share</h3>
             {/* <div className="flex justify-center mt-5">
               <input
@@ -351,7 +351,7 @@ function CreatePool(props) {
                 }}
               />
             </div> */}
-            <div className="overflow-y-auto h-[200px] border border-neutral-700 border-b-0 border-r-0 border-l-0  p-2">
+            <div className="overflow-y-auto h-[270px] md:h-[200px] border border-neutral-700 border-b-0 border-r-0 border-l-0  p-2">
               {holdingsData ? (
                 <>
                   {holdingsData?.map((item) => {
@@ -384,13 +384,10 @@ function CreatePool(props) {
                 <>No Data no holdings</>
               )}
             </div>
-            <div className="modal-action">
-              <form method="dialog">
-                {/* if there is a button in form, it will close the modal */}
-                <button className="btn">Close</button>
-              </form>
-            </div>
           </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
         </dialog>
       </div>
     </div>
