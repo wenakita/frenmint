@@ -189,10 +189,10 @@ function PoolsManageDialoge(props) {
           value="h"
           selected
           onClick={() => {
-            setShowWithdrawShare(true);
             setShowDepositGoddog(false);
             setShowWithdrawGoddog(false);
             setShowDepositShare(false);
+            setShowWithdrawShare(true);
           }}
         >
           Withdraw shares
@@ -200,12 +200,10 @@ function PoolsManageDialoge(props) {
         <option
           value="h"
           onClick={() => {
-            console.log("here");
-            setShowWithdrawGoddog(true);
-
             setShowWithdrawShare(false);
             setShowDepositGoddog(false);
             setShowDepositShare(false);
+            setShowWithdrawGoddog(true);
           }}
         >
           Withdraw goddog
@@ -213,11 +211,10 @@ function PoolsManageDialoge(props) {
         <option
           value="h"
           onClick={() => {
-            setShowDepositGoddog(true);
-
             setShowWithdrawShare(false);
             setShowWithdrawGoddog(false);
             setShowDepositShare(false);
+            setShowDepositGoddog(true);
           }}
         >
           Deposit goddog
@@ -225,16 +222,16 @@ function PoolsManageDialoge(props) {
         <option
           value="h"
           onClick={() => {
-            setShowDepositShare(true);
-
             setShowWithdrawShare(false);
             setShowDepositGoddog(false);
             setShowWithdrawGoddog(false);
+            setShowDepositShare(true);
           }}
         >
           Deposit shares
         </option>
       </select>
+
       <div className="flex justify-between text-[8px]">
         <h3>
           {showDepositGoddog || showDepositShare
