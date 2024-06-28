@@ -36,7 +36,7 @@ function NewBalances() {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  });
   async function getActivePools() {
     setUserPools(null);
 
