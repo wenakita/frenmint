@@ -9,6 +9,9 @@ import { uintFormat } from "../../requests/friendCalls";
 import { getGoddogPrice, getEthPrice } from "../../requests/priceCalls";
 import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
+import { getShareBalance } from "../../requests/txRequests";
+import { readContract } from "@wagmi/core";
+import { config } from "../../config";
 //remmm min nft to deposit is 4 no maximum
 //formula to caclculate delta => numNftDeposited * 11 + 1
 //spot price = spotprice * delta
@@ -36,6 +39,7 @@ function CreatePool(props) {
   const [currentDelta, setCurrentDelta] = useState(0);
   const [initialTokenBalance, setIntitialTokenBalance] = useState(null);
   const [message, setMessgae] = useState(null);
+  const [shareBalance, setShareBalance] = useState(null);
   const [lp, setLp] = useState(0);
   useEffect(() => {
     if (holdingsData) {
@@ -46,6 +50,7 @@ function CreatePool(props) {
   }, []);
   useEffect(() => {
     console.log(selectedShare);
+    getBalance();
   }, [selectedShare]);
 
   useEffect(() => {
@@ -79,6 +84,17 @@ function CreatePool(props) {
     setCurrentDelta(deltaEquation);
     console.log(roundedSpotPrice);
     setCurrentSpotPrice(preSpotPriceEquation.toFixed(0));
+  }
+
+  async function getBalance() {
+    const balRes = await getShareBalance(
+      readContract,
+      config,
+      friendTechABI,
+      w0?.address,
+      selectedShare?.contract
+    );
+    setShareBalance(balRes);
   }
 
   async function goddogPermission() {

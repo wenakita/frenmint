@@ -334,7 +334,7 @@ function Swapper(props) {
           </div>
 
           <button
-            className="w-full border border-neutral-800 bg-blue-500 rounded-lg text-white font-bold text-[12px] p-1"
+            className="w-full border border-neutral-800 bg-blue-500 hover:bg-stone-800 rounded-lg text-white font-bold text-[12px] p-1"
             onClick={() => {
               if (shouldBurn) {
                 console.log("burn");

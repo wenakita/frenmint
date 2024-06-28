@@ -43,6 +43,7 @@ function PoolSwap(props) {
   const [buyFromPool, setBuyFromPool] = useState(true);
   const [uintTotal, setUintTotal] = useState(null);
   const [goddogPrice, setGoddogPrice] = useState(null);
+  const [shareBalance, setShareBalance] = useState(null);
   const [input, setInput] = useState(null);
   const [total, setTotal] = useState(null);
 
@@ -51,6 +52,10 @@ function PoolSwap(props) {
     getExistingPools();
     setGoddogBalance(uintFormat(goddogBalanceResult?.data?.value).toFixed(2));
   }, []);
+
+  useEffect(() => {
+    getBalance();
+  }, [currentShare]);
   console.log(selectedPool);
   useEffect(() => {
     console.log(input);
@@ -62,6 +67,17 @@ function PoolSwap(props) {
       getSellNftQuote();
     }
   }, [input]);
+
+  async function getBalance() {
+    const balRes = await getShareBalance(
+      readContract,
+      config,
+      friendTechABI,
+      w0?.address,
+      currentShare?.address
+    );
+    setShareBalance(balRes);
+  }
 
   async function getPrice() {
     const res = await getGoddogPrice();
@@ -352,7 +368,13 @@ function PoolSwap(props) {
       </div>
       <div className="grid grid-rows-1 gap-y-1 p-1">
         <div className="border p-2 rounded-lg border-neutral-700 text-white font-mono font-bold text-[12px]">
-          <h3>{buyFromPool ? "You buy" : "You Sell"}</h3>
+          <div className="flex justify-between">
+            <h3>{buyFromPool ? "You buy" : "You sell"}</h3>
+
+            <h3 className="text-[8px]">
+              Share balance:{" " + shareBalance || 0}
+            </h3>
+          </div>
           <input
             type="text"
             className="w-[350px] bg-transparent border border-transparent outline-none"
