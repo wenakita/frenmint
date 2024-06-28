@@ -70,9 +70,12 @@ function Swapper(props) {
     setEthBalance(Number(ethBal?.data?.formatted).toFixed(6));
   });
   useEffect(() => {
-    console.log(searchInput);
+    console.log(searchInput.length);
+
     if (searchInput) {
       searchUser();
+    } else if (searchInput.length === 0) {
+      setSearchResults(null);
     }
   }, [searchInput]);
 
@@ -518,43 +521,6 @@ function Swapper(props) {
             </div>
 
             <div className="overflow-y-auto  h-[270px] md:h-[200px] border border-neutral-700 border-b-0 border-r-0 border-l-0  p-2">
-              {holdingsData ? (
-                <>
-                  {holdingsData.map((item) => {
-                    const slicedContract = `${item?.FTData?.address.slice(0, 4)}...${item?.FTData?.address.slice(item?.FTData?.address.length - 4, item?.FTData?.address.length)}`;
-                    return (
-                      <button
-                        key={item}
-                        className=" p-2 grid grid-flow-col whitespace-nowrap text-[10px] w-full hover:bg-stone-800"
-                        onClick={() => {
-                          setCurrentShare(item?.FTData);
-                          document.getElementById("my_modal_1").close();
-                        }}
-                      >
-                        <div className="flex justify-start gap-2">
-                          <img
-                            src={item?.FTData?.ftPfpUrl}
-                            alt=""
-                            className="w-5 h-5 rounded-full"
-                          />
-                          <h3 className="mt-1">{item?.FTData?.ftName}</h3>
-                        </div>
-                        <div className="flex justify-end">
-                          {" " +
-                            item?.balance +
-                            " ≈ " +
-                            Number(
-                              uintFormat(item?.FTData?.displayPrice) *
-                                ethPrice *
-                                item?.balance
-                            ).toFixed(2) +
-                            "USD"}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </>
-              ) : null}
               {searchResults ? (
                 <>
                   {searchResults.map((item) => {
@@ -585,6 +551,45 @@ function Swapper(props) {
                 <>
                   {trendingFriends ? (
                     <>
+                      {holdingsData ? (
+                        <>
+                          {holdingsData.map((item) => {
+                            const slicedContract = `${item?.FTData?.address.slice(0, 4)}...${item?.FTData?.address.slice(item?.FTData?.address.length - 4, item?.FTData?.address.length)}`;
+                            return (
+                              <button
+                                key={item}
+                                className=" p-2 grid grid-flow-col whitespace-nowrap text-[10px] w-full hover:bg-stone-800"
+                                onClick={() => {
+                                  setCurrentShare(item?.FTData);
+                                  document.getElementById("my_modal_1").close();
+                                }}
+                              >
+                                <div className="flex justify-start gap-2">
+                                  <img
+                                    src={item?.FTData?.ftPfpUrl}
+                                    alt=""
+                                    className="w-5 h-5 rounded-full"
+                                  />
+                                  <h3 className="mt-1">
+                                    {item?.FTData?.ftName}
+                                  </h3>
+                                </div>
+                                <div className="flex justify-end">
+                                  {" " +
+                                    item?.balance +
+                                    " ≈ " +
+                                    Number(
+                                      uintFormat(item?.FTData?.displayPrice) *
+                                        ethPrice *
+                                        item?.balance
+                                    ).toFixed(2) +
+                                    "USD"}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </>
+                      ) : null}
                       {trendingFriends.map((item) => {
                         const slicedContract = `${item?.address.slice(0, 4)}...${item?.address.slice(item?.address.length - 4, item?.address.length)}`;
                         return (
