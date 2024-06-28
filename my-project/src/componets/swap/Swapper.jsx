@@ -1,41 +1,29 @@
-import { useEffect, useState } from "react";
-import React from "react";
-import {
-  FaArrowUp,
-  FaArrowDown,
-  FaChartArea,
-  FaExternalLinkAlt,
-  FaCheckCircle,
-} from "react-icons/fa";
-import AvaliablePairs from "./AvailablePairs";
-import { uintFormat } from "../../formatters/format";
-import { SearchByUser } from "../../requests/friendCalls";
-import { getEthPrice } from "../../requests/priceCalls";
-import {
-  getShareSellTotal,
-  getShareBuyTotal,
-  getShareBalance,
-  wrap,
-  unwrap,
-} from "../../requests/txRequests";
-import { readContract } from "@wagmi/core";
-import { Contract } from "ethers";
-import { supabase } from "../../client";
-import { postTransaction } from "../../requests/supaBaseHandler";
 import { useWallets } from "@privy-io/react-auth";
-import FriendABI from "../../abi/FriendABI";
-import { config } from "../../config";
-import friendTechABI from "../../abi/FriendTechABi";
-import { parseEther } from "ethers/lib/utils";
+import { readContract } from "@wagmi/core";
+import React, { useEffect, useState } from "react";
+import { BsArrowRepeat } from "react-icons/bs";
+import { CiWallet } from "react-icons/ci";
+import { FaCheckCircle, FaExternalLinkAlt } from "react-icons/fa";
+import { MdError } from "react-icons/md";
+import { Link } from "react-router-dom";
 import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
-import { Button, Modal, Result } from "antd";
+import FriendABI from "../../abi/FriendABI";
+import friendTechABI from "../../abi/FriendTechABi";
+import { supabase } from "../../client";
+import { config } from "../../config";
+import { SearchByUser } from "../../requests/friendCalls";
+import { getEthPrice } from "../../requests/priceCalls";
+import { postTransaction } from "../../requests/supaBaseHandler";
+import {
+  getShareBalance,
+  getShareBuyTotal,
+  getShareSellTotal,
+  unwrap,
+  wrap,
+} from "../../requests/txRequests";
+import AvaliablePairs from "./AvailablePairs";
 import ChartButton from "./ChartButton";
-import { getBalance } from "viem/actions";
-import { BsArrowRepeat } from "react-icons/bs";
-import { Link } from "react-router-dom";
-import { MdError } from "react-icons/md";
-import { CiWallet } from "react-icons/ci";
 function Swapper(props) {
   const {
     trendingFriends,

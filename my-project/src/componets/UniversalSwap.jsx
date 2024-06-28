@@ -1,43 +1,45 @@
-import { useBalance } from "wagmi";
-import { useWallets } from "@privy-io/react-auth";
-import { uintFormat } from "../formatters/format";
-import { useState, useEffect } from "react";
-import { getTrending, getShareChartData } from "../requests/friendCalls";
-import { motion } from "framer-motion";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { getEthPrice, getGoddogPrice } from "../requests/priceCalls";
-import { readContract } from "@wagmi/core";
-import { SearchByContract, SearchByUser } from "../requests/friendCalls";
-import { getShareBalance } from "../requests/txRequests";
-import FriendABI from "../abi/FriendABI";
-import { config } from "../config";
-import { getShareUri } from "../requests/txRequests";
-import { getFinalWrapTotal } from "../requests/txRequests";
-import FriendTechABI from "../abi/FriendTechABi";
-import { findId } from "../requests/friendCalls";
-import SwapChart from "./SwapChart.jsx";
-import { Link } from "react-router-dom";
-import { base } from "wagmi/chains";
-import CreatePoolSwap from "./CreatePoolSwap.jsx";
-import {
-  getSingleBuyNftPrice,
-  getSingleSellNftPrice,
-} from "../requests/txRequests";
 import {
   Description,
   Dialog,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { Quoter } from "sudo-defined-quoter";
-import { wrapToken } from "../requests/txRequests";
+import { useWallets } from "@privy-io/react-auth";
+import { readContract } from "@wagmi/core";
 import { Contract } from "ethers";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { Quoter } from "sudo-defined-quoter";
 import { parseEther } from "viem";
-import friendTechABI from "../abi/FriendTechABi";
+import { useBalance } from "wagmi";
+import { base } from "wagmi/chains";
+import FriendABI from "../abi/FriendABI";
+import FriendTechABI from "../abi/FriendTechABi";
 import SudoSwapPoolABI from "../abi/SudoSwapPoolABI.js";
-import YouSend from "./YouSend.jsx";
+import { config } from "../config";
+import { uintFormat } from "../formatters/format";
+import {
+  SearchByContract,
+  SearchByUser,
+  findId,
+  getShareChartData,
+  getTrending,
+} from "../requests/friendCalls";
+import { getEthPrice, getGoddogPrice } from "../requests/priceCalls";
+import {
+  getFinalWrapTotal,
+  getShareBalance,
+  getShareUri,
+  getSingleBuyNftPrice,
+  getSingleSellNftPrice,
+} from "../requests/txRequests";
+import CreatePoolSwap from "./CreatePoolSwap.jsx";
+import SwapChart from "./SwapChart.jsx";
 import YouRecieve from "./YouRecieve.jsx";
+import YouSend from "./YouSend.jsx";
 function UniversalSwap() {
   let [isOpen, setIsOpen] = useState(false);
   const [ethPrice, setEthPrice] = useState(null);
