@@ -396,9 +396,9 @@ function Swapper(props) {
                       <img
                         src={item?.ftPfpUrl}
                         alt=""
-                        className="size-5 rounded-full"
+                        className="size-4 rounded-full"
                       />
-                      <h3 className="mt-1">{item?.ftName}</h3>
+                      <h3 className="mt-0.5">{item?.ftName}</h3>
                     </div>
                   </button>
                 );

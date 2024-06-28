@@ -156,14 +156,56 @@ function NewNavigation() {
       <dialog id="my_modal_3" className="modal">
         <div className="modal-box bg-stone-900 h-[350px]">
           <h3 className="font-bold text-sm">Find shares</h3>
-          <div>
+          <div className="relative mb-3 mt-2">
             <input
               type="text"
-              className="w-full rounded-lg text-[10px]"
+              className="pl-9 pr-3 py-2 w-full text-[10px] bg-stone-800  rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+              placeholder="Search..."
               onChange={(e) => {
                 setSearchInput(e.target.value);
               }}
             />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg
+                className="w-4 h-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <div className="mb-3 mt-3 flex gap-3">
+            {trendingUsers?.map((item, index) => {
+              if (index < 4) {
+                return (
+                  <Link
+                    to={`/friend/${item?.address}`}
+                    key={item}
+                    className="border rounded-full bg-stone-950 border-stone-900 hover:bg-stone-800"
+                    onClick={() => {
+                      document.getElementById("my_modal_3").close();
+                    }}
+                  >
+                    <div className="flex justify-start text-[8px] p-1.5 gap-1.5 whitespace-nowrap">
+                      <img
+                        src={item?.ftPfpUrl}
+                        alt=""
+                        className="size-4 rounded-full"
+                      />
+                      <h3 className="mt-0.5 text-[8px]">{item?.ftName}</h3>
+                    </div>
+                  </Link>
+                );
+              }
+            })}
           </div>
           <div className="overflow-y-auto h-[270px] border border-neutral-700 border-b-0 border-r-0 border-l-0  p-2">
             {searchResults ? (
