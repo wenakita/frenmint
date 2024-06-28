@@ -2,21 +2,26 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../client";
 import { Link } from "react-router-dom";
 function RecentTx(props) {
-  const { getTxData } = props;
+  const { getTx, setGetTx, modalMessage } = props;
   const [liveTxData, setLiveTxData] = useState(null);
   const [displayTx, setDisplayTx] = useState(false);
   const [currentRecentTx, setCurrentRecentTx] = useState(null);
-  useEffect(() => {
-    fetchLiveTxData();
-  }, []);
+  const [previousTx, setPreviousTx] = useState(null);
 
   useEffect(() => {
     console.log("changed");
-    if (getTxData) {
+    if (getTx) {
       console.log("true");
       fetchLiveTxData();
     }
-  }, [getTxData]);
+  }, [modalMessage]);
+  useEffect(() => {
+    console.log("changed");
+    if (getTx) {
+      console.log("true");
+      fetchLiveTxData();
+    }
+  }, []);
 
   async function fetchLiveTxData() {
     const { data, error } = await supabase.from("txs").select();
@@ -25,14 +30,15 @@ function RecentTx(props) {
     }
     if (data) {
       console.log(data[data.length - 1]);
+      setPreviousTx(data[data.length - 1]);
       setLiveTxData(data[data.length - 1]);
+
       console.log(liveTxData);
     }
   }
-  //
 
   useEffect(() => {
-    if (liveTxData !== null || liveTxData) {
+    if (liveTxData) {
       setDisplayTx(true);
       setTimeout(() => {
         setDisplayTx(false);

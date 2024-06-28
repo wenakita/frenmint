@@ -119,7 +119,15 @@ function NewBalances() {
       <div
         className={`border border-t-0 border-r-0 border-l-0 w-screen  border-stone-800 `}
       >
-        <div className="text-[10px] mt-10">
+        <div className="text-[10px] mt-5">
+          <div className="mb-2 p-2 flex gap-2 size-[50px] text-[15px] font-bold">
+            <img
+              src="https://preview.redd.it/53dts4ayvsn91.gif?format=png8&s=aacacea0d9fc353ba7fa2ebc91aa98c4e5e82929"
+              alt=""
+              className=" rounded-full"
+            />
+            <h3 className="text-white mt-2">{currentUserName}</h3>
+          </div>
           <div className="flex justify-start gap-2 ">
             <button
               onClick={() => {

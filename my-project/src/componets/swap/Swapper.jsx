@@ -24,6 +24,7 @@ import {
 } from "../../requests/txRequests";
 import AvaliablePairs from "./AvailablePairs";
 import ChartButton from "./ChartButton";
+import RecentTx from "../RecentTx";
 function Swapper(props) {
   const {
     trendingFriends,
@@ -49,6 +50,7 @@ function Swapper(props) {
   const [shareBalance, setShareBalance] = useState(null);
   const [ethPrice, setEthPrice] = useState(null);
   const [modalMessage, setModalMessage] = useState(null);
+  const [getTx, setGetTx] = useState(true);
 
   const ethBal = useBalance({
     address: userAddress,
@@ -162,6 +164,7 @@ function Swapper(props) {
       currentTotal,
       currentFrenmintUser
     );
+    setGetTx(true);
   }
 
   async function unwrapToken() {
@@ -186,6 +189,7 @@ function Swapper(props) {
       currentTotal,
       currentFrenmintUser
     );
+    setGetTx(true);
   }
 
   function finalizedModal(res) {
@@ -210,6 +214,7 @@ function Swapper(props) {
 
   return (
     <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
+      <RecentTx getTx={getTx} setGetTx={setGetTx} modalMessage={modalMessage} />
       <dialog id="my_modal_25" className="modal">
         <div className="modal-box bg-neutral-900">
           <div className="mb-3">
