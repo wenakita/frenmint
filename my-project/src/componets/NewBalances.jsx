@@ -132,7 +132,9 @@ function NewBalances() {
               alt=""
               className=" rounded-full"
             />
-            <h3 className="text-white mt-2">{currentUserName}</h3>
+            {currentUserName && (
+              <h3 className="text-white mt-2">{currentUserName}</h3>
+            )}
           </div>
           <div className="flex justify-start gap-2 ">
             <button
