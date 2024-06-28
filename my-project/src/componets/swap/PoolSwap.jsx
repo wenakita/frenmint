@@ -3,7 +3,12 @@ import { readContract } from "@wagmi/core";
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import { BsArrowRepeat } from "react-icons/bs";
-import { FaCheckCircle, FaExternalLinkAlt } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaCube,
+  FaEthereum,
+  FaExternalLinkAlt,
+} from "react-icons/fa";
 import { MdError } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { Quoter } from "sudo-defined-quoter";
@@ -481,11 +486,28 @@ function PoolSwap(props) {
         </div>
         <div className="">
           <div className="p-2 text-[8px] mb-2">
-            <h3>Pool Ca: {selectedPool?.sudoSwapData?.address}</h3>
-
-            <h3>{uintFormat(currentShare?.displayPrice)} Ξ / Share</h3>
+            <Link
+              to={`https://basescan.org/address/${currentShare?.address}`}
+              target="_blank"
+              className="hover:underline text-gray-200 "
+            >
+              <div className="flex gap-1 ">
+                <FaCube className="text-[10px] text-gray-500 mt-[1px]" />
+                {currentShare?.address.slice(0, 4) +
+                  "..." +
+                  currentShare?.address.slice(
+                    currentShare?.address.length - 4,
+                    currentShare?.address.length
+                  )}
+              </div>
+            </Link>
+            <div className="flex gap-0.5 text-gray-200">
+              <FaEthereum className="mt-1 text-[11px] text-gray-500" />
+              <h3 className="mt-[3.5px] font-bold">
+                {uintFormat(currentShare?.displayPrice).toFixed(4)} / Share
+              </h3>
+            </div>
           </div>
-
           <button
             className="w-full border border-neutral-800 bg-blue-500 rounded-lg text-white font-bold text-[12px] p-1"
             onClick={() => {
