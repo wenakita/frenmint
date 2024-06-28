@@ -32,7 +32,7 @@ function ChartButton(props) {
       >
         <FaChartArea />
       </button>
-      <dialog id="my_modal_12" className="modal">
+      <dialog id="my_modal_12" className="modal modal-bottom md:modal-middle">
         <div className="modal-box bg-stone-950 overflow-y-auto overflow-x-hidden h-[500px] md:h-auto">
           <div className="flex gap-1">
             <img
