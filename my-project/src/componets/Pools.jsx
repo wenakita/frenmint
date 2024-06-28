@@ -396,8 +396,8 @@ function Pools(props) {
                   </div>
                 </div>
                 <dialog id="my_modal_1" className="modal">
-                  <div className="modal-box bg-neutral-950">
-                    <div className="text-start mt-4">
+                  <div className="modal-box bg-neutral-900">
+                    <div className="text-start">
                       <PoolsManageDialoge
                         currentPool={currentPool}
                         getActivePools={getActivePools}

@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { uintFormat } from "../requests/friendCalls";
-import { useBalance } from "wagmi";
 import { useWallets } from "@privy-io/react-auth";
+import { readContract } from "@wagmi/core";
+import React, { useEffect, useRef, useState } from "react";
+import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
 import friendTechABI from "../abi/FriendTechABi";
-import { readContract } from "@wagmi/core";
+import SudoSwapABI from "../abi/SudoSwapABI";
+import SudoSwapPoolABI from "../abi/SudoSwapPoolABI";
+import { config } from "../config";
 import {
   depositGoddog,
   depositShares,
@@ -12,9 +14,10 @@ import {
   withdrawGoddog,
   withdrawShares,
 } from "../requests/txRequests";
-import { config } from "../config";
-import SudoSwapPoolABI from "../abi/SudoSwapPoolABI";
-import SudoSwapABI from "../abi/SudoSwapABI";
+import { message } from "antd";
+import { FaCheckCircle, FaExternalLinkAlt } from "react-icons/fa";
+import { MdError } from "react-icons/md";
+import { Link } from "react-router-dom";
 function PoolsManageDialoge(props) {
   const { currentPool, getActivePools } = props;
   const [showWithdrawShare, setShowWithdrawShare] = useState(false);
@@ -23,6 +26,7 @@ function PoolsManageDialoge(props) {
   const [showDepositShare, setShowDepositShare] = useState(false);
   const [goddogBalance, setGoddogBalance] = useState(null);
   const [currentShareBalance, setCurrentShareBalance] = useState(null);
+  const [modalMessage, setModalMessage] = useState(null);
   const [input, setInput] = useState(null);
   const inputRef = useRef();
   const { wallets } = useWallets();
@@ -38,14 +42,7 @@ function PoolsManageDialoge(props) {
     chainId: base.id,
   });
   const currentPoolGoddogBalance = poolGoddogBalance?.data?.formatted;
-  useEffect(() => {
-    setGoddogBalance(Number(goddogBalanceResult?.data?.value) / 10 ** 18);
-    const size = window
-      .getComputedStyle(inputRef.current, null)
-      .getPropertyValue("font-size");
 
-    console.log(size);
-  }, []);
   console.log(currentPool);
 
   useEffect(() => {
@@ -67,17 +64,19 @@ function PoolsManageDialoge(props) {
   }
 
   async function detectTransaction() {
+    let res;
+
     const provider = await w0?.getEthersProvider();
     const signer = await provider?.getSigner();
     if (showWithdrawGoddog) {
-      const res = await withdrawGoddog(
+      res = await withdrawGoddog(
         signer,
         SudoSwapPoolABI,
         currentPool?.poolData?.sharePoolData?.address,
         input
       );
     } else if (showWithdrawShare) {
-      const res = await withdrawShares(
+      res = await withdrawShares(
         signer,
         SudoSwapPoolABI,
         currentPool?.poolData?.sharePoolData?.address,
@@ -85,14 +84,14 @@ function PoolsManageDialoge(props) {
         currentPool?.poolData?.sharePoolData?.erc1155Id
       );
     } else if (showDepositGoddog) {
-      const res = await depositGoddog(
+      res = await depositGoddog(
         signer,
         SudoSwapABI,
         currentPool?.poolData?.sharePoolData?.address,
         input
       );
     } else if (showDepositShare) {
-      const res = await depositShares(
+      res = await depositShares(
         signer,
         SudoSwapABI,
         currentPool?.poolData?.sharePoolData?.address,
@@ -100,15 +99,91 @@ function PoolsManageDialoge(props) {
         input
       );
     }
-    getActivePools();
+    console.log(res);
+    if (res.failed === false) {
+      setModalMessage({
+        message: `${res.type} successful!`,
+        variant: "green",
+        failed: res.failed,
+        hash: res?.receipt?.transactionHash,
+      });
+    } else if (res.failed === true) {
+      console.log("failed tx");
+      setModalMessage({
+        message: `${res.type} unexpectedly failed`,
+        variant: "red",
+        failed: res.failed,
+        hash: null,
+      });
+    }
+    document.getElementById("my_modal_20").showModal();
   }
 
   return (
     <div className="border bg-neutral-900 p-2 rounded-lg border-stone-900 font-mono font-bold">
+      {/*  */}
+      <dialog id="my_modal_20" className="modal">
+        <div className="modal-box bg-neutral-900">
+          <div className="mb-3">
+            {modalMessage?.failed ? (
+              <MdError
+                className={`text-[100px] text-${modalMessage?.variant}-500 ms-auto me-auto`}
+              />
+            ) : (
+              <FaCheckCircle className="text-[100px] text-green-500 ms-auto me-auto " />
+            )}
+          </div>
+          <h3 className="font-bold text-[10px] font-mono text-center">
+            {modalMessage?.message}
+          </h3>
+
+          {modalMessage?.failed ? (
+            <h3 className="text-[8px] text-center mt-1">
+              Please make sure you have enough to cover gas and tokens as well
+            </h3>
+          ) : (
+            <div className="text-center text-[10px] mt-2">
+              <Link
+                to={`https://basescan.org/tx/${modalMessage?.hash}`}
+                target="_blank"
+                className=""
+              >
+                <div className="flex justify-center gap-1">
+                  <FaExternalLinkAlt className="text-[13px] mt-1" />
+                  <h3 className="mt-1">Tx Hash</h3>
+                </div>
+              </Link>
+            </div>
+          )}
+          <div className="mt-2">
+            <button
+              onClick={() => {
+                document.getElementById("my_modal_20").close();
+              }}
+              className="border w-full rounded-md text-[12px] border-stone-900 bg-blue-500 text-white font-mono font-bold p-1 hover:bg-stone-800"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button
+            onClick={() => {
+              console.log("closed");
+              if (!modalMessage?.failed) {
+                getActivePools();
+              }
+            }}
+          >
+            close
+          </button>
+        </form>
+      </dialog>
+      {/*  */}
       <select
         name="h"
         id=""
-        className="text-[8px] p-1 rounded-md bg-stone-950 border border-transparent hover:border-blue-500 w-full mb-2"
+        className="text-[8px] p-1 rounded-md bg-stone-950 border border-transparent hover:border-blue-500 w-full mb-4"
       >
         <option value="" disabled selected>
           Select
@@ -187,7 +262,7 @@ function PoolsManageDialoge(props) {
                         ? `Shares deposited: ${Number(
                             currentPool?.poolData?.sharePoolData?.nftBalance
                           )} `
-                        : "Select option"}
+                        : null}
                     </>
                   )}
                 </>
