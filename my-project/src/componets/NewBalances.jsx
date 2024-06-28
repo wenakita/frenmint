@@ -23,7 +23,7 @@ function NewBalances() {
   const { wallets } = useWallets();
   const userAddress = wallets[0]?.address;
   const [hasUserName, setHasUserName] = useState(null);
-  const [currentUserName, setCurrentUserName] = useState(null);
+  const [currentUserName, setCurrentUserName] = useState("");
   const [userPools, setUserPools] = useState(null);
   const [viewShareHoldings, setViewShareHoldings] = useState(true);
   const [transferShares, setTransferShares] = useState(null);
