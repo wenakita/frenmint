@@ -36,7 +36,8 @@ function NewBalances() {
 
   useEffect(() => {
     fetchUsers();
-  });
+  }),
+    [];
   async function getActivePools() {
     setUserPools(null);
 
@@ -100,8 +101,6 @@ function NewBalances() {
   }
 
   async function fetchUsers() {
-    let hasUserName = false;
-    let userName;
     const { data, error } = await supabase.from("usernames").select();
     if (error) {
       console.log(error);
@@ -110,16 +109,11 @@ function NewBalances() {
       console.log(data);
       for (const key in data) {
         if (data[key]?.user_address === userAddress) {
-          console.log(data[key]);
-          userName = data[key]?.username;
-          hasUserName = true;
+          setCurrentUserName(data[key]?.username);
+
           break;
         }
       }
-    }
-    console.log("userName, ", userName);
-    if (hasUserName) {
-      setCurrentUserName(userName);
     }
   }
   return (
