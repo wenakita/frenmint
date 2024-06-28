@@ -12,6 +12,7 @@ import { base } from "wagmi/chains";
 import { getShareBalance } from "../../requests/txRequests";
 import { readContract } from "@wagmi/core";
 import { config } from "../../config";
+import ChartButton from "./ChartButton";
 //remmm min nft to deposit is 4 no maximum
 //formula to caclculate delta => numNftDeposited * 11 + 1
 //spot price = spotprice * delta
@@ -32,7 +33,13 @@ function CreatePool(props) {
   const [goddogBalance, setGoddogBalance] = useState(null);
   const [ethbalance, setEthBalance] = useState(null);
 
-  const { holdingsData, setCurrentShare } = props;
+  const {
+    holdingsData,
+    setCurrentShare,
+    currentPriceHistory,
+    currentShare,
+    shareTotalVolume,
+  } = props;
   const [selectedShare, setSelectedShare] = useState(null);
   const [depositAmount, setDepositAmount] = useState(0);
   const [currentSpotPrice, setCurrentSpotPrice] = useState(0);
@@ -40,8 +47,12 @@ function CreatePool(props) {
   const [initialTokenBalance, setIntitialTokenBalance] = useState(null);
   const [message, setMessgae] = useState(null);
   const [shareBalance, setShareBalance] = useState(null);
+  const [ethPrice, setEthPrice] = useState(null);
+  const [goddogPrice, setGoddogPrice] = useState(null);
+
   const [lp, setLp] = useState(0);
   useEffect(() => {
+    getEthereumPrice();
     if (holdingsData) {
       setSelectedShare(holdingsData[0]);
     }
@@ -57,6 +68,15 @@ function CreatePool(props) {
     console.log(depositAmount);
     calculate();
   }, [depositAmount]);
+
+  async function getEthereumPrice() {
+    const ethPriceUSD = await getEthPrice();
+    const oooOOOPrice = await getGoddogPrice();
+    console.log(oooOOOPrice);
+    setGoddogPrice(oooOOOPrice);
+
+    setEthPrice(ethPriceUSD);
+  }
 
   async function calculate() {
     const ethPriceUSD = await getEthPrice();
@@ -199,20 +219,30 @@ function CreatePool(props) {
   //   - Basically make it so users simply 1. Enter the number of NFT's they wana provide and then 2. Click "Create Pool"
   return (
     <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
-      <div className="flex justify-start gap-1">
-        <img
-          src="https://avatars.githubusercontent.com/u/94413972?s=280&v=4"
-          alt=""
-          className="w-5 h-5 rounded-full"
-        />
-        <h3 className="text-white font-bold text-[10px] mt-0.5">
-          Add liquidity
-        </h3>
+      <div className="flex justify-between">
+        <div className="flex justify-start gap-1">
+          <img
+            src="https://avatars.githubusercontent.com/u/94413972?s=280&v=4"
+            alt=""
+            className="w-5 h-5 rounded-full"
+          />
+          <h3 className="text-white font-bold text-[10px] mt-0.5">
+            Add liquidity
+          </h3>
+        </div>
+        <div>
+          <ChartButton
+            shareTotalVolume={shareTotalVolume}
+            currentPriceHistory={currentPriceHistory}
+            currentShare={currentShare}
+          />
+        </div>
       </div>
+
       <div className=" mt-4">
         <div className="">
           <div className="flex justify-start">
-            <h3 className="text-white text-[10px]">Paired token</h3>
+            <h3 className="text-white text-[10px]">Paired ERC-20 Token</h3>
           </div>
           <button
             className="border w-full rounded-md border-neutral-600 bg-stone-800 mt-1 hover:text-stone-500"
@@ -247,7 +277,7 @@ function CreatePool(props) {
         </div>
         <div className="">
           <div className="flex justify-start">
-            <h3 className="text-white text-[10px]">Paired share</h3>
+            <h3 className="text-white text-[10px]">Paired ERC-1155 Share</h3>
           </div>
           <button
             className="border w-full rounded-md border-neutral-600 bg-stone-800 mt-1 hover:text-stone-500"
@@ -299,7 +329,7 @@ function CreatePool(props) {
           </div>
         </div>
 
-        <div className=" p-1  text-[10px] mb-4">
+        <div className=" p-1  text-[9px] mb-4">
           <div className="flex justify-center">
             <h3 className="text-red-500">{message ? message : null}</h3>
           </div>
@@ -307,7 +337,7 @@ function CreatePool(props) {
             Initial Pool
           </div>
 
-          <div className="grid grid-cols-3 p-1">
+          <div className="grid grid-cols-2 p-1">
             <div className="border border-neutral-700 bg-neutral-800 rounded-md">
               <div className="grid grid-rows-1 p-2">
                 <div className="font-bold text-stone-400">Pool fee</div>
@@ -316,27 +346,41 @@ function CreatePool(props) {
             </div>
             <div className="border border-neutral-700 bg-neutral-800 rounded-sm">
               <div className="grid grid-rows-1 p-2">
-                <div className="font-bold text-stone-400">$OOOooo LP</div>
-                <div className="font-bold text-white text-[8px] ">
-                  {lp.toFixed(0)}
+                <div className="font-bold text-stone-400 whitespace-nowrap">
+                  Required $OOOooo LP
                 </div>
-              </div>
-            </div>
-            <div className="border border-neutral-700 bg-neutral-800 rounded-md">
-              <div className="grid grid-rows-1 p-2">
-                <div className="font-bold text-stone-400">Delta</div>
                 <div className="font-bold text-white text-[8px] ">
-                  {currentDelta}
+                  <div className="flex gap-1">
+                    <h3>{lp.toFixed(0)}</h3>
+                    <h3 className="text-[7px] mt-[1px]">
+                      {"≈ " + Number(goddogPrice * lp).toFixed(2) + " USD"}
+                    </h3>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div className="border border-neutral-700 bg-neutral-800 rounded-md w-[98%] mx-auto">
             <div className="grid grid-rows-1 p-2">
-              <div className="font-bold text-stone-400">Share price</div>
+              <div className="font-bold text-stone-400">Mint price</div>
               <div className="font-bold text-white ">
-                {uintFormat(selectedShare?.FTData?.displayPrice) || 0}{" "}
-                {" Ξ / Share"}
+                <div className="flex gap-1">
+                  <h3>
+                    {uintFormat(selectedShare?.FTData?.displayPrice).toFixed(
+                      5
+                    ) || 0}{" "}
+                    {" Ξ / Share"}
+                  </h3>
+                  <h3 className="text-[7px] mt-[2px]">
+                    ≈{" "}
+                    {" " +
+                      Number(
+                        uintFormat(selectedShare?.FTData?.displayPrice) *
+                          ethPrice
+                      ).toFixed(2)}{" "}
+                    USD
+                  </h3>
+                </div>
               </div>
             </div>
           </div>

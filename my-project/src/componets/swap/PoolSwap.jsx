@@ -15,7 +15,7 @@ import SudoSwapPoolTXABI from "../../abi/SudoSwapPoolTXABI";
 import { config } from "../../config";
 import { uintFormat } from "../../formatters/format";
 import { SearchByContract } from "../../requests/friendCalls";
-import { getGoddogPrice } from "../../requests/priceCalls";
+import { getEthPrice, getGoddogPrice } from "../../requests/priceCalls";
 import {
   buyPool,
   getShareBalance,
@@ -51,6 +51,7 @@ function PoolSwap(props) {
   const [input, setInput] = useState(null);
   const [total, setTotal] = useState(null);
   const [modalMessage, setModalMessage] = useState(null);
+  const [ethPrice, setEthPrice] = useState(null);
 
   useEffect(() => {
     getPrice();
@@ -86,7 +87,10 @@ function PoolSwap(props) {
 
   async function getPrice() {
     const res = await getGoddogPrice();
+    const ethRes = await getEthPrice();
+    console.log(ethRes);
     console.log(res);
+    setEthPrice(ethRes);
     setGoddogPrice(res);
   }
 
@@ -386,7 +390,9 @@ function PoolSwap(props) {
           <div>
             <h3 className="text-[7px]">
               {"≈ " +
-                Number(total?.toFixed(2) * goddogPrice).toFixed(2) +
+                Number(
+                  uintFormat(currentShare?.displayPrice) * ethPrice * input
+                ).toFixed(2) +
                 " USD"}
             </h3>
           </div>

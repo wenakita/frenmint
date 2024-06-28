@@ -172,6 +172,9 @@ function NewSwap() {
                   <CreatePool
                     holdingsData={holdingsData}
                     setCurrentShare={setCurrentShare}
+                    currentPriceHistory={currentPriceHistory}
+                    currentShare={currentShare}
+                    shareTotalVolume={shareTotalVolume}
                   />
                 ) : (
                   <>

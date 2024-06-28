@@ -34,9 +34,9 @@ function Layout() {
           </div> */}
         </>
       ) : null}
-      <div className="">
+      {/* <div className="">
         <RecentTx />
-      </div>
+      </div> */}
 
       <div className="">
         <Outlet />

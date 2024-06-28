@@ -480,3 +480,13 @@ export async function buyPool(signer, abi, parameters, owner) {
     return { failed: true, receipt: null, type: "Pool buy" };
   }
 }
+
+async function createSharePool(signer, abi, parameters, owner) {
+  const isAppoved = await checkShareApproval(
+    owner,
+    "0x605145D263482684590f630E9e581B21E4938eb8"
+  );
+  if (!isAppoved) {
+    await approveShareSpending(signer);
+  }
+}
