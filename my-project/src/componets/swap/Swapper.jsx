@@ -70,11 +70,9 @@ function Swapper(props) {
     setEthBalance(Number(ethBal?.data?.formatted).toFixed(6));
   });
   useEffect(() => {
-    console.log(searchInput.length);
-
-    if (searchInput) {
+    if (searchInput !== null) {
       searchUser();
-    } else if (searchInput.length === 0) {
+    } else {
       setSearchResults(null);
     }
   }, [searchInput]);
