@@ -100,6 +100,8 @@ function NewBalances() {
   }
 
   async function fetchUsers() {
+    let hasUserName = false;
+    let userName;
     const { data, error } = await supabase.from("usernames").select();
     if (error) {
       console.log(error);
@@ -109,9 +111,13 @@ function NewBalances() {
       for (const key in data) {
         if (data[key]?.user_address === userAddress) {
           console.log(data[key]);
-          setCurrentuserName(data[key]?.username);
+          userName = data[key]?.username;
+          hasUserName = true;
         }
       }
+    }
+    if (hasUserName) {
+      setCurrentuserName(userName);
     }
   }
   return (
