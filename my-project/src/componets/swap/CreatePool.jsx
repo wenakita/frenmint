@@ -401,7 +401,14 @@ function CreatePool(props) {
 
         <dialog id="my_modal_1" className="modal modal-bottom md:modal-middle">
           <div className="modal-box bg-neutral-900  h-[400px]">
-            <h3 className="font-bold text-lg mb-2">Select a share</h3>
+            <div className="flex gap-1">
+              <img
+                src="https://www.friend.tech/friendtechlogo.png"
+                alt=""
+                className="size-5"
+              />
+              <h3 className="font-bold text-sm mb-2">Select </h3>
+            </div>
             {/* <div className="flex justify-center mt-5">
               <input
                 type="text"
@@ -411,7 +418,7 @@ function CreatePool(props) {
                 }}
               />
             </div> */}
-            <div className="overflow-y-auto h-[270px] md:h-[200px] border border-neutral-700 border-b-0 border-r-0 border-l-0  p-2">
+            <div className="overflow-y-auto h-[270px] md:h-[200px] border border-neutral-800 border-b-0 border-r-0 border-l-0  p-2">
               {holdingsData ? (
                 <>
                   {holdingsData?.map((item) => {

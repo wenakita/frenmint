@@ -513,7 +513,14 @@ function PoolSwap(props) {
       </div>
       <dialog id="my_modal_1" className="modal modal-bottom md:modal-middle">
         <div className="modal-box bg-neutral-900  h-[400px] md:h-auto">
-          <h3 className="font-bold text-lg mb-2">Select a share</h3>
+          <div className="flex gap-1">
+            <img
+              src="https://www.friend.tech/friendtechlogo.png"
+              alt=""
+              className="size-5"
+            />
+            <h3 className="font-bold text-sm mb-2">Select </h3>
+          </div>
           <div className="relative mb-2">
             <input
               type="text"

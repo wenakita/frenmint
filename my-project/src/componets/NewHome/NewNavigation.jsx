@@ -5,6 +5,8 @@ import { FaArrowsRotate } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { usePrivy } from "@privy-io/react-auth";
 import { GetTrendingFriends, SearchByUser } from "../../requests/friendCalls";
+import { RiSwap2Line } from "react-icons/ri";
+
 function NewNavigation() {
   const navigate = useNavigate();
   const { logout, authenticated, user, ready } = usePrivy();
@@ -131,7 +133,7 @@ function NewNavigation() {
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
+              className="size-4 mt-0.5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -151,14 +153,21 @@ function NewNavigation() {
           </button>
           <button className="btn btn-ghost btn-circle">
             <Link to={"/newswap"} className="btn btn-ghost btn-circle">
-              <FaArrowsRotate className="text-[15px]" />
+              <RiSwap2Line className="text-[15px]" />
             </Link>
           </button>
         </div>
       </div>
       <dialog id="my_modal_3" className="modal">
-        <div className="modal-box bg-stone-900 h-[350px]">
-          <h3 className="font-bold text-sm">Find shares</h3>
+        <div className="modal-box bg-neutral-900 h-[350px]">
+          <div className="flex gap-1">
+            <img
+              src="https://www.friend.tech/friendtechlogo.png"
+              alt=""
+              className="size-5"
+            />
+            <h3 className="font-bold text-sm">Search</h3>
+          </div>
           <div className="relative mb-3 mt-2">
             <input
               type="text"

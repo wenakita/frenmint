@@ -15,6 +15,8 @@ import { config } from "../../config";
 import { SearchByUser } from "../../requests/friendCalls";
 import { getEthPrice } from "../../requests/priceCalls";
 import { postTransaction } from "../../requests/supaBaseHandler";
+import { FaEthereum } from "react-icons/fa6";
+import { FaCube } from "react-icons/fa";
 import {
   getShareBalance,
   getShareBuyTotal,
@@ -401,8 +403,27 @@ function Swapper(props) {
         </div>
         <div className="">
           <div className="p-2 text-[8px] mb-2">
-            <h3>CA: {currentShare?.address}</h3>
-            <h3>{currentSharePrice} Ξ / Share</h3>
+            <Link
+              to={`https://basescan.org/address/${currentShare?.address}`}
+              target="_blank"
+              className="hover:underline text-gray-200 "
+            >
+              <div className="flex gap-1 ">
+                <FaCube className="text-[10px] text-gray-500 mt-[1px]" />
+                {currentShare?.address.slice(0, 4) +
+                  "..." +
+                  currentShare?.address.slice(
+                    currentShare?.address.length - 4,
+                    currentShare?.address.length
+                  )}
+              </div>
+            </Link>
+            <div className="flex gap-0.5 text-gray-200">
+              <FaEthereum className="mt-1 text-[11px] text-gray-500" />
+              <h3 className="mt-[3.5px] font-bold">
+                {currentSharePrice} / Share
+              </h3>
+            </div>
           </div>
 
           <button
@@ -423,7 +444,14 @@ function Swapper(props) {
       </div>
       <dialog id="my_modal_1" className="modal modal-bottom md:modal-middle">
         <div className="modal-box bg-neutral-900 h-[400px] md:h-auto">
-          <h3 className="font-bold text-sm mb-2">Select share</h3>
+          <div className="flex gap-1">
+            <img
+              src="https://www.friend.tech/friendtechlogo.png"
+              alt=""
+              className="size-5"
+            />
+            <h3 className="font-bold text-sm mb-2">Select </h3>
+          </div>
           <div className="relative">
             <input
               type="text"
