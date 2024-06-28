@@ -485,14 +485,31 @@ function PoolSwap(props) {
       <dialog id="my_modal_1" className="modal modal-bottom md:modal-middle">
         <div className="modal-box bg-neutral-900  h-[400px] md:h-auto">
           <h3 className="font-bold text-lg mb-2">Select a share</h3>
-          <div className="flex justify-center mt-5">
+          <div className="relative mb-2">
             <input
               type="text"
-              className="w-[80%] border rounded-lg border-transparent outline-none text-[10px] mb-4"
+              className="pl-9 pr-3 py-2 w-full text-[10px] bg-stone-800  rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+              placeholder="Search..."
               onChange={(e) => {
                 // setSearchInput(e.target.value);
               }}
             />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg
+                className="w-4 h-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"
+                ></path>
+              </svg>
+            </div>
           </div>
           <div className="overflow-y-auto h-[270px] md:h-[200px] border border-neutral-700 border-b-0 border-r-0 border-l-0  p-2">
             {availablePools ? (

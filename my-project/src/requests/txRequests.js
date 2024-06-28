@@ -287,10 +287,10 @@ export async function withdrawGoddog(signer, abi, targetPool, withdrawAmount) {
     );
     const reciept = await res.wait();
     console.log(await reciept);
-    return { failed: false, receipt: reciept, type: "withdraw" };
+    return { failed: false, receipt: reciept, type: "Withdraw" };
   } catch (error) {
     console.log(error);
-    return { failed: true, receipt: null, type: "withdraw" };
+    return { failed: true, receipt: null, type: "Withdraw" };
   }
 }
 

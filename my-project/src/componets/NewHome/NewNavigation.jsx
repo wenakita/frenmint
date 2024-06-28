@@ -72,9 +72,9 @@ function NewNavigation() {
                   Whitepaper
                 </Link>
               </li>
-              <li className="">
+              {/* <li className="">
                 <Link to={"/my-pools"}>my pool</Link>
-              </li>
+              </li> */}
               <li>
                 <Link
                   to={"https://telegra.ph/What-is-FrenMint-06-03"}
@@ -83,9 +83,9 @@ function NewNavigation() {
                   Frenmint docs
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to={"/my-pools"}>Manage Pools</Link>
-              </li>
+              </li> */}
 
               <li>
                 <Link
@@ -154,18 +154,18 @@ function NewNavigation() {
         </div>
       </div>
       <dialog id="my_modal_3" className="modal">
-        <div className="modal-box bg-stone-900">
-          <h3 className="font-bold text-lg">Search users</h3>
+        <div className="modal-box bg-stone-900 h-[350px]">
+          <h3 className="font-bold text-sm">Find shares</h3>
           <div>
             <input
               type="text"
-              className="w-full rounded-lg p-1"
+              className="w-full rounded-lg text-[10px]"
               onChange={(e) => {
                 setSearchInput(e.target.value);
               }}
             />
           </div>
-          <div className="overflow-y-auto h-[200px] border border-neutral-700 border-b-0 border-r-0 border-l-0  p-2">
+          <div className="overflow-y-auto h-[270px] border border-neutral-700 border-b-0 border-r-0 border-l-0  p-2">
             {searchResults ? (
               <>
                 {searchResults.map((item) => {
@@ -226,13 +226,10 @@ function NewNavigation() {
               </>
             )}
           </div>
-          <div className="modal-action">
-            <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
-              <button className="btn">Close</button>
-            </form>
-          </div>
         </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
       </dialog>
     </>
   );
