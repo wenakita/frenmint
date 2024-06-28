@@ -36,8 +36,7 @@ function NewBalances() {
 
   useEffect(() => {
     fetchUsers();
-  }),
-    [];
+  }, []);
   async function getActivePools() {
     setUserPools(null);
 
@@ -115,6 +114,7 @@ function NewBalances() {
         }
       }
     }
+    console.log(currentUserName, "username");
   }
   return (
     <div className="mt-1 ">
