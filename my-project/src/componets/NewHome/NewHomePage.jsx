@@ -11,6 +11,8 @@ import Hero from "./Hero";
 import Faq from "./Faq";
 import Socials from "./Socials";
 import { useWalletData } from "../hooks/useWalletData";
+import _ from "lodash";
+
 function NewHomePage() {
   const testing = useWalletData();
   console.log(testing);
@@ -34,6 +36,8 @@ function NewHomePage() {
         const res = await SearchByContract(data[key]?.share_address);
         formattedData.push(res);
       }
+      console.log(formattedData);
+
       setRecentTxs(formattedData);
     }
   }

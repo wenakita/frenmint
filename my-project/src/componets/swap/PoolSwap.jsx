@@ -365,7 +365,7 @@ function PoolSwap(props) {
             alt=""
             className="size-5 "
           />
-          <h3 className="">{buyFromPool ? "Buy" : "Sell"}</h3>
+          <h3 className="">Swap</h3>
         </div>
         <div>
           <ChartButton

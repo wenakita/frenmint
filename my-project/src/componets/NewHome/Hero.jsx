@@ -52,9 +52,10 @@ function Hero(props) {
             SocialFi in the palm of your hands
           </h3>
           <h3 className="text-gray-500 font-mono font-bold text-[15px] break-words md:w-[80%] lg:w-[50%] mx-auto">
-            FrenMint offers a cost-effective way to mint ERC-1155 NFTs via
-            Friend.Tech shares, providing 31% lower fees for traders and up to
-            38% higher revenue for hosts.
+            FrenMint offers a cost-effective way to buy Friend.Tech shares as
+            ERC-1155 NFTs. Pairing the NFTs with our native ERC-20 token GODDOG
+            ($oooOOO) enables us to provide 31% lower fees for traders and at
+            the same time 38% more revenue for hosts aka liquidity providers.
           </h3>
         </div>
         <div className=" mt-4 w-[50%] mx-auto">

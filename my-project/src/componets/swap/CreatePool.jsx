@@ -286,12 +286,15 @@ function CreatePool(props) {
             <div className="flex justify-between gap-1 p-0.5">
               <div className="flex justify-start gap-1">
                 <img
-                  src={selectedShare?.FTData?.ftPfpUrl}
+                  src={
+                    selectedShare?.FTData?.ftPfpUrl ||
+                    "https://p7.hiclipart.com/preview/281/279/792/pepe-the-frog-batman-internet-meme-pepe-frog.jpg"
+                  }
                   alt=""
                   className="w-3 h-3 mt-[3px] ms-1 rounded-full"
                 />
                 <h3 className="whitespace-nowrap truncate text-[8px] mt-0.5">
-                  {selectedShare?.FTData?.ftName}
+                  {selectedShare?.FTData?.ftName || "You own 0 shares"}
                 </h3>
               </div>
               <img
