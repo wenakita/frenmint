@@ -155,15 +155,17 @@ function Swapper(props) {
     );
     finalizedModal(txRes);
 
-    await postTransaction(
-      supabase,
-      currentShare,
-      input,
-      userAddress,
-      true,
-      currentTotal,
-      currentFrenmintUser
-    );
+    if (!txRes?.failed) {
+      await postTransaction(
+        supabase,
+        currentShare,
+        input,
+        userAddress,
+        true,
+        currentTotal,
+        currentFrenmintUser
+      );
+    }
     setGetTx(true);
   }
 
@@ -180,15 +182,17 @@ function Swapper(props) {
     );
     finalizedModal(txRes);
 
-    await postTransaction(
-      supabase,
-      currentShare,
-      input,
-      userAddress,
-      false,
-      currentTotal,
-      currentFrenmintUser
-    );
+    if (!txRes?.failed) {
+      await postTransaction(
+        supabase,
+        currentShare,
+        input,
+        userAddress,
+        false,
+        currentTotal,
+        currentFrenmintUser
+      );
+    }
     setGetTx(true);
   }
 
