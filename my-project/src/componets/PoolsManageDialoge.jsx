@@ -20,7 +20,7 @@ import { MdError } from "react-icons/md";
 import { Link } from "react-router-dom";
 function PoolsManageDialoge(props) {
   const { currentPool, getActivePools } = props;
-  const [showWithdrawShare, setShowWithdrawShare] = useState(false);
+  const [showWithdrawShare, setShowWithdrawShare] = useState(true);
   const [showWithdrawGoddog, setShowWithdrawGoddog] = useState(false);
   const [showDepositGoddog, setShowDepositGoddog] = useState(false);
   const [showDepositShare, setShowDepositShare] = useState(false);
@@ -185,11 +185,9 @@ function PoolsManageDialoge(props) {
         id=""
         className="text-[8px] p-1 rounded-md bg-stone-950 border border-transparent hover:border-blue-500 w-full mb-4"
       >
-        <option value="" disabled selected>
-          Select
-        </option>
         <option
           value="h"
+          selected
           onClick={() => {
             setShowWithdrawShare(true);
             setShowDepositGoddog(false);
