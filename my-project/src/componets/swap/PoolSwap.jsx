@@ -1,26 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { Quoter } from "sudo-defined-quoter";
-import AvaliablePairs from "./AvailablePairs";
-import { Contract, ethers } from "ethers";
+import { useWallets } from "@privy-io/react-auth";
 import { readContract } from "@wagmi/core";
+import { ethers } from "ethers";
+import React, { useEffect, useState } from "react";
+import { BsArrowRepeat } from "react-icons/bs";
+import { FaCheckCircle, FaExternalLinkAlt } from "react-icons/fa";
+import { MdError } from "react-icons/md";
+import { Link } from "react-router-dom";
+import { Quoter } from "sudo-defined-quoter";
+import { useBalance } from "wagmi";
+import { base } from "wagmi/chains";
 import friendTechABI from "../../abi/FriendTechABi";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import SudoSwapPoolABI from "../../abi/SudoSwapPoolABI";
+import SudoSwapPoolTXABI from "../../abi/SudoSwapPoolTXABI";
+import { config } from "../../config";
+import { uintFormat } from "../../formatters/format";
+import { SearchByContract } from "../../requests/friendCalls";
+import { getGoddogPrice } from "../../requests/priceCalls";
 import {
+  buyPool,
   getShareBalance,
   getShareUri,
   getSingleBuyNftPrice,
   getSingleSellNftPrice,
+  sellPool,
 } from "../../requests/txRequests";
-import { config } from "../../config";
-import { SearchByContract } from "../../requests/friendCalls";
-import { useWallets } from "@privy-io/react-auth";
-import GodDogABI from "../../abi/GodDogABI";
-import SudoSwapPoolTXABI from "../../abi/SudoSwapPoolTXABI";
-import { uintFormat } from "../../formatters/format";
-import { useBalance } from "wagmi";
-import { base } from "wagmi/chains";
-import { getGoddogPrice } from "../../requests/priceCalls";
+import AvaliablePairs from "./AvailablePairs";
 import ChartButton from "./ChartButton";
 
 function PoolSwap(props) {
@@ -46,6 +50,7 @@ function PoolSwap(props) {
   const [shareBalance, setShareBalance] = useState(null);
   const [input, setInput] = useState(null);
   const [total, setTotal] = useState(null);
+  const [modalMessage, setModalMessage] = useState(null);
 
   useEffect(() => {
     getPrice();
@@ -85,56 +90,10 @@ function PoolSwap(props) {
     setGoddogPrice(res);
   }
 
-  async function approveGoddog() {
+  async function buyInPool(nftId, poolAddress, spotPrice) {
     const provider = await w0?.getEthersProvider();
     const network = await provider.getNetwork();
     const signer = await provider?.getSigner();
-    const godDogContract = new Contract(
-      "0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
-      GodDogABI,
-      signer
-    );
-    try {
-      const res = await godDogContract.approve(
-        "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
-        "99999999999999999999999999999999"
-      );
-      const reciept = await res;
-      console.log(await reciept);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async function approveShare() {
-    try {
-      const provider = await w0?.getEthersProvider();
-      const network = await provider.getNetwork();
-      const signer = await provider?.getSigner();
-
-      const godDogContract = new Contract(
-        "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
-        friendTechABI,
-        signer
-      );
-      const res = await godDogContract.setApprovalForAll(
-        "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
-        true
-      );
-      const reciept = await res;
-      console.log(await reciept);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  //format for buy in pool
-  // purchaseShareFromPool(
-  //   selectedPool?.sudoSwapData?.erc1155Id,
-  //   selectedPool?.sudoSwapData?.address,
-  //   selectedPool?.sudoSwapData?.spotPrice
-  // );
-
-  async function buyInPool(nftId, poolAddress, spotPrice) {
     const buyPrice = await getSingleBuyNftPrice(
       readContract,
       config,
@@ -143,57 +102,41 @@ function PoolSwap(props) {
       poolAddress,
       String(input)
     );
-    console.log(input, buyPrice, spotPrice);
 
-    await approveGoddog();
-
-    const provider = await w0?.getEthersProvider();
-    const network = await provider.getNetwork();
-    const signer = await provider?.getSigner();
-    const sudoSwapContract = new Contract(
-      "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
-      SudoSwapPoolTXABI,
-      signer
-    );
-
-    try {
-      const parameters = [
+    const parameters = [
+      [
         [
-          [
-            poolAddress,
-            false,
-            [String(input)], // Note: Ensure "1" is a string if required, otherwise use [1] for numbers
-            ethers.BigNumber.from(String(buyPrice)),
-            "0",
-            ethers.BigNumber.from(String(spotPrice)),
-            [ethers.BigNumber.from(String(buyPrice))],
-          ],
+          poolAddress,
+          false,
+          [String(input)],
+          ethers.BigNumber.from(String(buyPrice)),
+          "0",
+          ethers.BigNumber.from(String(spotPrice)),
+          [ethers.BigNumber.from(String(buyPrice))],
         ],
-        [],
-        String(w0?.address),
-        String(w0?.address),
-        false,
-      ];
-      const res = await sudoSwapContract.swap(parameters, {
-        gasLimit: 200000,
-      });
-      const reciept = await res.wait();
-      console.log(await reciept);
-      // acitvateLoading();
-      // setDisplayPools(false);
-      getExistingPools();
-    } catch (error) {
-      console.log(error);
+      ],
+      [],
+      String(w0?.address),
+      String(w0?.address),
+      false,
+    ];
+
+    const txRes = await buyPool(
+      signer,
+      SudoSwapPoolTXABI,
+      parameters,
+      w0?.address
+    );
+    if (!txRes?.failed) {
+      getBalance();
     }
+    finalizedModal(txRes);
   }
 
-  //ex format for sell in pool
-  // sellInPool(
-  //   selectedPool?.sudoSwapData?.erc1155Id,
-  //   selectedPool?.sudoSwapData?.address,
-  //   selectedPool?.sudoSwapData?.spotPrice
-  // );
   async function sellInPool(nftId, poolAddress, spotPrice) {
+    const provider = await w0?.getEthersProvider();
+
+    const signer = await provider?.getSigner();
     const sellPrice = await getSingleSellNftPrice(
       readContract,
       config,
@@ -202,57 +145,56 @@ function PoolSwap(props) {
       poolAddress,
       String(input)
     );
-    console.log(sellPrice, spotPrice, input);
 
-    await approveShare();
-
-    const provider = await w0?.getEthersProvider();
-    const network = await provider.getNetwork();
-    const signer = await provider?.getSigner();
-    const sudoSwapContract = new Contract(
-      "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
-      SudoSwapPoolTXABI,
-      signer
-    );
-    // format for params
-    // '1'
-    // nftBuyQuote[3]:
-    //  49386666666666666666n
-    // spotPrice:
-    //  320000000000000000000n
-    try {
-      const parameters = [
-        [],
+    const parameters = [
+      [],
+      [
         [
-          [
-            poolAddress,
-            false,
-            false,
-            [String(input)], // Note: Ensure "1" is a string if required, otherwise use [1] for numbers
-            false,
-            "0x",
-            ethers.BigNumber.from(String(sellPrice)),
-            ethers.BigNumber.from(String(spotPrice)),
-            [ethers.BigNumber.from(String(sellPrice))],
-          ],
+          poolAddress,
+          false,
+          false,
+          [String(input)],
+          false,
+          "0x",
+          ethers.BigNumber.from(String(sellPrice)),
+          ethers.BigNumber.from(String(spotPrice)),
+          [ethers.BigNumber.from(String(sellPrice))],
         ],
-        String(w0?.address),
-        String(w0?.address),
-        false,
-      ];
-      const res = await sudoSwapContract.swap(parameters, {
-        gasLimit: 250000,
-      });
-      const reciept = await res.wait();
-      console.log(await reciept);
-
-      // acitvateLoading();
-      // setDisplayPools(false);
-      getExistingPools();
-    } catch (error) {
-      console.log(error);
-      // setMessage("Transaction Reverted");
+      ],
+      String(w0?.address),
+      String(w0?.address),
+      false,
+    ];
+    const txRes = await sellPool(
+      signer,
+      SudoSwapPoolTXABI,
+      parameters,
+      w0?.address
+    );
+    if (!txRes?.failed) {
+      getBalance();
     }
+    finalizedModal(txRes);
+  }
+
+  function finalizedModal(res) {
+    if (res.failed === false) {
+      setModalMessage({
+        message: `${res.type} successful!`,
+        variant: "green",
+        failed: res.failed,
+        hash: res?.receipt?.transactionHash,
+      });
+    } else if (res.failed === true) {
+      console.log("failed tx");
+      setModalMessage({
+        message: `${res.type} unexpectedly failed`,
+        variant: "red",
+        failed: res.failed,
+        hash: null,
+      });
+    }
+    document.getElementById("my_modal_23").showModal();
   }
 
   async function getSellNftQuote() {
@@ -265,11 +207,8 @@ function PoolSwap(props) {
       selectedPool?.sudoSwapData?.address,
       String(input)
     );
-    console.log(sellPrice);
+
     setUintTotal(sellPrice);
-
-    console.log(Number(sellPrice) / 10 ** 18);
-
     setTotal(Number(sellPrice) / 10 ** 18);
   }
   async function getBuyNftQuote() {
@@ -349,6 +288,65 @@ function PoolSwap(props) {
   }
   return (
     <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
+      {/*  */}
+      <dialog id="my_modal_23" className="modal">
+        <div className="modal-box bg-neutral-900">
+          <div className="mb-3">
+            {modalMessage?.failed ? (
+              <MdError
+                className={`text-[100px] text-${modalMessage?.variant}-500 ms-auto me-auto`}
+              />
+            ) : (
+              <FaCheckCircle className="text-[100px] text-green-500 ms-auto me-auto " />
+            )}
+          </div>
+          <h3 className="font-bold text-[10px] font-mono text-center">
+            {modalMessage?.message}
+          </h3>
+
+          {modalMessage?.failed ? (
+            <h3 className="text-[8px] text-center mt-1">
+              Please make sure you have enough to cover gas and tokens as well
+            </h3>
+          ) : (
+            <div className="text-center text-[10px] mt-2">
+              <Link
+                to={`https://basescan.org/tx/${modalMessage?.hash}`}
+                target="_blank"
+                className=""
+              >
+                <div className="flex justify-center gap-1">
+                  <FaExternalLinkAlt className="text-[13px] mt-1" />
+                  <h3 className="mt-1">Tx Hash</h3>
+                </div>
+              </Link>
+            </div>
+          )}
+          <div className="mt-2">
+            <button
+              onClick={() => {
+                document.getElementById("my_modal_23").close();
+              }}
+              className="border w-full rounded-md text-[12px] border-stone-900 bg-blue-500 text-white font-mono font-bold p-1 hover:bg-stone-800"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button
+            onClick={() => {
+              if (!modalMessage?.failed) {
+                // getActivePools();
+                getExistingPools();
+              }
+            }}
+          >
+            close
+          </button>
+        </form>
+      </dialog>
+      {/*  */}
       <div className="flex justify-between text-white text-[12px] font-bold p-2">
         <div className="flex gap-1">
           <img
@@ -417,7 +415,7 @@ function PoolSwap(props) {
         </div>
         <div className=" ms-[170px]">
           <div
-            className="border w-[40px] border-neutral-700 bg-stone-900 p-2 rounded-md flex justify-center text-[8px] text-stone-200 gap-1 hover:text-stone-800"
+            className="border border-transparent w-[40px]  p-2 rounded-md flex justify-center text-[8px] text-stone-200 gap-1 hover:animate-spin"
             onClick={() => {
               if (buyFromPool) {
                 setBuyFromPool(false);
@@ -426,8 +424,7 @@ function PoolSwap(props) {
               }
             }}
           >
-            <FaArrowUp />
-            <FaArrowDown />
+            <BsArrowRepeat className="text-[12px]" />
           </div>
         </div>
 

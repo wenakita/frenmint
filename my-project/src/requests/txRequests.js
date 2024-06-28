@@ -4,6 +4,7 @@ import PodsPoolABI from "../abi/PodsPoolABI";
 import { ethers } from "ethers";
 import { Contract } from "ethers";
 import friendTechABI from "../abi/FriendTechABi";
+import GodDogABI from "../abi/GodDogABI";
 const podsPoolCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
 const podsIndexFundCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
 const goddogTokenCA = "0xddf7d080c82b8048baae54e376a3406572429b4e";
@@ -253,8 +254,52 @@ export async function getSharePrice(
 //     console.log(error)
 //   }
 // }
+export async function checkShareApproval(owner, operator) {
+  try {
+    const isApproved = await readContract(config, {
+      address: "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+      abi: friendTechABI,
+      functionName: "isApprovedForAll",
+      args: [owner, operator],
+    });
 
-export async function approveGoddogSpending() {}
+    return isApproved;
+  } catch (error) {
+    console.log(error);
+  }
+}
+export async function checkGoddogApproval(owner, operator) {
+  try {
+    const isApproved = await readContract(config, {
+      address: "0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
+      abi: friendTechABI,
+      functionName: "isApprovedForAll",
+      args: [owner, operator],
+    });
+
+    return isApproved;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function approveGoddogSpending(signer) {
+  const godDogContract = new Contract(
+    "0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
+    GodDogABI,
+    signer
+  );
+  try {
+    const res = await godDogContract.approve(
+      "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
+      "99999999999999999999999999999999"
+    );
+    const reciept = await res;
+    console.log(await reciept);
+  } catch (error) {
+    console.log(error);
+  }
+}
 export async function approveShareSpending(signer) {
   const friendTechWrapperContract = new Contract(
     "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
@@ -321,9 +366,16 @@ export async function depositShares(
   abi,
   targetPool,
   nftId,
-  depositAmount
+  depositAmount,
+  owner
 ) {
-  await approveShareSpending(signer);
+  const isAppoved = await checkShareApproval(
+    owner,
+    "0x605145D263482684590f630E9e581B21E4938eb8"
+  );
+  if (!isAppoved) {
+    await approveShareSpending(signer);
+  }
   const SudoSwapContract = new Contract(
     "0x605145D263482684590f630E9e581B21E4938eb8",
     abi,
@@ -362,5 +414,54 @@ export async function depositGoddog(signer, abi, targetPool, depositAmount) {
   } catch (error) {
     console.log(error);
     return { failed: true, receipt: null, type: "Deposit" };
+  }
+}
+
+export async function sellPool(signer, abi, parameters, owner) {
+  console.log(parameters);
+  const isAppoved = await checkShareApproval(
+    owner,
+    "0xa07eBD56b361Fe79AF706A2bF6d8097091225548"
+  );
+  if (!isAppoved) {
+    await approveShareSpending(signer);
+  }
+  const sudoSwapContract = new Contract(
+    "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
+    abi,
+    signer
+  );
+  try {
+    console.log("done");
+    const res = await sudoSwapContract.swap(parameters, {
+      gasLimit: 250000,
+    });
+    const reciept = await res.wait();
+    return { failed: false, receipt: reciept, type: "Pool sell" };
+  } catch (error) {
+    console.log(error);
+    return { failed: true, receipt: null, type: "Pool sell" };
+  }
+}
+
+export async function buyPool(signer, abi, parameters, owner) {
+  console.log(parameters);
+  await approveGoddogSpending(signer);
+
+  const sudoSwapContract = new Contract(
+    "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
+    abi,
+    signer
+  );
+  try {
+    console.log("done");
+    const res = await sudoSwapContract.swap(parameters, {
+      gasLimit: 250000,
+    });
+    const reciept = await res.wait();
+    return { failed: false, receipt: reciept, type: "Pool buy" };
+  } catch (error) {
+    console.log(error);
+    return { failed: true, receipt: null, type: "Pool buy" };
   }
 }

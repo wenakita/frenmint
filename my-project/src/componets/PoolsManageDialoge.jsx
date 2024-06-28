@@ -96,7 +96,8 @@ function PoolsManageDialoge(props) {
         SudoSwapABI,
         currentPool?.poolData?.sharePoolData?.address,
         currentPool?.poolData?.sharePoolData?.erc1155Id,
-        input
+        input,
+        w0?.address
       );
     }
     console.log(res);

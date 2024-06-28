@@ -42,7 +42,7 @@ function CardBuilder(props) {
     <>
       {data ? (
         <div
-          className={` card ${isHero ? "w-[200px] md:w-[205px] lg:w-[250px] mx-auto shadow-lg " : isBalance ? "w-full h-[250px]" : "w-full"} shadow-xl  md:mt-0 bg-gradient-to-tr from-stone-950 to-neutral-950 border border-stone-900 `}
+          className={` card ${isHero ? "w-[200px] md:w-[205px] lg:w-[250px] mx-auto shadow-lg " : isBalance ? "w-full h-[250px] md:h-[280px]" : "w-full"} shadow-xl  md:mt-0 bg-gradient-to-tr from-stone-950 to-neutral-950 border border-stone-900 `}
         >
           <div className=" w-full card-body rounded-lg mx-auto p-2">
             <figure
@@ -78,17 +78,17 @@ function CardBuilder(props) {
                   {uintFormat(data?.displayPrice).toFixed(5)}
                 </h3>
               </div>
+              {isBalance ? (
+                <div className="relative">
+                  <button
+                    onClick={() => navigate(`/newswap`, { state: data })}
+                    className=" text-[9px] font-bold p-0.5 w-full border bg-gray-200 text-black border-neutral-900 rounded-lg hover:bg-stone-400"
+                  >
+                    Mint
+                  </button>
+                </div>
+              ) : null}
             </div>
-            {isBalance ? (
-              <div className="">
-                <button
-                  onClick={() => navigate(`/newswap`, { state: data })}
-                  className=" text-[9px] font-bold p-1 w-full border bg-gray-200 text-black border-neutral-900 rounded-lg hover:bg-stone-400"
-                >
-                  Mint
-                </button>
-              </div>
-            ) : null}
           </div>
         </div>
       ) : null}{" "}

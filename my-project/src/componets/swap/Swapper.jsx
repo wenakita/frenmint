@@ -24,6 +24,7 @@ import { base } from "wagmi/chains";
 import { Button, Modal, Result } from "antd";
 import ChartButton from "./ChartButton";
 import { getBalance } from "viem/actions";
+import { BsArrowRepeat } from "react-icons/bs";
 function Swapper(props) {
   const {
     trendingFriends,
@@ -276,7 +277,7 @@ function Swapper(props) {
         </div>
         <div className="flex justify-center">
           <div
-            className="border w-[40px] border-neutral-700 bg-stone-900 p-2 rounded-md flex justify-center text-[8px] text-stone-200 gap-1 hover:text-stone-800"
+            className=" w-[40px] p-2 rounded-md flex justify-center text-[8px] text-stone-200 gap-1 hover:animate-spin"
             onClick={() => {
               if (shouldBurn) {
                 setShouldBurn(false);
@@ -288,8 +289,7 @@ function Swapper(props) {
               }
             }}
           >
-            <FaArrowUp />
-            <FaArrowDown />
+            <BsArrowRepeat className="text-[12px]" />
           </div>
         </div>
 

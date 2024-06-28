@@ -169,7 +169,7 @@ function NewBalances() {
       {viewShareHoldings ? (
         <>
           {balanceData ? (
-            <div className="mt-2 border border-transparent grid grid-cols-2 md:grid-cols-3  w-[375px] h-[400px] md:w-[560px]  gap-x-5 gap-y-2 p-2">
+            <div className="mt-2 border border-transparent grid grid-cols-2 md:grid-cols-3  w-[375px] h-[400px] md:w-[560px]  gap-x-5 gap-y-4 p-2">
               {balanceData.map((item, index) => {
                 return (
                   <CardBuilder
