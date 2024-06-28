@@ -12,7 +12,7 @@ import FriendABI from "../../abi/FriendABI";
 import friendTechABI from "../../abi/FriendTechABi";
 import { supabase } from "../../client";
 import { config } from "../../config";
-import { SearchByUser } from "../../requests/friendCalls";
+import { SearchByUser, uintFormat } from "../../requests/friendCalls";
 import { getEthPrice } from "../../requests/priceCalls";
 import { postTransaction } from "../../requests/supaBaseHandler";
 import { FaEthereum } from "react-icons/fa6";
@@ -40,7 +40,7 @@ function Swapper(props) {
     currentPriceHistory,
     shareTotalVolume,
   } = props;
-
+  console.log(holdingsData);
   const { wallets } = useWallets();
   const userAddress = wallets[0]?.address;
   const [shouldMint, setShouldMint] = useState(true);
@@ -518,6 +518,43 @@ function Swapper(props) {
             </div>
 
             <div className="overflow-y-auto  h-[270px] md:h-[200px] border border-neutral-700 border-b-0 border-r-0 border-l-0  p-2">
+              {holdingsData ? (
+                <>
+                  {holdingsData.map((item) => {
+                    const slicedContract = `${item?.FTData?.address.slice(0, 4)}...${item?.FTData?.address.slice(item?.FTData?.address.length - 4, item?.FTData?.address.length)}`;
+                    return (
+                      <button
+                        key={item}
+                        className=" p-2 grid grid-flow-col whitespace-nowrap text-[10px] w-full hover:bg-stone-800"
+                        onClick={() => {
+                          setCurrentShare(item?.FTData);
+                          document.getElementById("my_modal_1").close();
+                        }}
+                      >
+                        <div className="flex justify-start gap-2">
+                          <img
+                            src={item?.FTData?.ftPfpUrl}
+                            alt=""
+                            className="w-5 h-5 rounded-full"
+                          />
+                          <h3 className="mt-1">{item?.FTData?.ftName}</h3>
+                        </div>
+                        <div className="flex justify-end">
+                          {" " +
+                            item?.balance +
+                            " ≈ " +
+                            Number(
+                              uintFormat(item?.FTData?.displayPrice) *
+                                ethPrice *
+                                item?.balance
+                            ).toFixed(2) +
+                            "USD"}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </>
+              ) : null}
               {searchResults ? (
                 <>
                   {searchResults.map((item) => {
