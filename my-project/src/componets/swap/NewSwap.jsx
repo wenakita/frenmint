@@ -52,19 +52,23 @@ function NewSwap() {
   const [holdingsData, setHoldingsData] = useState(null);
 
   useEffect(() => {
-    if (location?.state !== null) {
-      console.log(location?.state);
+    getUserHoldings();
+    getTrending();
+  }, []);
+  useEffect(() => {
+    console.log(location?.state?.userData);
+    if (location?.state) {
+      console.log(location?.state?.userData);
       if (location?.state?.data !== null) {
         setCurrentShare(location?.state);
-      } else if (location?.state?.userData !== null) {
+      }
+      if (location?.state?.userData !== null) {
         setCurrentShare(location?.state?.userData);
       }
     } else if (location?.state === null) {
       getGoddogShareInfo();
     }
-    getUserHoldings();
-    getTrending();
-  }, []);
+  }, [location?.state]);
 
   useEffect(() => {
     console.log(currentShare);
