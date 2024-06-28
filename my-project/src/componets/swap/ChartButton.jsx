@@ -33,7 +33,7 @@ function ChartButton(props) {
         <FaChartArea />
       </button>
       <dialog id="my_modal_12" className="modal">
-        <div className="modal-box bg-stone-950 overflow-y-auto h-[500px] md:h-auto">
+        <div className="modal-box bg-stone-950 overflow-y-auto overflow-x-hidden h-[500px] md:h-auto">
           <div className="flex gap-1">
             <img
               src={currentShare?.ftPfpUrl}
@@ -99,9 +99,9 @@ function ChartButton(props) {
                   />
                 </AreaChart>
               </ResponsiveContainer>
-              <div className="overflow-x-auto overflow-y-auto h-[200px] mb-5">
+              <div className="overflow-x-hidden overflow-y-auto  h-[200px] mb-5">
                 <table className="table bg-neutral-900   text-[8px]">
-                  <thead className="text-[8px] ">
+                  <thead className="text-[8px]  ">
                     <tr>
                       <th>Trader</th>
 
@@ -124,7 +124,7 @@ function ChartButton(props) {
                               <img
                                 src={item?.traderPfp}
                                 alt=""
-                                className="w-5 h-5 rounded-full"
+                                className="size-6 rounded-full"
                               />
                             </Link>
                           </td>
