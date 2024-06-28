@@ -343,7 +343,9 @@ function Swapper(props) {
             <h3 className="text-[7px]">
               {"≈ " + Number(currentTotal * ethPrice).toFixed(2) + " USD"}
             </h3>
-            <h3 className="text-[8px]">Share balance:{" " + shareBalance}</h3>
+            <h3 className="text-[8px]">
+              ERC-1155 share balance:{" " + shareBalance}
+            </h3>
           </div>
         </div>
         <div className="flex justify-center">

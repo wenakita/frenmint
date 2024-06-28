@@ -322,7 +322,7 @@ function CreatePool(props) {
                   value={depositAmount || 0}
                 />
                 <div className="flex justify-end text-[8px]">
-                  Share Balance: {selectedShare?.balance || 0}
+                  ERC-1155 share baalnce: {selectedShare?.balance || 0}
                 </div>
               </div>
             </div>

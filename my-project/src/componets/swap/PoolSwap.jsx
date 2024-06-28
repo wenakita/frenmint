@@ -418,7 +418,7 @@ function PoolSwap(props) {
                 " USD"}
             </h3>
             <h3 className="text-[8px]">
-              Share balance:{" " + shareBalance || 0}
+              ERC-1155 share balance:{" " + shareBalance || 0}
             </h3>
           </div>
         </div>
