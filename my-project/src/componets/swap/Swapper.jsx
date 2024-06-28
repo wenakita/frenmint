@@ -5,7 +5,11 @@ import AvaliablePairs from "./AvailablePairs";
 import { uintFormat } from "../../formatters/format";
 import { SearchByUser } from "../../requests/friendCalls";
 import { getEthPrice } from "../../requests/priceCalls";
-import { getShareSellTotal, getShareBuyTotal } from "../../requests/txRequests";
+import {
+  getShareSellTotal,
+  getShareBuyTotal,
+  getShareBalance,
+} from "../../requests/txRequests";
 import { readContract } from "@wagmi/core";
 import { Contract } from "ethers";
 import { supabase } from "../../client";
@@ -19,6 +23,7 @@ import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
 import { Button, Modal, Result } from "antd";
 import ChartButton from "./ChartButton";
+import { getBalance } from "viem/actions";
 function Swapper(props) {
   const {
     trendingFriends,
@@ -41,6 +46,7 @@ function Swapper(props) {
   const [currentTotal, setCurrentTotal] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const [currentFrenmintUser, setCurrentFrenmintUser] = useState(null);
+  const [shareBalance, setShareBalance] = useState(null);
   const [ethPrice, setEthPrice] = useState(null);
   const ethBal = useBalance({
     address: userAddress,
@@ -73,6 +79,21 @@ function Swapper(props) {
       searchUser();
     }
   }, [searchInput]);
+
+  useEffect(() => {
+    getBalance();
+  }, [currentShare]);
+
+  async function getBalance() {
+    const balRes = await getShareBalance(
+      readContract,
+      config,
+      friendTechABI,
+      userAddress,
+      currentShare?.address
+    );
+    setShareBalance(balRes);
+  }
 
   useEffect(() => {
     console.log(input);
@@ -207,7 +228,12 @@ function Swapper(props) {
       </div>
       <div className="grid grid-rows-1 gap-y-1 p-1">
         <div className="border p-2 rounded-lg border-neutral-700 text-white font-mono font-bold text-[12px]">
-          <h3>{shouldMint ? "You buy" : "You sell"}</h3>
+          <div className="flex justify-between">
+            <h3>{shouldMint ? "You Buy" : "You Sell"}</h3>
+
+            <h3 className="text-[8px]">Share balance:{" " + shareBalance}</h3>
+          </div>
+
           <input
             type="text"
             className="w-[350px] bg-transparent border border-transparent outline-none"
