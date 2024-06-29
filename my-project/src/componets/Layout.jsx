@@ -88,8 +88,10 @@ function Layout() {
             </h3>
           </div>
           <div className="p-4">
-            <p className="font-mono font-bold whitespace-nowrap text-[11px] text-center">
-              You are currently on a chain that is not available on frenmint
+            <p className="font-mono font-bold whitespace-nowrap text-[10px] text-center">
+              {chainId === 8453
+                ? "Make sure you are on base chain before completing transactions on frenmint"
+                : "You are currently on a chain that is not available on frenmint"}
             </p>
             <p className=" font-bold whitespace-nowrap text-[8px] text-center">
               log out and Switch to base chain before logging in to completing
@@ -108,6 +110,9 @@ function Layout() {
             </button>
           </div>
         </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
       </dialog>
 
       {/*  */}
