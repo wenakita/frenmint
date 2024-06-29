@@ -107,6 +107,7 @@ function NewSwap() {
     setTrendingUsers(trendingFriends);
   }
   async function getUserHoldings() {
+    setHoldingsData(null);
     const userHoldings = await findId(userAddress);
     const holdingsData = await findHoldingsShareData(
       readContract,
