@@ -242,7 +242,7 @@ function CreatePool(props) {
   //   - Allow users to only just the number of shares they would like to provide as liquidity.
   //   - Basically make it so users simply 1. Enter the number of NFT's they wana provide and then 2. Click "Create Pool"
   return (
-    <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
+    <div className="border border-transparent bg-neutral-900 p-2 rounded-md w-[400px] mx-auto">
       <dialog id="my_modal_200" className="modal">
         <div className="modal-box bg-neutral-900">
           <div className="mb-3">
@@ -472,7 +472,7 @@ function CreatePool(props) {
 
         <div>
           <button
-            className="w-full border text-[10px] border-neutral-700 p-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-bold"
+            className="w-full border text-[10px] border-neutral-700 p-1 rounded-md bg-blue-700 hover:bg-stone-800 text-white font-bold font-mono"
             onClick={() => {
               console.log("hey");
               createPool();

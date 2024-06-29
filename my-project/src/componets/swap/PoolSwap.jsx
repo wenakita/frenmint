@@ -294,7 +294,7 @@ function PoolSwap(props) {
     setAvailablePools(poolFormattedData);
   }
   return (
-    <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
+    <div className="border border-transparent bg-neutral-900 p-2 rounded-md w-[400px] mx-auto">
       {/*  */}
       <dialog id="my_modal_23" className="modal">
         <div className="modal-box bg-neutral-900">
@@ -388,7 +388,7 @@ function PoolSwap(props) {
               value={input || 0}
             />
             <button
-              className="border w-[150px] rounded-md border-neutral-600 bg-stone-800 mt-1 hover:text-stone-500"
+              className="border w-[150px] rounded-md border-neutral-800 bg-neutral-800 mt-1 hover:text-stone-500"
               onClick={() => document.getElementById("my_modal_1").showModal()}
             >
               <div className="flex justify-between gap-1 p-0.5">
@@ -449,7 +449,7 @@ function PoolSwap(props) {
               className="w-[150px] bg-transparent border border-transparent outline-none text-[14px]"
               value={total ? total.toFixed(2) : 0}
             />
-            <button className="border w-[150px] rounded-md border-neutral-600 bg-stone-800 mt-1 hover:text-stone-500">
+            <button className="border  w-[80px] rounded-md border-neutral-800 bg-neutral-800 mt-1 hover:text-stone-500">
               <div className="flex justify-between gap-1 p-0.5">
                 <div className="flex justify-start gap-1">
                   <img
@@ -505,7 +505,7 @@ function PoolSwap(props) {
             </div>
           </div>
           <button
-            className="w-full border border-neutral-800 bg-blue-500 rounded-lg text-white font-bold text-[12px] p-1"
+            className="w-full border border-neutral-800 bg-blue-700 rounded-lg text-white hover:bg-stone-800 text-[10px] font-mono font-bold p-1"
             onClick={() => {
               if (buyFromPool) {
                 buyInPool(

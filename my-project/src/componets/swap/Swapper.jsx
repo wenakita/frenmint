@@ -235,7 +235,7 @@ function Swapper(props) {
 
   return (
     <>
-      <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
+      <div className="border border-transparent bg-neutral-900 p-2 rounded-md w-[400px] mx-auto">
         <RecentTx
           getTx={getTx}
           setGetTx={setGetTx}
@@ -333,7 +333,7 @@ function Swapper(props) {
                 value={input || 0}
               />
               <button
-                className="border w-[150px] rounded-md border-neutral-600 bg-stone-800 hover:text-stone-500"
+                className="border w-[150px] rounded-md border-neutral-800 bg-neutral-800 hover:text-stone-500"
                 onClick={() =>
                   document.getElementById("my_modal_1").showModal()
                 }
@@ -396,7 +396,7 @@ function Swapper(props) {
                 className="w-[150px] bg-transparent border border-transparent outline-none text-[14px]"
                 value={currentTotal || 0}
               />
-              <button className="border w-[150px] rounded-md border-neutral-600 bg-stone-800 mt-1 hover:text-stone-500">
+              <button className="border w-[80px] rounded-md border-neutral-800 bg-neutral-800 mt-1 hover:text-stone-500">
                 <div className="flex justify-between gap-1 p-0.5">
                   <div className="flex justify-start gap-1">
                     <img
@@ -408,11 +408,6 @@ function Swapper(props) {
                       {AvaliablePairs[0]?.name}
                     </h3>
                   </div>
-                  <img
-                    src="https://enterprisefilmsllc.com/wp-content/uploads/2018/07/white-down-arrow-png-2.png"
-                    alt=""
-                    className="w-3 h-3 mt-1"
-                  />
                 </div>
               </button>
             </div>
@@ -451,7 +446,7 @@ function Swapper(props) {
             </div>
 
             <button
-              className="w-full border border-neutral-800 bg-blue-500 hover:bg-stone-800 rounded-lg text-white font-bold text-[12px] p-1"
+              className="w-full border border-neutral-800 bg-blue-700 hover:bg-stone-800 hover:bg-stone-800 rounded-lg text-white font-mono font-bold text-[10px] p-1"
               onClick={() => {
                 if (shouldBurn) {
                   unwrapToken();
