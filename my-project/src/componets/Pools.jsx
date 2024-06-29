@@ -310,11 +310,9 @@ function Pools(props) {
   }
 
   return (
-    <center
+    <div
       className={
-        displayPools
-          ? `grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center`
-          : null
+        displayPools ? `grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ` : null
       }
     >
       {displayPools ? (
@@ -413,69 +411,8 @@ function Pools(props) {
           })}
         </>
       ) : null}
-    </center>
+    </div>
   );
 }
 
 export default Pools;
-
-//this is the target for tommorow we map each pool that the user has
-//for each we get image by calling contract to get the uri we extract the uri from the contract
-//we call the friend tech api by passing in the contract we got from the uri and get the full data of the share and display it
-
-//friendtech wrapper contract
-
-//this is the object format for the pool data
-// [
-//   {
-//     poolData: {
-//       shareData: {
-//         id: 629782,
-//         address: '0xa053f456c2ed11965f57f4940e9443e0d50203e3',
-//         twitterUsername: null,
-//         twitterName: null,
-//         twitterPfpUrl: null,
-//         twitterUserId: null,
-//         ftUsername: 'Ivasilevff',
-//         ftName: 'SoFi Shop🔔',
-//         ftPfpUrl:
-//           'https://d3egfmvgqzu76k.cloudfront.net/pfp-images/0xa053f456c2ed11965f57f4940e9443e0d50203e3/73620910m9fd42t0mvq?Expires=1816307663&Key-Pair-Id=K11ON08J8XW8N0&Signature=N9qwr8lEdkyfc~VRkPblLNzM65~9D3spgJR0CgHMlMhQkdQe6uWSAD62mhuKyYpLfN9Slv6-XM4X12MP32rGufavN2-zbiMWeVoLWENT50n-thfEgs5T24I3w~xUekXEcXAUFpJtgFWe0rv6CxV-dsInAQSqU8QsxHACEtlo880Zqc7H3s9zdFygwFsC5eQlAJ7~ngPw~vajMypsHkxhlet6TzW0xgMuTKPuUYZgXSwU4zqXfdOc3SLNbxY25B6OxKGKPQGOa5ip9jr5-vnp4E78gzl1ysF7mf7nhl0-NNn520mLKvqFHfUUx9ihieWkK2A-8DSI-sVGqTAcRWwiIA__',
-//         lastOnline: '1714510208709',
-//         lastMessageTime: 1714510113595,
-//         holderCount: 1,
-//         holdingCount: 0,
-//         watchlistCount: 1,
-//         followerCount: 1,
-//         followingCount: 0,
-//         shareSupply: 2,
-//         displayPrice: '250000000000000',
-//         netBuy: '0',
-//         lifetimeFeesCollectedInWei: '0',
-//         userBio: '  on-chain crypto podcast Follow🌊',
-//         rank: '93631'
-//       },
-//       sharePoolData: {
-//         address: '0x3168260f187cd8bb2052f4de19650e7f267f345d',
-//         tokenBalance: 0n,
-//         spotPrice: 17733719337290908n,
-//         delta: 1069000000000000000n,
-//         royalty: 0n,
-//         nftIds: Set { 0: '915310770104444432551381599323274438466366211043' },
-//         nftBalance: 1n,
-//         fee: 69000000000000000n,
-//         bondingCurveAddress: '0x9506c0e5cee9ad1dee65b3539268d61ccb25afb6',
-//         isETHPool: false,
-//         tokenAddress: '0xddf7d080c82b8048baae54e376a3406572429b4e',
-//         poolType: 1,
-//         owner: '0x0f76cd9bb6b3b7eaeda808818218d61f923b3494',
-//         isSeaportFillable: false,
-//         erc1155Id: '915310770104444432551381599323274438466366211043'
-//       }
-//     }
-//   }
-// ]
-
-// in order to sell someone must buy first VITE_DEFINED_KEY
-//to buy or sell we call the swap function in th epool contract
-
-//this is the ca of the contract where we can swap the nft before we swap me must approve nft or goddog tokens depending on what we doing buying or selling
