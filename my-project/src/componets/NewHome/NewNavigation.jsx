@@ -66,9 +66,12 @@ function NewNavigation() {
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-neutral-900 rounded-box w-52 font-bold"
             >
-              <li className="">
-                <Link to={"/analytics"}>Analytics</Link>
-              </li>
+              {authenticated && wallet ? (
+                <li className="">
+                  <Link to={"/analytics"}>Analytics</Link>
+                </li>
+              ) : null}
+
               <li className="">
                 <Link
                   to={"https://telegra.ph/GODDOG-Official-Whitepaper-06-01"}
@@ -126,37 +129,39 @@ function NewNavigation() {
           </Link>
         </div>
 
-        <div className="navbar-end">
-          <button
-            className="btn btn-ghost btn-circle"
-            onClick={() => document.getElementById("my_modal_3").showModal()}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="size-4 mt-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+        {authenticated && wallet ? (
+          <div className="navbar-end">
+            <button
+              className="btn btn-ghost btn-circle"
+              onClick={() => document.getElementById("my_modal_3").showModal()}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
-          <button className="btn btn-ghost btn-circle">
-            <Link to={"/new"} className="btn btn-ghost btn-circle">
-              <CiWallet className="text-[20px]" />
-            </Link>
-          </button>
-          <button className="btn btn-ghost btn-circle">
-            <Link to={"/newswap"} className="btn btn-ghost btn-circle">
-              <RiSwap2Line className="text-[15px]" />
-            </Link>
-          </button>
-        </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="size-4 mt-0.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </button>
+            <button className="btn btn-ghost btn-circle">
+              <Link to={"/new"} className="btn btn-ghost btn-circle">
+                <CiWallet className="text-[20px]" />
+              </Link>
+            </button>
+            <button className="btn btn-ghost btn-circle">
+              <Link to={"/newswap"} className="btn btn-ghost btn-circle">
+                <RiSwap2Line className="text-[15px]" />
+              </Link>
+            </button>
+          </div>
+        ) : null}
       </div>
       <dialog id="my_modal_3" className="modal">
         <div className="modal-box bg-neutral-900 h-[350px]">

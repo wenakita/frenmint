@@ -152,7 +152,7 @@ function Layout() {
         </div>
       </dialog>
       <div className="">
-        {authenticated && wallet ? <NewNavigation /> : null}
+        <NewNavigation />
       </div>
 
       {authenticated && wallet ? (
