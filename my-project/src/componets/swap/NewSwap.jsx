@@ -21,11 +21,10 @@ import SwapCharts from "./SwapCharts";
 import SwapTabs from "./SwapTabs";
 import Swapper from "./Swapper";
 
-function NewSwap() {
+function NewSwap(props) {
   // document.getElementById("my_modal_300").showModal();  works every where
 
   const location = useLocation();
-
   //these are used to switch between tabs
   const [viewSwap, setViewSwap] = useState(true);
   const [viewPools, setViewPools] = useState(false);

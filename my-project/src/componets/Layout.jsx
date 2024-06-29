@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
 import SearchBar from "./SearchBar";
 import { usePrivy } from "@privy-io/react-auth";
@@ -11,6 +11,8 @@ import NewNavigation from "./NewHome/NewNavigation";
 import TopSlider from "./NewHome/TopSlider";
 import { supabase } from "../client";
 import { useAccount } from "wagmi";
+import TrendingCarousel from "./TrendingCarousel";
+import { GetTrendingFriends } from "../requests/friendCalls";
 
 function Layout() {
   const { logout, authenticated, user, ready } = usePrivy();
@@ -18,22 +20,27 @@ function Layout() {
   const { address, chainId, isConnecting, isDisconnected } = useAccount();
   const navigate = useNavigate();
   const params = useParams();
+  const location = useLocation();
+  console.log(location?.pathname === "/");
+  //it should not equal "/"
+
   const wallet = user?.wallet;
   const [input, setInput] = useState(null);
-  useEffect(() => {
-    // console.log("chain id:", chainId);
-    // if (chainId !== 8453) {
-    //   if (authenticated && wallet) {
-    //     document.getElementById("my_modal_300").showModal();
-    //   }
-    // }
+  const [trending, setTrending] = useState(null);
 
+  useEffect(() => {
     if (!authenticated && !wallet) {
       navigate("/");
     } else {
+      getTrending();
       getUsers();
     }
   }, [authenticated, wallet]);
+
+  async function getTrending() {
+    const result = await GetTrendingFriends();
+    setTrending(result);
+  }
 
   async function getUsers() {
     let hasUserName = false;
@@ -143,6 +150,11 @@ function Layout() {
       <div className="">
         <NewNavigation />
       </div>
+      {location?.pathname !== "/" ? (
+        <div>
+          <TrendingCarousel trending={trending} />
+        </div>
+      ) : null}
 
       {authenticated && wallet ? (
         <>

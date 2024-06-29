@@ -39,10 +39,8 @@ function NewFriend() {
   const { address } = useParams();
 
   useEffect(() => {
+    setLoading(true);
     fetchUser();
-    setTimeout(() => {
-      setLoading(false);
-    }, [2000]);
   }, [address]);
 
   async function fetchUser() {
@@ -54,6 +52,7 @@ function NewFriend() {
 
     setTxData(orderedPriceHistory);
     setUserData(res);
+    setLoading(false);
   }
 
   const items = [

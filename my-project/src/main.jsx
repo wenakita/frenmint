@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         config={{
           appearance: {
             theme: "dark",
-            logo: "https://i.postimg.cc/qqhQyJgK/friendmint-removebg-preview.png",
+            logo: "https://i.postimg.cc/qqhQyJgK/friendmint-removebg-prev iew.png",
           },
           loginMethods: ["email", "wallet", "google", "farcaster", "twitter"],
           embeddedWallets: {
