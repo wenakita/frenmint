@@ -490,3 +490,34 @@ async function createSharePool(signer, abi, parameters, owner) {
     await approveShareSpending(signer);
   }
 }
+
+export async function transferShares(
+  signer,
+  amount,
+  shareAddress,
+  owner,
+  receiver
+) {
+  const shareContract = new Contract(
+    "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+    friendTechABI,
+    signer
+  );
+  try {
+    const res = await shareContract?.safeTransferFrom(
+      owner,
+      receiver,
+      shareAddress,
+      amount,
+      "0x"
+    );
+    const reciept = await res.wait();
+
+    return { failed: false, receipt: reciept, type: "Transfer" };
+  } catch (error) {
+    console.log(error);
+    return { failed: true, receipt: null, type: "Transfer" };
+
+    r;
+  }
+}

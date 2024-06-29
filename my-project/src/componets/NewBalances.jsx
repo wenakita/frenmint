@@ -27,6 +27,7 @@ function NewBalances() {
   const [userPools, setUserPools] = useState(null);
   const [viewShareHoldings, setViewShareHoldings] = useState(true);
   const [transferShares, setTransferShares] = useState(null);
+  const [selectedData, setSelectedData] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -196,6 +197,9 @@ function NewBalances() {
                     data={item?.FTData}
                     isHero={false}
                     isBalance={true}
+                    selectedData={selectedData}
+                    setSelectedData={setSelectedData}
+                    getShareHoldings={getShareHoldings}
                   />
                 );
               })}
