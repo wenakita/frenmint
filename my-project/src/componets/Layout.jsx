@@ -69,7 +69,7 @@ function Layout() {
   }
 
   return (
-    <div className="container">
+    <div className="container" style={{ touchAction: "pan-y" }}>
       <dialog id="my_modal_69" className="modal">
         <div className="modal-box bg-neutral-900">
           <div className="flex">
