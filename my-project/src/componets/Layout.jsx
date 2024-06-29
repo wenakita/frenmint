@@ -21,6 +21,7 @@ function Layout() {
   const wallet = user?.wallet;
   const [input, setInput] = useState(null);
   useEffect(() => {
+    console.log("chain id:", chainId);
     if (chainId !== 8453) {
       if (authenticated && wallet) {
         document.getElementById("my_modal_300").showModal();
