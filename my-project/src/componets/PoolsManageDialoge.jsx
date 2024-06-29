@@ -8,6 +8,7 @@ import SudoSwapABI from "../abi/SudoSwapABI";
 import SudoSwapPoolABI from "../abi/SudoSwapPoolABI";
 import { config } from "../config";
 import {
+  checkChain,
   depositGoddog,
   depositShares,
   getShareBalance,
@@ -67,57 +68,63 @@ function PoolsManageDialoge(props) {
     let res;
 
     const provider = await w0?.getEthersProvider();
+    const network = await provider.getNetwork();
+    const validNetwork = await checkChain(network?.chainId);
     const signer = await provider?.getSigner();
-    if (showWithdrawGoddog) {
-      res = await withdrawGoddog(
-        signer,
-        SudoSwapPoolABI,
-        currentPool?.poolData?.sharePoolData?.address,
-        input
-      );
-    } else if (showWithdrawShare) {
-      res = await withdrawShares(
-        signer,
-        SudoSwapPoolABI,
-        currentPool?.poolData?.sharePoolData?.address,
-        input,
-        currentPool?.poolData?.sharePoolData?.erc1155Id
-      );
-    } else if (showDepositGoddog) {
-      res = await depositGoddog(
-        signer,
-        SudoSwapABI,
-        currentPool?.poolData?.sharePoolData?.address,
-        input
-      );
-    } else if (showDepositShare) {
-      res = await depositShares(
-        signer,
-        SudoSwapABI,
-        currentPool?.poolData?.sharePoolData?.address,
-        currentPool?.poolData?.sharePoolData?.erc1155Id,
-        input,
-        w0?.address
-      );
+    if (validNetwork) {
+      if (showWithdrawGoddog) {
+        res = await withdrawGoddog(
+          signer,
+          SudoSwapPoolABI,
+          currentPool?.poolData?.sharePoolData?.address,
+          input
+        );
+      } else if (showWithdrawShare) {
+        res = await withdrawShares(
+          signer,
+          SudoSwapPoolABI,
+          currentPool?.poolData?.sharePoolData?.address,
+          input,
+          currentPool?.poolData?.sharePoolData?.erc1155Id
+        );
+      } else if (showDepositGoddog) {
+        res = await depositGoddog(
+          signer,
+          SudoSwapABI,
+          currentPool?.poolData?.sharePoolData?.address,
+          input
+        );
+      } else if (showDepositShare) {
+        res = await depositShares(
+          signer,
+          SudoSwapABI,
+          currentPool?.poolData?.sharePoolData?.address,
+          currentPool?.poolData?.sharePoolData?.erc1155Id,
+          input,
+          w0?.address
+        );
+      }
+      console.log(res);
+      if (res.failed === false) {
+        setModalMessage({
+          message: `${res.type} successful!`,
+          variant: "green",
+          failed: res.failed,
+          hash: res?.receipt?.transactionHash,
+        });
+      } else if (res.failed === true) {
+        console.log("failed tx");
+        setModalMessage({
+          message: `${res.type} unexpectedly failed`,
+          variant: "red",
+          failed: res.failed,
+          hash: null,
+        });
+      }
+      document.getElementById("my_modal_20").showModal();
+    } else {
+      document.getElementById("my_modal_300").showModal();
     }
-    console.log(res);
-    if (res.failed === false) {
-      setModalMessage({
-        message: `${res.type} successful!`,
-        variant: "green",
-        failed: res.failed,
-        hash: res?.receipt?.transactionHash,
-      });
-    } else if (res.failed === true) {
-      console.log("failed tx");
-      setModalMessage({
-        message: `${res.type} unexpectedly failed`,
-        variant: "red",
-        failed: res.failed,
-        hash: null,
-      });
-    }
-    document.getElementById("my_modal_20").showModal();
   }
 
   return (

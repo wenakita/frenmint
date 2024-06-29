@@ -9,7 +9,6 @@ export async function postTransaction(
 ) {
   const currentDate = new Date();
   const stringDate = String(currentDate);
-  console.log(":running");
   try {
     if (isBuy) {
       console.log("is buy");

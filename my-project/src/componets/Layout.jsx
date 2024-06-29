@@ -10,15 +10,23 @@ import LiveChat from "./LiveChat";
 import NewNavigation from "./NewHome/NewNavigation";
 import TopSlider from "./NewHome/TopSlider";
 import { supabase } from "../client";
+import { useAccount } from "wagmi";
+
 function Layout() {
+  const { logout, authenticated, user, ready } = usePrivy();
+
+  const { address, chainId, isConnecting, isDisconnected } = useAccount();
   const navigate = useNavigate();
   const params = useParams();
-  console.log(params.address);
-  const { authenticated, user, ready } = usePrivy();
   const wallet = user?.wallet;
   const [input, setInput] = useState(null);
-  console.log();
   useEffect(() => {
+    if (chainId !== 8453) {
+      if (authenticated && wallet) {
+        document.getElementById("my_modal_300").showModal();
+      }
+    }
+
     if (!authenticated && !wallet) {
       navigate("/");
     } else {
@@ -33,10 +41,8 @@ function Layout() {
       console.log(error);
     }
     if (data) {
-      console.log(data);
       for (const key in data) {
         if (data[key]?.user_address === wallet?.address) {
-          console.log(true);
           hasUserName = true;
         }
       }
@@ -50,8 +56,6 @@ function Layout() {
   }
 
   async function createUserName() {
-    console.log(input, wallet?.address);
-
     try {
       await supabase
         .from("usernames")
@@ -70,6 +74,42 @@ function Layout() {
 
   return (
     <div className="container touch-pan-y">
+      <dialog id="my_modal_300" className="modal">
+        <div className="modal-box bg-neutral-900">
+          <div className="flex gap-1">
+            <img
+              src="https://i.postimg.cc/qqhQyJgK/friendmint-removebg-preview.png"
+              alt=""
+              className="size-6"
+            />
+            <h3 className="font-bold text-[15px] text-red-500">
+              Wrong chain warning
+            </h3>
+          </div>
+          <div className="p-4">
+            <p className="font-mono font-bold whitespace-nowrap text-[11px] text-center">
+              You are currently on a chain that is not available on frenmint
+            </p>
+            <p className=" font-bold whitespace-nowrap text-[8px] text-center">
+              log out and Switch to base chain before logging in to completing
+              any transaction on frenmint
+            </p>
+          </div>
+          <div className="\">
+            <button
+              className="w-full border bg-blue-600 hover:bg-stone-800 rounded-lg text-white border-stone-500 text-[10px] p-1 font-mono font-bold"
+              onClick={() => {
+                logout();
+                document.getElementById("my_modal_300").close();
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </dialog>
+
+      {/*  */}
       <dialog id="my_modal_69" className="modal ">
         <div className="modal-box bg-neutral-900">
           <div className="flex">

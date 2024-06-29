@@ -24,12 +24,10 @@ function SwapCharts(props) {
     currentSharePrice,
     shareTotalVolume,
   } = props;
-  console.log(currentSharePrice);
 
   const [hoverPrice, setHoverPrice] = useState(null);
   const [hoverDate, setHoverDate] = useState(null);
 
-  console.log(currentShare);
   const CustomTooltip = ({ active, payload, label }) => {
     if (active) {
       setHoverDate(label);

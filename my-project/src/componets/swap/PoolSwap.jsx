@@ -23,6 +23,7 @@ import { SearchByContract } from "../../requests/friendCalls";
 import { getEthPrice, getGoddogPrice } from "../../requests/priceCalls";
 import {
   buyPool,
+  checkChain,
   getShareBalance,
   getShareUri,
   getSingleBuyNftPrice,
@@ -69,14 +70,10 @@ function PoolSwap(props) {
   useEffect(() => {
     getBalance();
   }, [currentShare]);
-  console.log(selectedPool);
   useEffect(() => {
-    console.log(input);
     if (buyFromPool) {
-      console.log("buy");
       getBuyNftQuote();
     } else {
-      console.log("sell");
       getSellNftQuote();
     }
   }, [input]);
@@ -95,8 +92,6 @@ function PoolSwap(props) {
   async function getPrice() {
     const res = await getGoddogPrice();
     const ethRes = await getEthPrice();
-    console.log(ethRes);
-    console.log(res);
     setEthPrice(ethRes);
     setGoddogPrice(res);
   }
@@ -104,6 +99,7 @@ function PoolSwap(props) {
   async function buyInPool(nftId, poolAddress, spotPrice) {
     const provider = await w0?.getEthersProvider();
     const network = await provider.getNetwork();
+    const validNetwork = await checkChain(network?.chainId);
     const signer = await provider?.getSigner();
     const buyPrice = await getSingleBuyNftPrice(
       readContract,
@@ -132,21 +128,26 @@ function PoolSwap(props) {
       false,
     ];
 
-    const txRes = await buyPool(
-      signer,
-      SudoSwapPoolTXABI,
-      parameters,
-      w0?.address
-    );
-    if (!txRes?.failed) {
-      getBalance();
+    if (validNetwork) {
+      const txRes = await buyPool(
+        signer,
+        SudoSwapPoolTXABI,
+        parameters,
+        w0?.address
+      );
+      if (!txRes?.failed) {
+        getBalance();
+      }
+      finalizedModal(txRes);
+    } else {
+      document.getElementById("my_modal_300").showModal();
     }
-    finalizedModal(txRes);
   }
 
   async function sellInPool(nftId, poolAddress, spotPrice) {
     const provider = await w0?.getEthersProvider();
-
+    const network = await provider.getNetwork();
+    const validNetwork = await checkChain(network?.chainId);
     const signer = await provider?.getSigner();
     const sellPrice = await getSingleSellNftPrice(
       readContract,
@@ -176,16 +177,20 @@ function PoolSwap(props) {
       String(w0?.address),
       false,
     ];
-    const txRes = await sellPool(
-      signer,
-      SudoSwapPoolTXABI,
-      parameters,
-      w0?.address
-    );
-    if (!txRes?.failed) {
-      getBalance();
+    if (validNetwork) {
+      const txRes = await sellPool(
+        signer,
+        SudoSwapPoolTXABI,
+        parameters,
+        w0?.address
+      );
+      if (!txRes?.failed) {
+        getBalance();
+      }
+      finalizedModal(txRes);
+    } else {
+      document.getElementById("my_modal_300").showModal();
     }
-    finalizedModal(txRes);
   }
 
   function finalizedModal(res) {
@@ -209,7 +214,6 @@ function PoolSwap(props) {
   }
 
   async function getSellNftQuote() {
-    console.log(input);
     const sellPrice = await getSingleSellNftPrice(
       readContract,
       config,
@@ -223,7 +227,6 @@ function PoolSwap(props) {
     setTotal(Number(sellPrice) / 10 ** 18);
   }
   async function getBuyNftQuote() {
-    console.log(input);
     const buyPrice = await getSingleBuyNftPrice(
       readContract,
       config,
@@ -232,7 +235,6 @@ function PoolSwap(props) {
       selectedPool?.sudoSwapData?.address,
       String(input)
     );
-    console.log(buyPrice);
     setTotal(Number(buyPrice) / 10 ** 18);
   }
 
@@ -242,7 +244,6 @@ function PoolSwap(props) {
       "0xbeea45F16D512a01f7E2a3785458D4a7089c8514"
     );
     const poolFormattedData = [];
-    console.log(a);
     for (const key in a) {
       const currentId = a[key]?.erc1155Id;
       const currentShareContract = await getShareUri(
@@ -251,11 +252,9 @@ function PoolSwap(props) {
         friendTechABI,
         currentId
       );
-      console.log(currentShareContract);
       const currentPoolAddress = a[key].address;
       if (currentShareContract !== null) {
         const currentShareData = await SearchByContract(currentShareContract);
-        console.log(currentShareData);
         if (currentShareData !== null) {
           const userShareBalance = await getShareBalance(
             readContract,
@@ -272,7 +271,6 @@ function PoolSwap(props) {
             currentPoolAddress,
             "1"
           );
-          console.log(buyPrice);
           const sellPrice = await getSingleSellNftPrice(
             readContract,
             config,
@@ -281,7 +279,6 @@ function PoolSwap(props) {
             currentPoolAddress,
             "1"
           );
-          console.log(sellPrice);
           poolFormattedData.push({
             sudoSwapData: a[key],
             friendTechData: currentShareData,
@@ -293,7 +290,6 @@ function PoolSwap(props) {
         }
       }
     }
-    console.log(poolFormattedData);
     setSelectedPool(poolFormattedData[0]);
     setAvailablePools(poolFormattedData);
   }
@@ -512,15 +508,12 @@ function PoolSwap(props) {
             className="w-full border border-neutral-800 bg-blue-500 rounded-lg text-white font-bold text-[12px] p-1"
             onClick={() => {
               if (buyFromPool) {
-                console.log("buy");
-                console.log(uintFormat(selectedPool?.sudoSwapData?.spotPrice));
                 buyInPool(
                   selectedPool?.sudoSwapData?.erc1155Id,
                   selectedPool?.sudoSwapData?.address,
                   selectedPool?.sudoSwapData?.spotPrice
                 );
               } else {
-                console.log("sell");
                 sellInPool(
                   selectedPool?.sudoSwapData?.erc1155Id,
                   selectedPool?.sudoSwapData?.address,

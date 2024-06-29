@@ -18,6 +18,7 @@ import { postTransaction } from "../../requests/supaBaseHandler";
 import { FaEthereum } from "react-icons/fa6";
 import { FaCube } from "react-icons/fa";
 import {
+  checkChain,
   getShareBalance,
   getShareBuyTotal,
   getShareSellTotal,
@@ -40,7 +41,6 @@ function Swapper(props) {
     currentPriceHistory,
     shareTotalVolume,
   } = props;
-  console.log(holdingsData);
   const { wallets } = useWallets();
   const userAddress = wallets[0]?.address;
   const [shouldMint, setShouldMint] = useState(true);
@@ -61,7 +61,6 @@ function Swapper(props) {
   });
   const [ethBalance, setEthBalance] = useState(null);
 
-  console.log(Number(ethBal?.data?.formatted).toFixed(6));
   useEffect(() => {
     getprice();
     fetchFrenmintUsers();
@@ -93,12 +92,9 @@ function Swapper(props) {
   }
 
   useEffect(() => {
-    console.log(input);
     if (shouldMint) {
-      console.log("mint");
       calculateBuyTotal();
     } else {
-      console.log("burn");
       calculateSellTotal();
     }
   }, [input]);
@@ -114,10 +110,8 @@ function Swapper(props) {
       console.log(error);
     }
     if (data) {
-      console.log(data);
       for (const key in data) {
         if (data[key]?.user_address === userAddress) {
-          console.log(data[key]?.username);
           setCurrentFrenmintUser(data[key]?.username);
         }
       }
@@ -151,61 +145,72 @@ function Swapper(props) {
   }
   async function wrapToken() {
     const provider = await wallets[0]?.getEthersProvider();
+    const network = await provider.getNetwork();
+    const validNetwork = await checkChain(network?.chainId);
     const signer = await provider?.getSigner();
 
-    const txRes = await wrap(
-      signer,
-      input,
-      currentTotal,
-      currentShare?.address
-    );
-    finalizedModal(txRes);
-
-    if (!txRes?.failed) {
-      getBalance();
-      getUserHoldings();
-
-      await postTransaction(
-        supabase,
-        currentShare,
+    if (validNetwork) {
+      const txRes = await wrap(
+        signer,
         input,
-        userAddress,
-        true,
         currentTotal,
-        currentFrenmintUser
+        currentShare?.address
       );
+      finalizedModal(txRes);
+
+      if (!txRes?.failed) {
+        getBalance();
+        getUserHoldings();
+
+        await postTransaction(
+          supabase,
+          currentShare,
+          input,
+          userAddress,
+          true,
+          currentTotal,
+          currentFrenmintUser
+        );
+      }
+      setGetTx(true);
+    } else {
+      document.getElementById("my_modal_300").showModal();
     }
-    setGetTx(true);
   }
 
   async function unwrapToken() {
     const provider = await wallets[0]?.getEthersProvider();
     const network = await provider.getNetwork();
+    const validNetwork = await checkChain(network?.chainId);
     const signer = await provider?.getSigner();
 
-    const txRes = await unwrap(
-      signer,
-      input,
-      currentTotal,
-      currentShare?.address
-    );
-    finalizedModal(txRes);
-
-    if (!txRes?.failed) {
-      getBalance();
-      getUserHoldings();
-
-      await postTransaction(
-        supabase,
-        currentShare,
+    if (validNetwork) {
+      const txRes = await unwrap(
+        signer,
         input,
-        userAddress,
-        false,
         currentTotal,
-        currentFrenmintUser
+        currentShare?.address
       );
+      finalizedModal(txRes);
+
+      if (!txRes?.failed) {
+        getBalance();
+        getUserHoldings();
+
+        await postTransaction(
+          supabase,
+          currentShare,
+          input,
+          userAddress,
+          false,
+          currentTotal,
+          currentFrenmintUser
+        );
+      }
+      setGetTx(true);
+    } else {
+      document.getElementById("my_modal_300").showModal();
     }
-    setGetTx(true);
   }
 
   function finalizedModal(res) {
@@ -449,10 +454,8 @@ function Swapper(props) {
               className="w-full border border-neutral-800 bg-blue-500 hover:bg-stone-800 rounded-lg text-white font-bold text-[12px] p-1"
               onClick={() => {
                 if (shouldBurn) {
-                  console.log("burn");
                   unwrapToken();
                 } else {
-                  console.log("mint");
                   wrapToken();
                 }
               }}

@@ -12,7 +12,6 @@ export async function getEthPrice() {
       "https://api.dexscreener.com/latest/dex/pairs/base/0xb4CB800910B228ED3d0834cF79D697127BBB00e5"
     );
     const data = await res.json();
-    console.log(data.pairs[0].priceNative);
     return Number(data.pairs[0].priceNative);
   } catch (error) {
     console.log(error);
@@ -27,7 +26,6 @@ export async function getGoddogPrice() {
       debankOptions
     );
     const data = await res.json();
-    console.log(data.price);
     return data.price;
   } catch (error) {
     console.log(error);

@@ -111,14 +111,11 @@ function NewBalances() {
         console.log("Fetched usernames:", data);
         for (const key in data) {
           if (data[key]?.user_address === userAddress) {
-            console.log("Found matching user:", data[key]?.username);
             setCurrentUserName(data[key]?.username);
             break;
           }
         }
       }
-
-      console.log("Current username:", currentUserName);
     } catch (error) {
       console.error("Error fetching users:", error.message);
     }

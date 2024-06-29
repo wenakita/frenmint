@@ -1,34 +1,30 @@
+import { useWallets } from "@privy-io/react-auth";
+import { readContract } from "@wagmi/core";
+import _ from "lodash";
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import friendTechABI from "../../abi/FriendTechABi";
+import { config } from "../../config";
+import { uintFormat } from "../../formatters/format";
 import {
   GetTrendingFriends,
   SearchByContract,
   findHoldingsShareData,
   findId,
-  formatChartData,
+  getShareChartData,
 } from "../../requests/friendCalls";
-import { readContract } from "@wagmi/core";
-import friendTechABI from "../../abi/FriendTechABi";
-import { uintFormat } from "../../formatters/format";
-import { useWallets } from "@privy-io/react-auth";
-import { config } from "../../config";
+import { getEthPrice } from "../../requests/priceCalls";
+import CreatePool from "./CreatePool";
+import PoolSwap from "./PoolSwap";
+import ShareSender from "./ShareSender";
+import SwapCharts from "./SwapCharts";
 import SwapTabs from "./SwapTabs";
 import Swapper from "./Swapper";
-import { getShareChartData } from "../../requests/friendCalls";
-import SwapCharts from "./SwapCharts";
-import _ from "lodash";
-import { getEthPrice } from "../../requests/priceCalls";
-import PoolSwap from "./PoolSwap";
-import CreatePool from "./CreatePool";
-import { useLocation } from "react-router-dom";
-import ShareSender from "./ShareSender";
-import { useBalance } from "wagmi";
-import { base } from "wagmi/chains";
-import Pods from "./Pods";
-import MdSwapperSide from "./MdSwapperSide";
 
 function NewSwap() {
+  // document.getElementById("my_modal_300").showModal();  works every where
+
   const location = useLocation();
-  console.log(location?.state);
 
   //these are used to switch between tabs
   const [viewSwap, setViewSwap] = useState(true);
@@ -57,10 +53,7 @@ function NewSwap() {
     getTrending();
   }, []);
   useEffect(() => {
-    console.log(location?.state);
     if (location?.state) {
-      console.log(location?.state?.userData);
-
       if (location?.state?.userData !== null) {
         setCurrentShare(location?.state?.userData);
       }
@@ -70,7 +63,6 @@ function NewSwap() {
   }, [location?.state]);
 
   useEffect(() => {
-    console.log(currentShare);
     setCurrentPriceHistory(null);
     setCurrentSharePrice(uintFormat(currentShare?.displayPrice));
     getChart();
@@ -79,7 +71,6 @@ function NewSwap() {
     const goddogShareInfo = await SearchByContract(
       "0x7b202496c103da5bedfe17ac8080b49bd0a333f1"
     );
-    console.log(goddogShareInfo);
     setCurrentShare(goddogShareInfo);
   }
 
@@ -87,13 +78,10 @@ function NewSwap() {
     const ethPrice = await getEthPrice();
     const priceHistory = await getShareChartData(currentShare?.address);
     // const formattedPriceHistory = await formatChartData(priceHistory);
-    console.log(priceHistory);
     const orderedPriceHistory = _.orderBy(priceHistory, ["date"]);
     let totalVolume = 0;
     for (const key in priceHistory) {
       const currentData = priceHistory[key];
-      console.log(currentData?.priceAtDate);
-      console.log(Math.round(Number(currentData?.priceAtDate) * ethPrice));
       totalVolume += Math.round(Number(currentData?.priceAtDate) * ethPrice);
     }
     setShareTotalVolume(totalVolume);
@@ -115,7 +103,6 @@ function NewSwap() {
       userAddress,
       userHoldings
     );
-    console.log(holdingsData);
 
     setHoldingsData(holdingsData);
   }
@@ -191,9 +178,7 @@ function NewSwap() {
                       <>
                         {viewSend ? (
                           <ShareSender holdingsData={holdingsData} />
-                        ) : (
-                          <>{viewPods ? <Pods /> : null}</>
-                        )}
+                        ) : null}
                       </>
                     )}
                   </>

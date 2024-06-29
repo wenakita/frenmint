@@ -15,7 +15,6 @@ import _ from "lodash";
 
 function NewHomePage() {
   const testing = useWalletData();
-  console.log(testing);
   const [loading, setLoading] = useState(true);
   const [heroData, setHeroData] = useState(null);
   const [trending, setTrending] = useState(null);
@@ -31,12 +30,10 @@ function NewHomePage() {
     }
     if (data) {
       const formattedData = [];
-      console.log(data);
       for (const key in data) {
         const res = await SearchByContract(data[key]?.share_address);
         formattedData.push(res);
       }
-      console.log(formattedData);
 
       setRecentTxs(formattedData);
     }
@@ -51,7 +48,6 @@ function NewHomePage() {
     const result = await SearchByContract(
       "0x03d5a5ff92d2078ed2cbb67eecb72c15429b41f9"
     );
-    console.log(result);
 
     setHeroData(result);
   }

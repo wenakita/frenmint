@@ -9,7 +9,7 @@ import { uintFormat } from "../../requests/friendCalls";
 import { getGoddogPrice, getEthPrice } from "../../requests/priceCalls";
 import { useBalance } from "wagmi";
 import { base } from "wagmi/chains";
-import { getShareBalance } from "../../requests/txRequests";
+import { checkChain, getShareBalance } from "../../requests/txRequests";
 import { readContract } from "@wagmi/core";
 import { config } from "../../config";
 import ChartButton from "./ChartButton";
@@ -33,7 +33,6 @@ function CreatePool(props) {
     address: w0?.address,
     chainId: base.id,
   });
-  console.log(Number(ethBalance?.data?.formatted).toFixed(6));
   const [goddogBalance, setGoddogBalance] = useState(null);
   const [ethbalance, setEthBalance] = useState(null);
 
@@ -67,19 +66,16 @@ function CreatePool(props) {
     setEthBalance(Number(ethBalance?.data?.formatted).toFixed(6));
   }, []);
   useEffect(() => {
-    console.log(selectedShare);
     getBalance();
   }, [selectedShare]);
 
   useEffect(() => {
-    console.log(depositAmount);
     calculate();
   }, [depositAmount]);
 
   async function getEthereumPrice() {
     const ethPriceUSD = await getEthPrice();
     const oooOOOPrice = await getGoddogPrice();
-    console.log(oooOOOPrice);
     setGoddogPrice(oooOOOPrice);
     setEthPrice(ethPriceUSD);
   }
@@ -88,11 +84,9 @@ function CreatePool(props) {
     const ethPriceUSD = await getEthPrice();
     const goddogPrice = await getGoddogPrice();
     const goddogPriceUSD = goddogPrice * ethPriceUSD;
-    console.log(goddogPrice);
     const sharePrice = uintFormat(selectedShare.FTData?.displayPrice);
     const sharePriceUSD =
       uintFormat(selectedShare.FTData?.displayPrice) * ethPriceUSD;
-    console.log(sharePriceUSD);
     const deltaEquation = depositAmount * 11 + 1;
     const preSpotPriceEquation =
       (sharePrice * deltaEquation * ethPriceUSD) / goddogPrice;
@@ -101,14 +95,10 @@ function CreatePool(props) {
     const intialBalanceTest = sharePrice * depositAmount;
     const finalDepositAmount = (intialBalanceTest * ethPriceUSD) / goddogPrice;
     //pool price has to be per share in goddog
-    console.log(roundedSpotPrice);
-    console.log(preSpotPriceEquation);
 
     setLp(finalDepositAmount);
-    console.log(finalDepositAmount.toFixed(0));
     setIntitialTokenBalance(finalDepositAmount.toFixed(0));
     setCurrentDelta(deltaEquation);
-    console.log(roundedSpotPrice);
     setCurrentSpotPrice(preSpotPriceEquation.toFixed(0));
   }
 
@@ -169,10 +159,10 @@ function CreatePool(props) {
 
   async function createPool() {
     let txRes;
-    await goddogPermission();
-    await friendTechSharePermission();
+
     const provider = await w0?.getEthersProvider();
     const network = await provider.getNetwork();
+    const validNetwork = await checkChain(network?.chainId);
     const signer = await provider?.getSigner();
     const address = await signer?.getAddress();
 
@@ -181,38 +171,41 @@ function CreatePool(props) {
       SudoSwapABI,
       signer
     );
-    //params not working as intended fix buy price not
-    //the spot price has to be the shares current price calculate din goddog value
+
     try {
       const parameters = [
-        "0xDDf7d080C82b8048BAAe54e376a3406572429b4e", // token
-        "0xbeea45F16D512a01f7E2a3785458D4a7089c8514", // nft
-        "0xd0A2f4ae5E816ec09374c67F6532063B60dE037B", // bondingCurve
-        String(w0?.address), // assetRecipient
-        2, // poolType (assuming this should be uint8 and is 1)
-        ethers.BigNumber.from(String(currentDelta)), // delta(the change in slope, change in price per purchase)
+        "0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
+        "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+        "0xd0A2f4ae5E816ec09374c67F6532063B60dE037B",
+        String(w0?.address),
+        2,
+        ethers.BigNumber.from(String(currentDelta)),
         "69000000000000000", // fee
         ethers.BigNumber.from(currentSpotPrice).mul(
           ethers.BigNumber.from("10").pow(18)
-        ), // spotPrice this is the price in goddog for the nft
-        selectedShare.nftID, // nftId (uint256)
-        ethers.BigNumber.from(depositAmount), // initialNFTBalance (uint256)
+        ),
+        selectedShare.nftID,
+        ethers.BigNumber.from(depositAmount),
         ethers.BigNumber.from(initialTokenBalance)
           .mul(ethers.BigNumber.from("10").pow(18))
-          .toString(), // initialTokenBalance (uint256)  the amount has to be multiplited by 1^18
-        "0x0000000000000000000000000000000000000000", // hookAddress
+          .toString(),
+        "0x0000000000000000000000000000000000000000",
         "0x0000000000000000000000000000000000000000",
       ];
-      const res = await SudoSwapContract.createPairERC1155ERC20(parameters, {
-        gasLimit: 350000, // Adjust this value as needed
-      });
-      const reciept = await res.wait();
-      console.log(await reciept);
-      txRes = { failed: false, receipt: reciept, type: "Create pool" };
+      if (validNetwork) {
+        await goddogPermission();
+        await friendTechSharePermission();
+        const res = await SudoSwapContract.createPairERC1155ERC20(parameters, {
+          gasLimit: 350000,
+        });
+        const reciept = await res.wait();
+        console.log(await reciept);
+        txRes = { failed: false, receipt: reciept, type: "Create pool" };
 
-      getUserHoldings();
-      // acitvateLoading();
-      // setOpen(false);
+        getUserHoldings();
+      } else {
+        document.getElementById("my_modal_300").showModal();
+      }
     } catch (error) {
       console.log(error);
       txRes = { failed: false, receipt: null, type: "Create pool" };
@@ -240,7 +233,6 @@ function CreatePool(props) {
     document.getElementById("my_modal_200").showModal();
   }
 
-  console.log(holdingsData);
   //to add, goddog pair amount (liquidity tokens added), spot price , and how many shares to add
   //abstracct(do not add): fee: set to 6.9 defualt,
   // Abstract Parameters for Users:

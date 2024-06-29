@@ -20,9 +20,6 @@ function Portal() {
   });
   useEffect(() => {
     if ((authenticated && wallet) || (ready && authenticated)) {
-      // const formattedBalance = Number(userEthBalance?.data?.formatted);
-      // console.log(formattedBalance);
-      // if ()
       navigate("/home");
     }
   });

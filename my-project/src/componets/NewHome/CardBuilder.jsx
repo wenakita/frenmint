@@ -40,14 +40,10 @@ function CardBuilder(props) {
   const [receiver, setReceiver] = useState(null);
   const [modalMessage, setModalMessage] = useState(null);
 
-  console.log(data);
   // if (data) {
   //   test(data?.ftPfpUrl);
   // }
   useEffect(() => {
-    console.log(data);
-    console.log(data?.address);
-
     test(data?.ftPfpUrl);
   }, [data]);
 
@@ -56,10 +52,8 @@ function CardBuilder(props) {
   }, [selectedData]);
 
   async function test(imgUrl) {
-    console.log("here");
     //we check to see if image url is valid if it valid we should get a 200 response if not we get 404 etc
     const res = await fetch(url);
-    console.log(await res.status);
     if (res.status == 200) {
       setUrl(imgUrl);
     } else {
@@ -74,7 +68,6 @@ function CardBuilder(props) {
       w0?.address,
       selectedData?.address
     );
-    console.log(res);
     setCurrentShareBalance(res);
   }
 
@@ -89,7 +82,6 @@ function CardBuilder(props) {
       w0?.address,
       receiver
     );
-    console.log(txRes);
     finalizedModal(txRes);
   }
 
@@ -103,7 +95,6 @@ function CardBuilder(props) {
       });
       getShareHoldings();
     } else if (res.failed === true) {
-      console.log("failed tx");
       setModalMessage({
         message: `${res.type} unexpectedly failed`,
         variant: "red",

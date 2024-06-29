@@ -15,7 +15,6 @@ function ShareSender(props) {
       setSelectedShare(holdingsData[0]);
     }
   }, []);
-  console.log(holdingsData);
 
   async function sendShare() {
     const provider = await w0?.getEthersProvider();

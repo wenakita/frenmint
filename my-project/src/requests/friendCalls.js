@@ -1,14 +1,7 @@
 import { useState, useEffect } from "react";
 import { getShareBalance, getShareUri } from "./txRequests";
 const jwt = import.meta.env.VITE_FRIEND_TECH_JWT;
-console.log(jwt);
-const options = {
-  method: "GET",
-  headers: {
-    accept: "application/json",
-    "x-api-key": "3652122689914635ac7806c7547255fe",
-  },
-};
+
 const debankOptions = {
   method: "GET",
   headers: {
@@ -21,7 +14,6 @@ export async function GetTrendingFriends() {
   try {
     const res = await fetch("https://prod-api.kosetto.com/lists/top-by-price");
     const trendingUsers = await res.json();
-    console.log(trendingUsers);
 
     return trendingUsers.users;
   } catch (error) {
@@ -49,7 +41,6 @@ export async function SearchByContract(address) {
       }
     );
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.log(error);
@@ -58,7 +49,6 @@ export async function SearchByContract(address) {
 }
 
 export async function SearchByUser(userName) {
-  console.log(userName);
   try {
     const formattedQueryName = formatUserName(userName);
     const response = await fetch(
@@ -71,7 +61,6 @@ export async function SearchByUser(userName) {
       }
     );
     const data = await response.json();
-    console.log(data);
     return data.users;
   } catch (error) {
     console.log(error);
@@ -80,7 +69,6 @@ export async function SearchByUser(userName) {
 
 function formatUserName(target) {
   let formatted;
-  console.log(target);
   if (/\s/.test(target)) {
     formatted = target.replace(/\s/, "%20");
     return formatted;
@@ -89,7 +77,6 @@ function formatUserName(target) {
 }
 
 export async function fetchFollowers(shareAddress) {
-  console.log(shareAddress);
   try {
     const followerData = [];
     let currentPageStart;
@@ -97,23 +84,18 @@ export async function fetchFollowers(shareAddress) {
       `https://prod-api.kosetto.com/users/${shareAddress}/token/holders?requester=${shareAddress}`
     );
     const data = await res.json();
-    console.log(data);
-    console.log(data.users.length);
     followerData.push({
       page: data.users,
     });
     currentPageStart = data?.nextPageStart;
     if (data.nextPageStart !== null) {
-      console.log(currentPageStart);
       while (currentPageStart !== null) {
         const currentFollwerPage = await followerReccuring(
           shareAddress,
           currentPageStart
         );
 
-        console.log(currentFollwerPage);
         currentPageStart = currentFollwerPage.nextPageStart;
-        console.log(currentPageStart);
         if (currentPageStart === null) {
           break;
         } else {
@@ -131,7 +113,6 @@ export async function fetchFollowers(shareAddress) {
 }
 
 async function followerReccuring(userAdderss, pageStart) {
-  console.log("hello");
   try {
     const res = await fetch(
       `https://prod-api.kosetto.com/users/${userAdderss}/token/holders?requester=${userAdderss}&pageStart=${pageStart}`
@@ -183,9 +164,7 @@ export async function findId(userAddress) {
       debankOptions
     );
     const data = await res.json();
-    console.log(data);
     const output = await formatDebankResponse(data);
-    console.log(output);
     return output;
   } catch (error) {
     console.log(error);
@@ -201,7 +180,6 @@ export async function findHoldingsShareData(
   holdings
 ) {
   const formattedHoldings = [];
-  console.log(holdings);
   for (const key in holdings) {
     const currentShare = holdings[key];
     const currentShareCA = await getShareUri(
@@ -229,7 +207,6 @@ export async function findHoldingsShareData(
 }
 
 async function formatDebankResponse(data) {
-  console.log(data);
   let formattedBalance = [];
   for (const key in data) {
     if (
@@ -241,13 +218,10 @@ async function formatDebankResponse(data) {
       });
     }
   }
-  console.log(formattedBalance);
   return formattedBalance;
 }
 
 export async function fetchGlobalActivity() {
-  console.log("here");
-  console.log(import.meta.env.VITE_FRIEND_TECH_JWT);
   try {
     const response = await fetch(
       "https://prod-api.kosetto.com/global-activity-v2"
@@ -262,42 +236,8 @@ export async function fetchGlobalActivity() {
 
 async function dissectBuyTypes(data) {
   for (const key in data) {
-    console.log(data[key]);
   }
 }
-
-// export async function fetchFollowers(userAddress) {
-//   console.log(userAddress);
-//   try {
-//     const response = await fetch(
-//       `https://prod-api.kosetto.com/users/${userAddress}/following-list?requester=${userAddress}`,
-//       {
-//         headers: {
-//           Authorization: import.meta.env.VITE_FRIEND_TECH_JWT,
-//         },
-//       }
-//     );
-//     const data = await response.json();
-//     const result = await data.followingList;
-//     if (result.length > 3) {
-//       return [result[0], result[1], result[2]];
-//     } else {
-//       return [result[0]];
-//     }
-//   } catch (error) {
-//     return null;
-//   }
-// }
-// export async function GetTargetShareBalance(
-//   userAddress,
-//   targetAddress,
-//   shareId,
-//   useReadContract
-// ) {
-//   console.log(userAddress, targetAddress);
-
-//   return "1";
-// }
 
 export async function formatChartData(chartData) {
   for (const key in chartData) {
@@ -305,21 +245,15 @@ export async function formatChartData(chartData) {
     const currentDate = currentShare?.date;
     const buyAmountEth = uintFormat(currentShare.ethAmount);
     const sharesBought = currentShare.shareAmount;
-    console.log(buyAmountEth);
-    console.log(sharesBought);
-    console.log(currentDate);
     const convertedDate = new Date(currentDate);
     let month = convertedDate.toLocaleString("default", { month: "long" });
     let day = convertedDate.getDate();
     let year = convertedDate.getFullYear();
     let formattedDate = `${month} ${day}, ${year}`;
-    console.log(formattedDate);
     chartData[key].fullDate = formattedDate;
     const calculatePriceAtTime = Number(buyAmountEth) / Number(sharesBought);
-    console.log(calculatePriceAtTime);
     chartData[key].priceAtDate = calculatePriceAtTime;
   }
-  console.log(chartData);
   return chartData;
 }
 
@@ -330,7 +264,6 @@ export async function getShareChartData(shareAddress) {
   let isNull = false;
   let shareChartData = [];
   try {
-    console.log(shareAddress);
     const res = await fetch(
       `https://prod-api.kosetto.com/users/${shareAddress}/account-trade-activity`,
       {
@@ -342,20 +275,12 @@ export async function getShareChartData(shareAddress) {
     );
     const data = await res.json();
     const activity = data.users;
-    console.log(data.users);
-    console.log(data.nextPageStart);
     currentPageStart = data.nextPageStart;
 
     for (const key in activity) {
-      console.log(activity[key]);
-
       if (activity[key].subject !== null) {
         const currentShareAddress = activity[key].subject.address;
-        console.log(currentShareAddress);
-        console.log(currentShareAddress.localeCompare(shareAddress));
         if (currentShareAddress.localeCompare(shareAddress) === 0) {
-          console.log(activity[key]);
-          console.log(activity[key].isBuy);
           shareChartData.push({
             tradedShareAddress: activity[key].subject.address,
             traderShareAddress: activity[key].trader.address,
@@ -369,12 +294,8 @@ export async function getShareChartData(shareAddress) {
         }
       }
     }
-    console.log(shareChartData);
-    console.log(data.nextPageStart);
     if (data.nextPageStart !== null) {
       currentPageStart = data.nextPageStart;
-      console.log("ture");
-      console.log(data.nextPageStart);
       while (currentPageStart !== null) {
         const newData = await continueFindingChartData(
           currentPageStart,
@@ -387,15 +308,12 @@ export async function getShareChartData(shareAddress) {
             usersActivity[key].subject !== null ||
             usersActivity[key].club == null
           ) {
-            console.log(usersActivity[key]);
             const currentShareAddress = usersActivity[key].subject.address;
 
             if (
               currentShareAddress !== null ||
               usersActivity[key].club == null
             ) {
-              console.log(currentShareAddress);
-              console.log(usersActivity[key].isBuy);
               if (currentShareAddress.localeCompare(shareAddress) === 0) {
                 shareChartData.push({
                   tradedShareAddress: usersActivity[key].subject.address,
@@ -412,7 +330,6 @@ export async function getShareChartData(shareAddress) {
           }
         }
 
-        console.log(newData.nextPageStart);
         currentPageStart = newData?.nextPageStart;
         if (currentPageStart === null) {
           break;
@@ -434,7 +351,6 @@ export function uintFormat(value) {
 }
 
 export async function continueFindingChartData(pageStart, shareAddress) {
-  console.log(pageStart);
   const result = [];
   try {
     const res = await fetch(
@@ -447,7 +363,6 @@ export async function continueFindingChartData(pageStart, shareAddress) {
       }
     );
     const data = await res.json();
-    console.log(data.nextPageStart);
     return await data;
   } catch (error) {
     console.log(error);

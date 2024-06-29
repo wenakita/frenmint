@@ -24,10 +24,6 @@ function App() {
           <Route path="/" element={<Portal />} />
           <Route path="/home" element={<NewHomePage />} />
           <Route path="/friend/:address" element={<NewFriend />} />
-          <Route path="/balances" element={<BalancesPage />} />
-          <Route path="/my-pools" element={<MyPools />} />
-          <Route path="/pools" element={<FriendTechPools />} />
-          <Route path="/swap" element={<UniversalSwap />} />
           <Route path="/new" element={<NewBalances />} />
           <Route path="/newswap" element={<NewSwap />} />
           <Route path="/analytics" element={<Analytics />} />

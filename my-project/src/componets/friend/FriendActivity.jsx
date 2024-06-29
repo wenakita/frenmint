@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { uintFormat } from "../../formatters/format";
 function FriendActivity(props) {
   const { priceHistory } = props;
-  console.log(priceHistory);
   return (
     <div>
       {priceHistory ? (

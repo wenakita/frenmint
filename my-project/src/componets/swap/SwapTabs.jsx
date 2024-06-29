@@ -17,7 +17,6 @@ function SwapTabs(props) {
     viewLending,
     setViewLending,
   } = props;
-  console.log(viewSwap);
   return (
     <div className="">
       <div className=" flex justify-start gap-2 whitespace-nowrap text-stone-500 text-[11px] font-semibold p-1">

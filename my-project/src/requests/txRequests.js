@@ -21,7 +21,6 @@ export async function getPoolFees() {
       functionName: "fees",
       args: [],
     });
-    console.log(feeResults);
     return feeResults;
   } catch (error) {
     console.log(error);
@@ -35,8 +34,6 @@ export async function wrap(signer, amountToBuy, finalAmount, shareAddress) {
     signer
   );
   try {
-    console.log(amountToBuy, shareAddress, finalAmount);
-
     const res = await shareWrapperContract.wrap(
       shareAddress,
       Number(amountToBuy),
@@ -61,8 +58,6 @@ export async function unwrap(signer, amountToSell, finalAmount, shareAddress) {
     signer
   );
   try {
-    console.log(amountToSell, shareAddress, finalAmount);
-
     const res = await shareWrapperContract.unwrap(shareAddress, amountToSell);
     const receipt = await res.wait();
     console.log(await receipt);
@@ -82,7 +77,6 @@ export async function getShareSupply(readContract, config, abi, shareAddress) {
       functionName: "totalSupply",
       args: [shareAddress],
     });
-    console.log(supply);
     return Number(supply);
   } catch (error) {
     console.log(error);
@@ -104,7 +98,6 @@ export async function getShareBuyTotal(
       args: [shareAddress, amount],
     });
 
-    console.log(Number(buyTotal) / 10 ** 18);
     return Number(buyTotal) / 10 ** 18;
   } catch (error) {
     console.log(error);
@@ -125,8 +118,6 @@ export async function getShareSellTotal(
       functionName: "getSellPriceAfterFee",
       args: [shareAddress, amount],
     });
-    console.log(sellTotal);
-    console.log(Number(sellTotal) / 10 ** 18);
     return Number(sellTotal) / 10 ** 18;
   } catch (error) {
     console.log(error);
@@ -134,7 +125,6 @@ export async function getShareSellTotal(
 }
 
 export async function getShareBalance(readContract, config, abi, owner, nftId) {
-  console.log(owner, nftId);
   try {
     const balance = await readContract(config, {
       address: "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
@@ -142,7 +132,6 @@ export async function getShareBalance(readContract, config, abi, owner, nftId) {
       functionName: "balanceOf",
       args: [owner, nftId],
     });
-    console.log(balance);
     return Number(balance);
   } catch (error) {
     console.log(error);
@@ -157,15 +146,12 @@ export async function getFinalWrapTotal(
   amountToBuy
 ) {
   try {
-    console.log(shareAddress);
-    console.log(String(amountToBuy * Math.pow(10, 18)));
     const finalToPay = await readContract(config, {
       abi: friendWrapperAbi,
       address: "0xCF205808Ed36593aa40a44F10c7f7C2F67d4A4d4",
       functionName: "getBuyPriceAfterFee",
       args: [shareAddress, amountToBuy],
     });
-    console.log(Number(finalToPay) / 10 ** 18);
     return Number(finalToPay) / 10 ** 18;
   } catch (error) {
     console.log(error);
@@ -322,7 +308,6 @@ export async function approveShareSpending(signer) {
     signer
   );
   try {
-    console.log("running");
     const res = await friendTechWrapperContract.setApprovalForAll(
       "0x605145D263482684590f630E9e581B21E4938eb8",
       true
@@ -335,8 +320,6 @@ export async function approveShareSpending(signer) {
 }
 
 export async function withdrawGoddog(signer, abi, targetPool, withdrawAmount) {
-  console.log(signer);
-  console.log(withdrawAmount);
   const SudoSwapPoolContract = new Contract(targetPool, abi, signer);
   try {
     const res = await SudoSwapPoolContract.withdrawERC20(
@@ -433,7 +416,6 @@ export async function depositGoddog(signer, abi, targetPool, depositAmount) {
 }
 
 export async function sellPool(signer, abi, parameters, owner) {
-  console.log(parameters);
   const isAppoved = await checkShareApproval(
     owner,
     "0xa07eBD56b361Fe79AF706A2bF6d8097091225548"
@@ -447,7 +429,6 @@ export async function sellPool(signer, abi, parameters, owner) {
     signer
   );
   try {
-    console.log("done");
     const res = await sudoSwapContract.swap(parameters, {
       gasLimit: 250000,
     });
@@ -460,7 +441,6 @@ export async function sellPool(signer, abi, parameters, owner) {
 }
 
 export async function buyPool(signer, abi, parameters, owner) {
-  console.log(parameters);
   await approveGoddogSpending(signer);
 
   const sudoSwapContract = new Contract(
@@ -469,7 +449,6 @@ export async function buyPool(signer, abi, parameters, owner) {
     signer
   );
   try {
-    console.log("done");
     const res = await sudoSwapContract.swap(parameters, {
       gasLimit: 250000,
     });
@@ -517,7 +496,12 @@ export async function transferShares(
   } catch (error) {
     console.log(error);
     return { failed: true, receipt: null, type: "Transfer" };
-
-    r;
   }
+}
+
+export async function checkChain(chain) {
+  if (chain !== 8453) {
+    return false;
+  }
+  return true;
 }

@@ -50,8 +50,6 @@ function NewFriend() {
     setEthPrice(ethUSD);
     const res = await SearchByContract(address);
     const txs = await getShareChartData(address);
-    console.log(txs);
-    console.log(res);
     const orderedPriceHistory = _.orderBy(txs, ["date"]);
 
     setTxData(orderedPriceHistory);
@@ -211,9 +209,7 @@ function NewFriend() {
       ),
     },
   ];
-  const onChange = (key) => {
-    console.log(key);
-  };
+  const onChange = (key) => {};
   const customExpandIcon = ({ isActive }) =>
     isActive ? (
       <UpOutlined
@@ -248,9 +244,7 @@ function NewFriend() {
   };
 
   const [currentVW, setCurrentVW] = useState(null);
-  useEffect(() => {
-    console.log(currentVW);
-  }, [currentVW]);
+  useEffect(() => {}, [currentVW]);
 
   return (
     <div className={` mb-10`}>
