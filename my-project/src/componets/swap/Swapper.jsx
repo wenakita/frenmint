@@ -578,16 +578,17 @@ function Swapper(props) {
                                     {item?.FTData?.ftName}
                                   </h3>
                                 </div>
-                                <div className="flex justify-end">
-                                  {" " +
-                                    item?.balance +
-                                    " ≈ " +
-                                    Number(
-                                      uintFormat(item?.FTData?.displayPrice) *
-                                        ethPrice *
-                                        item?.balance
-                                    ).toFixed(2) +
-                                    "USD"}
+                                <div className="flex justify-end gap-1">
+                                  {" " + item?.balance}
+                                  <h3 className="text-[7.5px] mt-[2.7px]">
+                                    {" ≈ " +
+                                      Number(
+                                        uintFormat(item?.FTData?.displayPrice) *
+                                          ethPrice *
+                                          item?.balance
+                                      ).toFixed(2) +
+                                      "USD"}
+                                  </h3>
                                 </div>
                               </button>
                             );
