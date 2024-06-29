@@ -157,7 +157,9 @@ function CardBuilder(props) {
               {isBalance ? (
                 <div className="relative flex gap-1 mt-1">
                   <button
-                    onClick={() => navigate(`/newswap`, { state: data })}
+                    onClick={() =>
+                      navigate(`/newswap`, { state: { userData: data } })
+                    }
                     className=" text-[9px] font-bold p-0.5 w-full border bg-gray-200 text-black border-neutral-900 rounded-lg hover:bg-stone-400"
                   >
                     Mint

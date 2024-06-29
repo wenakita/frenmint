@@ -56,12 +56,10 @@ function NewSwap() {
     getTrending();
   }, []);
   useEffect(() => {
-    console.log(location?.state?.userData);
+    console.log(location?.state);
     if (location?.state) {
       console.log(location?.state?.userData);
-      if (location?.state?.data !== null) {
-        setCurrentShare(location?.state);
-      }
+
       if (location?.state?.userData !== null) {
         setCurrentShare(location?.state?.userData);
       }
