@@ -54,8 +54,8 @@ function CreatePool(props) {
   const [shareBalance, setShareBalance] = useState(null);
   const [modalMessage, setModalMessage] = useState(null);
 
-  // const [ethPrice, setEthPrice] = useState(null);
-  // const [goddogPrice, setGoddogPrice] = useState(null);
+  const [ethPrice, setEthPrice] = useState(null);
+  const [goddogPrice, setGoddogPrice] = useState(null);
 
   const [lp, setLp] = useState(0);
   useEffect(() => {
@@ -77,11 +77,11 @@ function CreatePool(props) {
   }, [depositAmount]);
 
   async function getEthereumPrice() {
-    // const ethPriceUSD = await getEthPrice();
-    // const oooOOOPrice = await getGoddogPrice();
-    // console.log(oooOOOPrice);
-    // setGoddogPrice(oooOOOPrice);
-    // setEthPrice(ethPriceUSD);
+    const ethPriceUSD = await getEthPrice();
+    const oooOOOPrice = await getGoddogPrice();
+    console.log(oooOOOPrice);
+    setGoddogPrice(oooOOOPrice);
+    setEthPrice(ethPriceUSD);
   }
 
   async function calculate() {
@@ -445,7 +445,7 @@ function CreatePool(props) {
                   <div className="flex gap-1">
                     <h3>{lp.toFixed(0)}</h3>
                     <h3 className="text-[7px] mt-[1px]">
-                      {"≈ " + Number(lp).toFixed(2) + " USD"}
+                      {"≈ " + Number(lp * goddogPrice).toFixed(2) + " USD"}
                     </h3>
                   </div>
                 </div>
@@ -467,7 +467,8 @@ function CreatePool(props) {
                     ≈{" "}
                     {" " +
                       Number(
-                        uintFormat(selectedShare?.FTData?.displayPrice)
+                        uintFormat(selectedShare?.FTData?.displayPrice) *
+                          ethPrice
                       ).toFixed(2)}{" "}
                     USD
                   </h3>
