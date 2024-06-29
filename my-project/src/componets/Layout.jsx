@@ -69,8 +69,8 @@ function Layout() {
   }
 
   return (
-    <div className="container" style={{ touchAction: "pan-y" }}>
-      <dialog id="my_modal_69" className="modal">
+    <div className="container touch-pan-y">
+      <dialog id="my_modal_69" className="modal ">
         <div className="modal-box bg-neutral-900">
           <div className="flex">
             <img
@@ -84,7 +84,7 @@ function Layout() {
             <h3 className="text-[10px]">Username:</h3>
             <input
               type="text"
-              className="w-full rounded-lg mt-1 text-[12px] p-1"
+              className="w-full rounded-lg mt-1 text-[12px] p-1 "
               placeholder="Name goes here..."
               onChange={(e) => {
                 setInput(e.target.value);
