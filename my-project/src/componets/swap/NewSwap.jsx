@@ -43,6 +43,7 @@ function NewSwap() {
   const [currentSharePrice, setCurrentSharePrice] = useState(null);
   const [currentPriceHistory, setCurrentPriceHistory] = useState(null);
   const [shareTotalVolume, setShareTotalVolume] = useState(null);
+
   //////////////////
   const { wallets } = useWallets();
   const userAddress = wallets[0]?.address;
@@ -174,6 +175,7 @@ function NewSwap() {
                     currentPriceHistory={currentPriceHistory}
                     currentShare={currentShare}
                     shareTotalVolume={shareTotalVolume}
+                    getUserHoldings={getUserHoldings}
                   />
                 ) : (
                   <>

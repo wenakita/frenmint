@@ -13,6 +13,10 @@ import { getShareBalance } from "../../requests/txRequests";
 import { readContract } from "@wagmi/core";
 import { config } from "../../config";
 import ChartButton from "./ChartButton";
+import { Link } from "react-router-dom";
+import { FaCheckCircle, FaExternalLinkAlt } from "react-icons/fa";
+import { CiWallet } from "react-icons/ci";
+import { MdError } from "react-icons/md";
 //remmm min nft to deposit is 4 no maximum
 //formula to caclculate delta => numNftDeposited * 11 + 1
 //spot price = spotprice * delta
@@ -39,6 +43,7 @@ function CreatePool(props) {
     currentPriceHistory,
     currentShare,
     shareTotalVolume,
+    getUserHoldings,
   } = props;
   const [selectedShare, setSelectedShare] = useState(null);
   const [depositAmount, setDepositAmount] = useState(0);
@@ -47,8 +52,10 @@ function CreatePool(props) {
   const [initialTokenBalance, setIntitialTokenBalance] = useState(null);
   const [message, setMessgae] = useState(null);
   const [shareBalance, setShareBalance] = useState(null);
-  const [ethPrice, setEthPrice] = useState(null);
-  const [goddogPrice, setGoddogPrice] = useState(null);
+  const [modalMessage, setModalMessage] = useState(null);
+
+  // const [ethPrice, setEthPrice] = useState(null);
+  // const [goddogPrice, setGoddogPrice] = useState(null);
 
   const [lp, setLp] = useState(0);
   useEffect(() => {
@@ -70,12 +77,11 @@ function CreatePool(props) {
   }, [depositAmount]);
 
   async function getEthereumPrice() {
-    const ethPriceUSD = await getEthPrice();
-    const oooOOOPrice = await getGoddogPrice();
-    console.log(oooOOOPrice);
-    setGoddogPrice(oooOOOPrice);
-
-    setEthPrice(ethPriceUSD);
+    // const ethPriceUSD = await getEthPrice();
+    // const oooOOOPrice = await getGoddogPrice();
+    // console.log(oooOOOPrice);
+    // setGoddogPrice(oooOOOPrice);
+    // setEthPrice(ethPriceUSD);
   }
 
   async function calculate() {
@@ -128,7 +134,7 @@ function CreatePool(props) {
     );
     try {
       const res = await godDogContract.approve(
-        "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
+        "0x605145D263482684590f630E9e581B21E4938eb8",
         "99999999999999999999999999999999"
       );
       const reciept = await res;
@@ -150,7 +156,7 @@ function CreatePool(props) {
         signer
       );
       const res = await godDogContract.setApprovalForAll(
-        "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
+        "0x605145D263482684590f630E9e581B21E4938eb8",
         true
       );
       const reciept = await res;
@@ -162,6 +168,7 @@ function CreatePool(props) {
   }
 
   async function createPool() {
+    let txRes;
     await goddogPermission();
     await friendTechSharePermission();
     const provider = await w0?.getEthersProvider();
@@ -197,15 +204,40 @@ function CreatePool(props) {
         "0x0000000000000000000000000000000000000000",
       ];
       const res = await SudoSwapContract.createPairERC1155ERC20(parameters, {
-        gasLimit: 300000, // Adjust this value as needed
+        gasLimit: 350000, // Adjust this value as needed
       });
       const reciept = await res.wait();
       console.log(await reciept);
+      txRes = { failed: false, receipt: reciept, type: "Create pool" };
+
+      getUserHoldings();
       // acitvateLoading();
       // setOpen(false);
     } catch (error) {
       console.log(error);
+      txRes = { failed: false, receipt: null, type: "Create pool" };
     }
+    finalizedModal(txRes);
+  }
+
+  function finalizedModal(res) {
+    if (res.failed === false) {
+      setModalMessage({
+        message: `${res.type} successful!`,
+        variant: "green",
+        failed: res.failed,
+        hash: res?.receipt?.transactionHash,
+      });
+    } else if (res.failed === true) {
+      console.log("failed tx");
+      setModalMessage({
+        message: `${res.type} unexpectedly failed`,
+        variant: "red",
+        failed: res.failed,
+        hash: null,
+      });
+    }
+    document.getElementById("my_modal_200").showModal();
   }
 
   console.log(holdingsData);
@@ -219,6 +251,63 @@ function CreatePool(props) {
   //   - Basically make it so users simply 1. Enter the number of NFT's they wana provide and then 2. Click "Create Pool"
   return (
     <div className="border border-transparent bg-stone-900 p-2 rounded-md w-[400px] mx-auto">
+      <dialog id="my_modal_200" className="modal">
+        <div className="modal-box bg-neutral-900">
+          <div className="mb-3">
+            {modalMessage?.failed ? (
+              <MdError
+                className={`text-[100px] text-${modalMessage?.variant}-500 ms-auto me-auto`}
+              />
+            ) : (
+              <FaCheckCircle className="text-[100px] text-green-500 ms-auto me-auto " />
+            )}
+          </div>
+          <h3 className="font-bold text-[10px] font-mono text-center">
+            {modalMessage?.message}
+          </h3>
+
+          {modalMessage?.failed ? (
+            <h3 className="text-[8px] text-center mt-1">
+              Please make sure you have enough to cover gas and tokens as well
+            </h3>
+          ) : (
+            <div className="text-center text-[10px] mt-2">
+              <Link
+                to={`https://basescan.org/tx/${modalMessage?.hash}`}
+                target="_blank"
+                className=""
+              >
+                <div className="flex justify-center gap-2">
+                  <div className="flex gap-1 hover:text-stone-800">
+                    <FaExternalLinkAlt className="text-[13px] mt-1" />
+                    <h3 className="mt-1">Tx Hash</h3>
+                  </div>
+                  <Link
+                    to={"/new"}
+                    className="flex gap-1 mt-0.5 hover:text-stone-800"
+                  >
+                    <CiWallet className="text-[18px]" />
+                    <h3 className="mt-0.5">wallet</h3>
+                  </Link>
+                </div>
+              </Link>
+            </div>
+          )}
+          <div className="mt-2">
+            <button
+              onClick={() => {
+                document.getElementById("my_modal_200").close();
+              }}
+              className="border w-full rounded-md text-[12px] border-stone-900 bg-blue-500 text-white font-mono font-bold p-1 hover:bg-stone-800"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button onClick={() => {}}>close</button>
+        </form>
+      </dialog>
       <div className="flex justify-between">
         <div className="flex justify-start gap-1">
           <img
@@ -325,7 +414,7 @@ function CreatePool(props) {
                   value={depositAmount || 0}
                 />
                 <div className="flex justify-end text-[8px]">
-                  ERC-1155 share baalnce: {selectedShare?.balance || 0}
+                  ERC-1155 share balance: {selectedShare?.balance || 0}
                 </div>
               </div>
             </div>
@@ -356,7 +445,7 @@ function CreatePool(props) {
                   <div className="flex gap-1">
                     <h3>{lp.toFixed(0)}</h3>
                     <h3 className="text-[7px] mt-[1px]">
-                      {"≈ " + Number(goddogPrice * lp).toFixed(2) + " USD"}
+                      {"≈ " + Number(lp).toFixed(2) + " USD"}
                     </h3>
                   </div>
                 </div>
@@ -378,8 +467,7 @@ function CreatePool(props) {
                     ≈{" "}
                     {" " +
                       Number(
-                        uintFormat(selectedShare?.FTData?.displayPrice) *
-                          ethPrice
+                        uintFormat(selectedShare?.FTData?.displayPrice)
                       ).toFixed(2)}{" "}
                     USD
                   </h3>
