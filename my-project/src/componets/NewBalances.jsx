@@ -165,18 +165,6 @@ function NewBalances() {
             >
               Pools
             </button>
-            <button
-              onClick={() => {
-                setTransferShares(true);
-                setViewShareHoldings(false);
-              }}
-              className={` hover:border hover:border-t-0 hover:border-r-0  p-1 hover:border-l-0  font-bold ${
-                transferShares === true &&
-                `border  border-t-0 border-r-0 border-l-0 text-white font-bold`
-              }`}
-            >
-              Transfer
-            </button>
           </div>
         </div>
         {/* <img
