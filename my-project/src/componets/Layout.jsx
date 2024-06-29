@@ -94,20 +94,9 @@ function Layout() {
                 : "You are currently on a chain that is not available on frenmint"}
             </p>
             <p className=" font-bold whitespace-nowrap text-[8px] text-center">
-              log out and Switch to base chain before logging in to completing
-              any transaction on frenmint
+              Switch to base chain before logging in to completing any
+              transaction on frenmint
             </p>
-          </div>
-          <div className="\">
-            <button
-              className="w-full border bg-blue-600 hover:bg-stone-800 rounded-lg text-white border-stone-500 text-[10px] p-1 font-mono font-bold"
-              onClick={() => {
-                logout();
-                document.getElementById("my_modal_300").close();
-              }}
-            >
-              Logout
-            </button>
           </div>
         </div>
         <form method="dialog" className="modal-backdrop">
