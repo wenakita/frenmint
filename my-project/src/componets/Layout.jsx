@@ -87,11 +87,39 @@ function Layout() {
 
   const [fileUrl, setFileUrl] = useState(null);
   //this how we store files
-  const handleFileChange = (event) => {
+
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      const url = URL.createObjectURL(file);
-      setFileUrl(url);
+      // Generate a unique file name
+      try {
+        const fileName = `${Date.now()}-${file.name}`;
+
+        // Upload file to Supabase Storage
+        const { data, error } = await supabase.storage
+          .from("profilepics")
+          .upload(fileName, file);
+
+        if (error) {
+          console.error("Error uploading file:", error);
+          return;
+        }
+
+        // Get public URL for the uploaded file
+        const { publicURL, error: urlError } = supabase.storage
+          .from("profilepics")
+          .getPublicUrl(data.path);
+
+        if (urlError) {
+          console.error("Error getting public URL:", urlError);
+          return;
+        }
+
+        setFileUrl(publicURL);
+        console.log("File URL:", publicURL);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

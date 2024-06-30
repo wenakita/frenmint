@@ -226,9 +226,12 @@ function NewNavigation(props) {
                     Welcome back {currentUser?.username}
                   </div>
                 </li>
-                <li className="mb-2  border border-transparent hover:bg-neutral-900 w-full">
-                  <Link to={"/new"} className="">
-                    <div className="flex gap-2">
+                <li className="">
+                  <Link
+                    to="/new"
+                    className="block border border-transparent hover:bg-neutral-900 w-full py-2 px-4"
+                  >
+                    <div className="flex items-center gap-2">
                       <CiWallet className="text-[20px]" />
                       <h3 className="text-[12px]">Wallet</h3>
                     </div>
