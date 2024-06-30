@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { CiWallet } from "react-icons/ci";
 import { MdOutlineCompareArrows } from "react-icons/md";
-import { FaArrowsRotate } from "react-icons/fa6";
+import { FaArrowsRotate, FaEthereum } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { usePrivy } from "@privy-io/react-auth";
 import { GetTrendingFriends, SearchByUser } from "../../requests/friendCalls";
 import { RiSwap2Line } from "react-icons/ri";
+import { supabase } from "../../client";
+import { useBalance } from "wagmi";
+import { base } from "wagmi/chains";
 
-function NewNavigation() {
+function NewNavigation(props) {
+  const { isCreated } = props;
   const navigate = useNavigate();
   const { logout, authenticated, user, ready } = usePrivy();
   const [searchInput, setSearchInput] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const [trendingUsers, setTrendingUsers] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [ethBalance, setEthBalance] = useState(null);
   const wallet = user?.wallet;
+  const ethBal = useBalance({
+    address: wallet?.address,
+    chainId: base.id,
+  });
   useEffect(() => {
     if ((!authenticated && !wallet) || (!authenticated && !ready)) {
       navigate("/");
@@ -27,6 +37,15 @@ function NewNavigation() {
     getTrending();
   }, []);
 
+  useEffect(() => {
+    fetchUsers();
+    getEthBalance();
+  }, [isCreated]);
+
+  async function getEthBalance() {
+    setEthBalance(Number(ethBal?.data?.formatted).toFixed(6));
+  }
+
   async function getTrending() {
     const trending = await GetTrendingFriends();
     setTrendingUsers(trending);
@@ -34,12 +53,32 @@ function NewNavigation() {
 
   async function searchUser() {
     const result = await SearchByUser(searchInput);
-    console.log(result);
     setSearchResults(result);
+  }
+
+  async function fetchUsers() {
+    try {
+      const { data, error } = await supabase.from("usernames").select();
+      if (error) {
+        console.error("Error fetching usernames:", error.message);
+        return;
+      }
+
+      if (data) {
+        for (const key in data) {
+          if (data[key]?.user_address === wallet?.address) {
+            setCurrentUser(data[key]);
+            break;
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error.message);
+    }
   }
   return (
     <>
-      <div className="navbar bg-neutral-950 md:w-screen w-screen border border-neutral-900">
+      <div className="navbar bg-neutral-950 md:w-screen w-screen border border-neutral-900 ">
         <div className="navbar-start">
           <div className="dropdown ">
             <div
@@ -151,15 +190,51 @@ function NewNavigation() {
               </svg>
             </button>
             <button className="btn btn-ghost btn-circle">
-              <Link to={"/new"} className="btn btn-ghost btn-circle">
-                <CiWallet className="text-[20px]" />
-              </Link>
-            </button>
-            <button className="btn btn-ghost btn-circle">
               <Link to={"/newswap"} className="btn btn-ghost btn-circle">
                 <RiSwap2Line className="text-[15px]" />
               </Link>
             </button>
+            {/* <button className="btn btn-ghost btn-circle">
+              <Link to={"/new"} className="btn btn-ghost btn-circle">
+                <CiWallet className="text-[20px]" />
+              </Link>
+            </button> */}
+            <div className="dropdown relative">
+              {currentUser && (
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="btn btn-ghost btn-circle"
+                >
+                  <img
+                    src={
+                      currentUser?.img_url ||
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk3BEiUjewgdlaP0T1JRZXBbeB4RjAXnz_Tg&s"
+                    }
+                    alt=""
+                    className="size-6 rounded-full mt-0.5"
+                  />
+                </div>
+              )}
+              <ul className=" menu menu-sm dropdown-content mt-3 z-[1] p-7 shadow bg-neutral-900 rounded-box w-52 font-bold absolute right-0 hover:bg-none">
+                <li className="mb-2  border border-transparent hover:bg-neutral-900 w-full">
+                  <Link to={"/new"} className="">
+                    <div className="flex gap-2">
+                      <CiWallet className="text-[20px]" />
+                      <h3 className="text-[12px]">Wallet</h3>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <div className="flex border border-1 border-b-0 border-l-0 border-r-0 rounded-none border-neutral-800">
+                    <FaEthereum className="mt-1 text-[11px] text-gray-500" />
+                    <h3 className="text-white text-[10px] font-mono mt-1">
+                      {ethBalance}
+                    </h3>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         ) : null}
       </div>

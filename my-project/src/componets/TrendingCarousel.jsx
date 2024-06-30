@@ -17,6 +17,7 @@ function TrendingCarousel({ trending }) {
     speed: 4000,
     autoplaySpeed: 4000,
     cssEase: "linear",
+
     responsive: [
       {
         breakpoint: 1024,

@@ -27,6 +27,7 @@ function Layout() {
   const wallet = user?.wallet;
   const [input, setInput] = useState(null);
   const [trending, setTrending] = useState(null);
+  const [isCreated, setIsCreated] = useState(false);
 
   useEffect(() => {
     if (!authenticated && !wallet) {
@@ -78,6 +79,7 @@ function Layout() {
         ])
         .single();
       getUsers();
+      setIsCreated(true);
     } catch (error) {
       console.log(error);
     }
@@ -186,7 +188,7 @@ function Layout() {
         </div>
       </dialog>
       <div className="">
-        <NewNavigation />
+        <NewNavigation isCreated={isCreated} />
       </div>
       {location?.pathname !== "/" ? (
         <div>
