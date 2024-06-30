@@ -84,7 +84,7 @@ function Layout() {
   }
 
   const [fileUrl, setFileUrl] = useState(null);
-
+  //this how we store files
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -135,24 +135,42 @@ function Layout() {
             />
             <h3 className="text-[12px] font-bold mt-1">Create a username</h3>
           </div>
+
           <div className="mt-3 p-2">
-            <h3 className="text-[10px]">Username:</h3>
+            <div className="mb-2">
+              <div className="flex gap-2">
+                {fileUrl && (
+                  <img
+                    src={fileUrl}
+                    alt=""
+                    className="size-14 border rounded-full border-stone-700"
+                  />
+                )}
+                <div className="mt-[17px] text-white font-bold  text-[14px]">
+                  {input && <h3>{input}</h3>}
+                </div>
+              </div>
+            </div>
+            <h3 className="text-[10px] mt-4">Username:</h3>
             <input
               type="text"
               className="w-full rounded-lg mt-1 text-[12px] p-1 "
-              placeholder="Name goes here..."
+              placeholder="Enter Name..."
               onChange={(e) => {
                 setInput(e.target.value);
               }}
             />
-            <div className="mb-2">
+            <div className="mb-2 mt-4">
+              <h3 className="text-[10px]">Profile picture:</h3>
+
               <input
                 type="file"
-                className="file-input file-input-bordered file-input-error w-full max-w-xs"
+                className="border file-input-primary rounded-lg w-full text-white bg-stone-800 text-[10px] font-bold"
                 onChange={handleFileChange}
               />
             </div>
-            <div className="mt-2">
+
+            <div className="mt-5">
               <button
                 className="w-full border border-stone-900 bg-blue-500 rounded-lg text-white font-bold p-1 text-[10px]"
                 onClick={() => {
