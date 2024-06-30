@@ -238,7 +238,7 @@ function NewBalances() {
                 setViewPools(true);
               }}
               className={` hover:border hover:border-t-0 hover:border-r-0 hover:border-l-0  p-1  font-bold ${
-                viewShareHoldings === false &&
+                viewPools === true &&
                 `border  border-t-0 border-r-0 border-l-0 text-white font-bold`
               }`}
             >
