@@ -44,31 +44,36 @@ function TrendingCarousel({ trending }) {
     <div className="relative h-auto py-4 border border-neutral-900 text-white w-screen">
       <div className="w-screen mx-auto ">
         <Slider {...settings}>
-          {trending?.map((item, index) => (
-            <div key={index} className="px-2">
-              <div className="flex items-center gap-2">
-                <h3 className="text-gray-500 font-bold text-xs">
-                  #{index + 1}
-                </h3>
-                <Link
-                  to={`/friend/${item?.address}`}
-                  className="flex items-center gap-1"
-                >
-                  <img
-                    src={item?.ftPfpUrl}
-                    alt={item?.ftName}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <div className="truncate text-xs">
-                    <h3 className="truncate">{item?.ftName}</h3>
+          {trending?.map((item, index) => {
+            if (index <= 11) {
+              return (
+                <div key={index} className="px-2">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-gray-500 font-bold text-xs">
+                      #{index + 1}
+                    </h3>
+                    <Link
+                      to={`/friend/${item?.address}`}
+                      className="flex items-center gap-1"
+                    >
+                      <img
+                        src={item?.ftPfpUrl}
+                        alt={item?.ftName}
+                        className="w-8 h-8 rounded-full"
+                      />
+                      <div className="truncate text-xs">
+                        <h3 className="truncate">{item?.ftName}</h3>
+                      </div>
+                      <h3 className="text-green-500 font-bold text-xs truncate">
+                        +{uintFormat(item?.displayPrice).toFixed(4)}
+                      </h3>
+                    </Link>
                   </div>
-                  <h3 className="text-green-500 font-bold text-xs truncate">
-                    +{uintFormat(item?.displayPrice).toFixed(4)}
-                  </h3>
-                </Link>
-              </div>
-            </div>
-          ))}
+                </div>
+              );
+            }
+            return null;
+          })}
         </Slider>
       </div>
     </div>
