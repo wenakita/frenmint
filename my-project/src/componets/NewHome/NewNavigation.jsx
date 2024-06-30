@@ -220,27 +220,30 @@ function NewNavigation(props) {
                   />
                 </div>
               )}
-              <ul className=" menu menu-sm dropdown-content mt-3 z-[1] p-6 shadow bg-neutral-900 rounded-box w-52 font-bold absolute right-0 hover:bg-none">
+              <ul className="menu menu-sm dropdown-content mt-3 z-10 p-6 shadow bg-neutral-900 rounded-box w-52 font-bold absolute right-0">
                 <li>
-                  <div className="text-start text-[8px] text-gray-200 text-truncate font-bold font-mono">
+                  <div className="text-start text-xs text-gray-200 font-bold font-mono truncate">
                     Welcome back {currentUser?.username}
                   </div>
                 </li>
-                <li className="">
+                <li>
                   <Link
                     to="/new"
                     className="block border border-transparent hover:bg-neutral-900 w-full py-2 px-4"
+                    onClick={() => {
+                      // Close the dropdown if needed
+                    }}
                   >
                     <div className="flex items-center gap-2">
-                      <CiWallet className="text-[20px]" />
-                      <h3 className="text-[12px]">Wallet</h3>
+                      <CiWallet className="text-2xl" />
+                      <h3 className=" text-[12px]">Wallet</h3>
                     </div>
                   </Link>
                 </li>
                 <li>
                   <div className="flex border border-1 border-b-0 border-l-0 border-r-0 rounded-none border-neutral-800">
-                    <FaEthereum className="mt-1 text-[11px] text-gray-500" />
-                    <h3 className="text-white text-[10px] font-mono mt-1">
+                    <FaEthereum className="mt-1 text-xs text-gray-500" />
+                    <h3 className="text-white text-xs font-mono mt-1">
                       {ethBalance}
                     </h3>
                   </div>
