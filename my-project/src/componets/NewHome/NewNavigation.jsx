@@ -232,6 +232,7 @@ function NewNavigation(props) {
                     className="block border border-transparent hover:bg-neutral-900 w-full py-2 px-4"
                     onClick={() => {
                       // Close the dropdown if needed
+                      navigate("/new");
                     }}
                   >
                     <div className="flex items-center gap-2">
