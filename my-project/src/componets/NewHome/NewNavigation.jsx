@@ -39,11 +39,11 @@ function NewNavigation(props) {
 
   useEffect(() => {
     fetchUsers();
-    getEthBalance();
   }, [isCreated]);
 
   useEffect(() => {
     fetchUsers();
+    getEthBalance();
   });
 
   async function getEthBalance() {
@@ -220,7 +220,12 @@ function NewNavigation(props) {
                   />
                 </div>
               )}
-              <ul className=" menu menu-sm dropdown-content mt-3 z-[1] p-7 shadow bg-neutral-900 rounded-box w-52 font-bold absolute right-0 hover:bg-none">
+              <ul className=" menu menu-sm dropdown-content mt-3 z-[1] p-6 shadow bg-neutral-900 rounded-box w-52 font-bold absolute right-0 hover:bg-none">
+                <li>
+                  <div className="text-start text-[8px] text-gray-200 text-truncate font-bold font-mono">
+                    Welcome back {currentUser?.username}
+                  </div>
+                </li>
                 <li className="mb-2  border border-transparent hover:bg-neutral-900 w-full">
                   <Link to={"/new"} className="">
                     <div className="flex gap-2">
