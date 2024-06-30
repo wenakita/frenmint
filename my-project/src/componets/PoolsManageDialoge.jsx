@@ -31,6 +31,7 @@ function PoolsManageDialoge(props) {
   const [currentShareBalance, setCurrentShareBalance] = useState(null);
   const [modalMessage, setModalMessage] = useState(null);
   const [input, setInput] = useState(null);
+  const [wrappedPoolBalance, setWrappedPoolBalance] = useState(null);
   const inputRef = useRef();
   const { wallets } = useWallets();
   const w0 = wallets[0];

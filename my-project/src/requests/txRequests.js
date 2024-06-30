@@ -6,6 +6,7 @@ import { Contract } from "ethers";
 import friendTechABI from "../abi/FriendTechABi";
 import GodDogABI from "../abi/GodDogABI";
 import { parseEther } from "viem";
+import WrappedPoolsABI from "../abi/WrappedPoolsABI";
 const podsPoolCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
 const podsIndexFundCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
 const goddogTokenCA = "0xddf7d080c82b8048baae54e376a3406572429b4e";
@@ -524,5 +525,34 @@ export async function transferPoolOwnerShip(
   } catch (error) {
     console.log(error);
     return { failed: true, receipt: null, type: "Transfer ownership" };
+  }
+}
+
+async function getWrappedPoolsBalance(owner) {
+  try {
+    const balance = await readContract(config, {
+      address: "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
+      abi: WrappedPoolsABI,
+      functionName: "balanceOf",
+      args: [owner],
+    });
+    return Number(balance);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function isPoolWrapped(poolAddress) {
+  try {
+    const wrappedPoolOwner = await readContract(config, {
+      address: "0x8D3C4a673Dd2fAC51d4fde7A42a0dfc5E4DCb228",
+      abi: WrappedPoolsABI,
+      functionName: "ownerOf",
+      args: [poolAddress],
+    });
+    return { address: wrappedPoolOwner, wrapped: true };
+  } catch (error) {
+    console.log(error);
+    return { address: null, wrapped: false };
   }
 }

@@ -30,6 +30,7 @@ import { parseEther } from "viem";
 import { Link } from "react-router-dom";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import PoolsManageDialoge from "./PoolsManageDialoge";
+import { MdVerified } from "react-icons/md";
 
 function Pools(props) {
   const [currentPool, setCurrentPool] = useState(null);
@@ -342,6 +343,15 @@ function Pools(props) {
                         #{item?.poolData?.shareData?.id}
                       </span>
                     </figure>
+                  </div>
+                  <div className="flex justify-start gap-1 ms-2 md:p-2">
+                    <Link
+                      to={`/friend/${item?.poolData?.shareData?.address}`}
+                      className="text-white font-mono font-bold whitespace-nowrap text-[10px] md:text-[12px] overflow-hidden hover:underline hover:text-stone-700"
+                    >
+                      {item?.poolData?.shareData?.ftName}
+                    </Link>
+                    <MdVerified className="text-blue-500 size-3 md:size-4" />
                   </div>
                   <div className="text-start p-2 font-mono text-[9px] card-body ">
                     <div>
