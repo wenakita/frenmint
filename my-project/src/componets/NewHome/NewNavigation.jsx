@@ -42,6 +42,10 @@ function NewNavigation(props) {
     getEthBalance();
   }, [isCreated]);
 
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   async function getEthBalance() {
     setEthBalance(Number(ethBal?.data?.formatted).toFixed(6));
   }
