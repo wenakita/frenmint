@@ -175,7 +175,7 @@ function NewNavigation(props) {
         {authenticated && wallet ? (
           <div className="navbar-end">
             <button
-              className="btn btn-ghost btn-circle"
+              className=""
               onClick={() => document.getElementById("my_modal_3").showModal()}
             >
               <svg
