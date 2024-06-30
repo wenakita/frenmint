@@ -328,7 +328,9 @@ function NewBalances() {
                               key={item}
                               className="w-[180px] md:w-[200px] card rounded-lg mx-auto p-2 border border-neutral-800 bg-gradient-to-tr from-stone-950 to-neutral-950 rounded-xl mt-3"
                             >
-                              <figure className={`relative "w-full}`}>
+                              <figure
+                                className={`relative "w-full  rounded-none`}
+                              >
                                 <Link
                                   to={`/friend/${item?.friendTechData?.address}`}
                                   className="text-white text-[10px] hover:underline  "
@@ -336,7 +338,7 @@ function NewBalances() {
                                   <img
                                     src={item?.friendTechData?.ftPfpUrl}
                                     alt=""
-                                    className="w-full h-full rounded-lg  "
+                                    className="w-full h-full  "
                                   />
                                 </Link>
                                 <span
