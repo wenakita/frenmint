@@ -44,7 +44,7 @@ function NewNavigation(props) {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  });
 
   async function getEthBalance() {
     setEthBalance(Number(ethBal?.data?.formatted).toFixed(6));
