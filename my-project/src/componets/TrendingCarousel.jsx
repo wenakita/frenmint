@@ -45,16 +45,6 @@ function TrendingCarousel({ trending }) {
   };
   return (
     <div className="relative h-[50px]">
-      <div className="absolute top-0 left-0 z-10 border border-neutral-800 rounded-md bg-neutral-950 h-[45px]">
-        <div className="flex p-2 gap-1 mt-1">
-          <img
-            src="https://em-content.zobj.net/source/apple/114/fire_1f525.png"
-            alt=""
-            className="size-4"
-          />
-          <h3 className="text-[8px] text-white font-bold mt-1">Trending</h3>
-        </div>
-      </div>
       <div className="border border-stone-900 p-1 w-screen text-white">
         <div className="slider-container">
           <Slider {...settings}>
