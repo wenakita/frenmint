@@ -41,8 +41,8 @@ function TrendingCarousel({ trending }) {
   };
 
   return (
-    <div className="relative h-auto py-4 border border-neutral-900 text-white">
-      <div className="max-w-screen-xl mx-auto">
+    <div className="relative h-auto py-4 border border-neutral-900 text-white w-screen">
+      <div className="w-screen mx-auto ">
         <Slider {...settings}>
           {trending?.map((item, index) => (
             <div key={index} className="px-2">
