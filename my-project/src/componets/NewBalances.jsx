@@ -111,7 +111,7 @@ function NewBalances() {
         console.log("Fetched usernames:", data);
         for (const key in data) {
           if (data[key]?.user_address === userAddress) {
-            setCurrentUserName(data[key]?.username);
+            setCurrentUserName(data[key]);
             break;
           }
         }
@@ -129,12 +129,12 @@ function NewBalances() {
         <div className="text-[10px] mt-5">
           <div className="mb-2 p-2 flex gap-2 size-[50px] text-[15px] font-bold">
             <img
-              src="https://preview.redd.it/53dts4ayvsn91.gif?format=png8&s=aacacea0d9fc353ba7fa2ebc91aa98c4e5e82929"
+              src={currentUserName?.img_url}
               alt=""
               className=" rounded-full"
             />
             {currentUserName && (
-              <h3 className="text-white mt-2">{currentUserName}</h3>
+              <h3 className="text-white mt-2">{currentUserName?.username}</h3>
             )}
           </div>
           <div className="flex justify-start gap-2 ">

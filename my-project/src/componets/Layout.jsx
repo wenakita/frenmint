@@ -71,6 +71,9 @@ function Layout() {
           {
             user_address: wallet?.address,
             username: input,
+            img_url:
+              fileUrl ||
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk3BEiUjewgdlaP0T1JRZXBbeB4RjAXnz_Tg&s",
           },
         ])
         .single();
@@ -79,6 +82,16 @@ function Layout() {
       console.log(error);
     }
   }
+
+  const [fileUrl, setFileUrl] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setFileUrl(url);
+    }
+  };
 
   return (
     <div className="container touch-pan-y">
@@ -132,6 +145,13 @@ function Layout() {
                 setInput(e.target.value);
               }}
             />
+            <div className="mb-2">
+              <input
+                type="file"
+                className="file-input file-input-bordered file-input-error w-full max-w-xs"
+                onChange={handleFileChange}
+              />
+            </div>
             <div className="mt-2">
               <button
                 className="w-full border border-stone-900 bg-blue-500 rounded-lg text-white font-bold p-1 text-[10px]"
