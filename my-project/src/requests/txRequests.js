@@ -505,3 +505,24 @@ export async function checkChain(chain) {
   }
   return true;
 }
+
+export async function transferPoolOwnerShip(
+  signer,
+  abi,
+  poolContract,
+  newOwner
+) {
+  const shareContract = new Contract(poolContract, abi, signer);
+  try {
+    const parameters = [];
+    const res = await shareContract?.transferOwnership(newOwner, "0x", {
+      gasLimit: 300000,
+    });
+    const reciept = await res.wait();
+
+    return { failed: false, receipt: reciept, type: "Transfer ownership" };
+  } catch (error) {
+    console.log(error);
+    return { failed: true, receipt: null, type: "Transfer ownership" };
+  }
+}

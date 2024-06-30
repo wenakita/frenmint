@@ -12,6 +12,7 @@ import {
   depositGoddog,
   depositShares,
   getShareBalance,
+  transferPoolOwnerShip,
   withdrawGoddog,
   withdrawShares,
 } from "../requests/txRequests";
@@ -25,6 +26,7 @@ function PoolsManageDialoge(props) {
   const [showWithdrawGoddog, setShowWithdrawGoddog] = useState(false);
   const [showDepositGoddog, setShowDepositGoddog] = useState(false);
   const [showDepositShare, setShowDepositShare] = useState(false);
+  const [showTransferOwnership, setTransferOwners] = useState(false);
   const [goddogBalance, setGoddogBalance] = useState(null);
   const [currentShareBalance, setCurrentShareBalance] = useState(null);
   const [modalMessage, setModalMessage] = useState(null);
@@ -102,6 +104,17 @@ function PoolsManageDialoge(props) {
           currentPool?.poolData?.sharePoolData?.erc1155Id,
           input,
           w0?.address
+        );
+      } else if (showTransferOwnership) {
+        console.log("transfer");
+        console.log(input);
+        console.log(currentPool?.poolData?.sharePoolData?.address);
+
+        res = await transferPoolOwnerShip(
+          signer,
+          SudoSwapPoolABI,
+          currentPool?.poolData?.sharePoolData?.address,
+          input
         );
       }
       console.log(res);
@@ -205,20 +218,35 @@ function PoolsManageDialoge(props) {
               setShowWithdrawShare(false);
               setShowDepositGoddog(false);
               setShowDepositShare(false);
+              setTransferOwners(false);
+
               setShowWithdrawGoddog(true);
               break;
             case "deposit-goddog":
               setShowWithdrawShare(false);
               setShowWithdrawGoddog(false);
               setShowDepositShare(false);
+              setTransferOwners(false);
+
               setShowDepositGoddog(true);
               break;
             case "deposit-shares":
               setShowWithdrawShare(false);
               setShowDepositGoddog(false);
               setShowWithdrawGoddog(false);
+              setTransferOwners(false);
+
               setShowDepositShare(true);
               break;
+
+            case "transfer-ownership":
+              setShowWithdrawShare(false);
+              setShowDepositGoddog(false);
+              setShowWithdrawGoddog(false);
+              setShowDepositShare(false);
+              setTransferOwners(true);
+              break;
+
             default:
               break;
           }
@@ -230,15 +258,18 @@ function PoolsManageDialoge(props) {
         <option value="withdraw-goddog">Withdraw goddog</option>
         <option value="deposit-goddog">Deposit goddog</option>
         <option value="deposit-shares">Deposit shares</option>
+        <option value="transfer-ownership">Transfer ownership</option>
       </select>
 
       <div className="flex justify-between text-[8px]">
         <h3>
-          {showDepositGoddog || showDepositShare
-            ? "You Deposit"
-            : showWithdrawGoddog || showWithdrawShare
-              ? "You withdraw"
-              : null}
+          {showDepositGoddog || (showDepositShare && !showTransferOwnership) ? (
+            "You Deposit"
+          ) : showWithdrawGoddog || showWithdrawShare ? (
+            "You withdraw"
+          ) : (
+            <>{showTransferOwnership ? "Transfer ownership" : null}</>
+          )}
         </h3>
         <h3>
           {showDepositGoddog ? (
@@ -269,7 +300,7 @@ function PoolsManageDialoge(props) {
       <input
         type="text"
         className="w-full rounded-lg bg-transparent outline-none"
-        defaultValue={0}
+        defaultValue={!showTransferOwnership && 0}
         onChange={(e) => {
           setInput(e.target.value);
         }}
@@ -308,7 +339,13 @@ function PoolsManageDialoge(props) {
                     "Withdraw goddog "
                   ) : (
                     <>
-                      {showWithdrawShare ? "Withdraw Shares " : "Select option"}
+                      {showWithdrawShare ? (
+                        "Withdraw Shares "
+                      ) : (
+                        <>
+                          {showTransferOwnership ? "Transfer ownership" : null}
+                        </>
+                      )}
                     </>
                   )}
                 </>
