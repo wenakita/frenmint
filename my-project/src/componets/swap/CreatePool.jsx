@@ -180,7 +180,7 @@ function CreatePool(props) {
         String(w0?.address),
         2,
         ethers.BigNumber.from(String(currentDelta)),
-        "42000000000000000", // fee
+        "34500000000000000", // fee
         ethers.BigNumber.from(currentSpotPrice).mul(
           ethers.BigNumber.from("10").pow(18)
         ),
