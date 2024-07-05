@@ -180,7 +180,7 @@ function CreatePool(props) {
         String(w0?.address),
         2,
         ethers.BigNumber.from(String(currentDelta)),
-        "69000000000000000", // fee
+        "42000000000000000", // fee
         ethers.BigNumber.from(currentSpotPrice).mul(
           ethers.BigNumber.from("10").pow(18)
         ),
@@ -425,7 +425,7 @@ function CreatePool(props) {
             <div className="border border-neutral-700 bg-neutral-800 rounded-md">
               <div className="grid grid-rows-1 p-2">
                 <div className="font-bold text-stone-400">Pool fee</div>
-                <div className="font-bold text-white text-[8px] ">6.9%</div>
+                <div className="font-bold text-white text-[8px] ">4.2%</div>
               </div>
             </div>
             <div className="border border-neutral-700 bg-neutral-800 rounded-sm">
