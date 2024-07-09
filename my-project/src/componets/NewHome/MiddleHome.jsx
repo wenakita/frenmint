@@ -1,5 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper-bundle.css"; // Add this line to import Swiper styles
 import CardBuilder from "./CardBuilder";
 
 function MiddleHome(props) {
@@ -15,7 +16,7 @@ function MiddleHome(props) {
   return (
     <div>
       <div>
-        <div className=" p-2 font-bold text-white">Top Ten</div>
+        <div className="p-2 font-bold text-white">Top Ten</div>
         {trending ? (
           <Swiper
             freeMode={true}
@@ -26,7 +27,6 @@ function MiddleHome(props) {
                 slidesPerView: 4,
                 spaceBetween: 10,
               },
-
               1024: {
                 slidesPerView: 6,
                 spaceBetween: 20,
@@ -35,7 +35,7 @@ function MiddleHome(props) {
             pagination={{
               clickable: false,
             }}
-            className="mySwiper "
+            className="mySwiper"
           >
             {topTen.map((item) => {
               return (
@@ -48,7 +48,7 @@ function MiddleHome(props) {
         ) : null}
       </div>
       <div className="mt-5">
-        <div className=" p-2 font-bold text-white">Recent Buys</div>
+        <div className="p-2 font-bold text-white">Recent Buys</div>
         {recentTxs ? (
           <Swiper
             freeMode={true}
@@ -59,7 +59,6 @@ function MiddleHome(props) {
                 slidesPerView: 4,
                 spaceBetween: 10,
               },
-
               1024: {
                 slidesPerView: 6,
                 spaceBetween: 20,
@@ -68,7 +67,7 @@ function MiddleHome(props) {
             pagination={{
               clickable: false,
             }}
-            className="mySwiper "
+            className="mySwiper"
           >
             {recentTxs.map((item) => {
               return (

@@ -105,6 +105,7 @@ export async function getRecentTx() {
   }
   if (data) {
     const formattedData = [];
+    console.log(data);
     for (const key in data) {
       const res = await SearchByContract(data[key]?.share_address);
       formattedData.push(res);
