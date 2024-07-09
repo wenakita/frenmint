@@ -1,3 +1,4 @@
+import { data } from "autoprefixer";
 import { supabase } from "../client";
 import { SearchByContract } from "./friendCalls";
 import { getEthPrice, getGoddogPrice, getTokenPrice } from "./priceCalls";
@@ -188,5 +189,47 @@ async function fetchUsers(userAddress) {
     return null;
   } catch (error) {
     console.error("Error fetching users:", error.message);
+  }
+}
+
+export async function getVolume() {
+  let volume = 0;
+  let sharesTransacted = 0;
+  const totalUsers = await getTotalUsers();
+
+  try {
+    const { data, error } = await supabase.from("txs").select();
+    if (error) {
+      console.error("Error fetching usernames:", error.message);
+      return;
+    }
+
+    if (data) {
+      console.log("Fetched usernames:", data);
+      for (const key in data) {
+        volume += Number(data[key]?.eth_val);
+        sharesTransacted += Number(data[key]?.purchase_amount);
+      }
+      console.log(volume, sharesTransacted);
+    }
+    return {
+      volume: volume,
+      sharesTransacted: sharesTransacted,
+      users: totalUsers,
+    };
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+  }
+}
+
+async function getTotalUsers() {
+  const { data, error } = await supabase.from("usernames").select();
+  if (data) {
+    console.log(data.length);
+    return data.length;
+  }
+  if (error) {
+    console.log(error);
+    return null;
   }
 }

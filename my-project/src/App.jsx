@@ -19,7 +19,7 @@ function App() {
           <Route path="/home" element={<NewHomePage />} />
           <Route path="/friend/:address" element={<NewFriend />} />
           <Route path="/new" element={<NewBalances />} />
-          <Route path="/newswap" element={<NewSwap />} />
+          {/* <Route path="/newswap" element={<NewSwap />} /> */}
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/swap" element={<SwapMain />} />
 

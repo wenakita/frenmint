@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { useNavigate } from "react-router-dom";
 import { useBalance } from "wagmi";
 import Socials from "../componets/NewHome/Socials";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import Faq from "./NewHome/Faq";
+import { getVolume } from "../requests/supaBaseHandler";
 function Portal() {
   const navigate = useNavigate();
   const {
@@ -21,11 +22,20 @@ function Portal() {
   const userEthBalance = useBalance({
     address: wallet?.address,
   });
+  const [data, setData] = useState(null);
   useEffect(() => {
     if ((authenticated && wallet) || (ready && authenticated)) {
       navigate("/home");
     }
   });
+  useEffect(() => {
+    Volume();
+  }, []);
+
+  async function Volume() {
+    const res = await getVolume();
+    setData(res);
+  }
 
   return (
     <div className="mt-10 w-screen">
@@ -80,13 +90,60 @@ function Portal() {
           />
         </div>
       </div>
-      <div>
-        <h3 className="text-[10px] mt-5 font-mono  text-gray-200 max-w-[300px] text-center mx-auto">
-          FrenMint offers a cost-effective way to mint ERC-1155 NFTs via
-          Friend.Tech shares, providing 31% lower fees for traders and up to 38%
-          higher revenue for hosts.
-        </h3>
+      <div className=" mt-2">
+        <div className="flex justify-center gap-1">
+          <h3 className="text-white font-mono font-bold text-[10px] mt-1">
+            Exculsivley on
+          </h3>
+          <img
+            src="https://avatars.githubusercontent.com/u/108554348?s=280&v=4"
+            alt=""
+            className="size-5 "
+          />
+        </div>
       </div>
+
+      <div>
+        <h3 className="text-[10px] mt-4 font-mono  text-gray-200 max-w-[300px] text-center mx-auto">
+          FrenMint offers a cost-effective way to mint ERC-1155 NFTs via
+          Friend.Tech shares, providing up to 38% higher revenue for hosts.
+        </h3>
+        <div className="flex mx-auto mt-10 text-[14px] w-[400px] p-8  ">
+          <div className=" rounded-box grid flex-grow place-items-center">
+            <div className="grid grid-rows-2">
+              <div className="text-white whitespace-nowrap font-mono font-bold">
+                Shares Minted
+              </div>
+              <div className="text-white whitespace-nowrap font-mono font-bold text-[12px]">
+                {data?.sharesTransacted}
+              </div>
+            </div>
+          </div>
+          <div className="divider divider-horizontal h-12"></div>
+          <div className=" grid  flex-grow place-items-center">
+            <div className="grid grid-rows-2">
+              <div className="text-white whitespace-nowrap font-mono font-bold">
+                Total Users
+              </div>
+              <div className="text-white whitespace-nowrap font-mono font-bold text-[12px]">
+                {data?.users}
+              </div>
+            </div>
+          </div>
+          <div className="divider divider-horizontal h-12"></div>
+          <div className=" grid  flex-grow place-items-center">
+            <div className="grid grid-rows-2">
+              <div className="text-white whitespace-nowrap font-mono font-bold">
+                ETH Volume
+              </div>
+              <div className="text-white whitespace-nowrap font-mono font-bold text-[12px]">
+                {Number(data?.volume).toFixed(2)} Ξ
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className=" grid  grid-cols-1 md:grid-cols-2 mt-10 max-w-[65%] mx-auto gap-2 font-bold text-[12px] lg:text-[14px] font-mono">
         <div className="border text-white bg-neutral-950 rounded-md border-stone-900 p-5">
           <div className="flex justify-between ">
