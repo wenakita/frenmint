@@ -10,6 +10,7 @@ import NewHomePage from "./componets/NewHome/NewHomePage";
 import NewFriend from "./componets/friend/NewFriend";
 import Analytics from "./componets/Analytics";
 import SwapMain from "./componets/swapv2/SwapMain";
+import TransactionCharts from "./componets/analytics/TransactionCharts";
 function App() {
   return (
     <HashRouter>
@@ -22,6 +23,7 @@ function App() {
           {/* <Route path="/newswap" element={<NewSwap />} /> */}
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/swap" element={<SwapMain />} />
+          <Route path="/pools" element={<TransactionCharts />} />
 
           {/* <Route path="/newfriend/:address" element={<NewFriend />} /> */}
 

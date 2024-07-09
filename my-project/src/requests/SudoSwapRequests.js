@@ -12,6 +12,7 @@ import {
 } from "./txRequests";
 import { SearchByContract, getIdHoldings } from "./friendCalls";
 import { getStakerInfo } from "./stakingRequests";
+import { getPoolData } from "./supaBaseHandler";
 
 export async function getWrappedPoolHoldings(userAddress) {
   const existingPools = await getExistingPools(userAddress);
@@ -239,6 +240,8 @@ export async function getExistingPools(userAddress) {
         }
         const isWrapped = await isPoolWrapped(currentPoolAddress);
         console.log(isWrapped);
+        const poolStats = await getPoolData(a[key]?.address);
+        console.log(poolStats);
         const userShareBalance = await getShareBalance(
           readContract,
           config,
@@ -272,6 +275,7 @@ export async function getExistingPools(userAddress) {
           isWrapped: isWrapped?.wrapped,
           wrappedPoolOwner: isWrapped?.address,
           pairIMGURL: ERC20IMG,
+          poolStats,
         });
       }
     }

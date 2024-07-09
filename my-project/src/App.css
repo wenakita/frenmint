@@ -17,3 +17,7 @@
 .slick-next {
   display: none !important;
 }
+
+.rounded-bar rect {
+  rx: 3; /* Adjust this value to control the roundness */
+}

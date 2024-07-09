@@ -110,9 +110,14 @@ function NewNavigation(props) {
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-neutral-900 rounded-box w-52 font-bold"
             >
               {authenticated && wallet ? (
-                <li className="">
-                  <Link to={"/analytics"}>Analytics</Link>
-                </li>
+                <>
+                  <li>
+                    <Link to={"/pools"}>Pools</Link>
+                  </li>
+                  <li className="">
+                    <Link to={"/analytics"}>Analytics</Link>
+                  </li>
+                </>
               ) : null}
 
               <li className="">
@@ -159,6 +164,7 @@ function NewNavigation(props) {
                   Chart
                 </Link>
               </li>
+
               <li>
                 <button onClick={logout}>Logout</button>
               </li>

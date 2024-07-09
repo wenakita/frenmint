@@ -109,6 +109,7 @@ export async function postPoolTxData(params, owner, isBuy) {
         username: username,
         ERC20_Token: ethVal?.token,
         token_price: String(ethVal?.price),
+        ftPfpUrl: params[0]?.ftPfpUrl,
       },
     ])
     .single();
@@ -216,13 +217,14 @@ export async function getVolume() {
       volume: volume,
       sharesTransacted: sharesTransacted,
       users: totalUsers,
+      mintedVolume: volume,
     };
   } catch (error) {
     console.error("Error fetching users:", error.message);
   }
 }
 
-async function getTotalUsers() {
+export async function getTotalUsers() {
   const { data, error } = await supabase.from("usernames").select();
   if (data) {
     console.log(data.length);
@@ -232,4 +234,74 @@ async function getTotalUsers() {
     console.log(error);
     return null;
   }
+}
+
+export async function getTransactionData() {
+  console.log(true);
+  const volume = await getVolume();
+  const poolVolume = await getPoolVolume();
+  console.log(volume);
+}
+
+export async function getPoolVolume() {
+  let volume = 0;
+  const { data, error } = await supabase.from("pool-txs").select();
+  if (data) {
+    console.log(data);
+    for (const key in data) {
+      const currentDate = new Date(data[key]?.created_at);
+      console.log(currentDate);
+      const currentEthValue = Number(data[key]?.eth_val);
+      console.log(currentEthValue);
+      volume += currentEthValue;
+    }
+  }
+  if (error) {
+    console.log(error);
+  }
+  return volume;
+}
+
+export async function getPoolData(poolAddress) {
+  const poolStats = [];
+  let volume = 0;
+  let txCount = 0;
+  let feesEarned = 0;
+  const { data, error } = await supabase.from("pool-txs").select();
+  if (data) {
+    console.log(data);
+    for (const key in data) {
+      const currentPoolAddress = data[key]?.pool_address;
+      if (currentPoolAddress.toLowerCase() === poolAddress.toLowerCase()) {
+        feesEarned += Number(data[key]?.eth_val) * 0.069;
+        ++txCount;
+        console.log(volume);
+        volume += Number(data[key]?.eth_val);
+        console.log(true);
+      }
+    }
+    console.log(feesEarned);
+    poolStats.push({
+      volume,
+      txCount,
+      feesEarned,
+    });
+  }
+  if (error) {
+    console.log(error);
+  }
+  return poolStats;
+}
+
+export async function getPoolTxs() {
+  const { data, error } = await supabase.from("pool-txs").select();
+  if (data) {
+    console.log(data);
+
+    return data;
+  }
+  if (error) {
+    console.log(error);
+  }
+  return null;
 }
