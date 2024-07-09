@@ -1,15 +1,17 @@
 import { supabase } from "../client";
 import { SearchByContract } from "./friendCalls";
-
+import { getEthPrice, getGoddogPrice, getTokenPrice } from "./priceCalls";
+const goddogCA = "0xDDf7d080C82b8048BAAe54e376a3406572429b4e";
+const friendCA = "0x0bD4887f7D41B35CD75DFF9FfeE2856106f86670";
 export async function postTransaction(
-  supabase,
   shareData,
   shareAmount,
   buyer,
   isBuy,
-  ethValue,
-  username
+  ethValue
 ) {
+  const username = await fetchUsers(buyer);
+  console.log(buyer);
   const currentDate = new Date();
   const stringDate = String(currentDate);
   try {
@@ -23,7 +25,7 @@ export async function postTransaction(
             share_address: shareData?.address,
             buyer_address: buyer,
             purchase_amount: shareAmount,
-            frenmint_username: username,
+            frenmint_username: username?.username,
             share_pfp: shareData?.ftPfpUrl,
             share_name: shareData?.ftName,
             is_buy: true,
@@ -97,6 +99,54 @@ export async function postMessageData(supabase, message, userName) {
     return false;
   }
 }
+//table data to post created_at, buyer_address, share_amount, share_address, eth_vval, share_name,is_buy, pool_address
+
+export async function postPoolTxData(params, owner, isBuy) {
+  const currentDate = new Date();
+  const stringDate = String(currentDate);
+  console.log(params);
+  let ethVal = await detectPair(
+    params[0]?.sudoSwapData?.tokenAddress,
+    params[1],
+    params[2]
+  );
+
+  await supabase
+    .from("pool-txs")
+    .insert([
+      {
+        created_at: stringDate,
+        buyer_address: owner,
+        share_amount: String(params[1]),
+        share_address: params[0]?.address,
+        eth_val: String(ethVal),
+        is_buy: isBuy,
+        pool_address: params[0]?.sudoSwapData?.address,
+        share_name: params[0]?.ftName,
+      },
+    ])
+    .single();
+}
+
+async function detectPair(ERC20, amount, tokenAmount) {
+  let output;
+  const goddogPrice = await getGoddogPrice();
+  const friendPrice = await getTokenPrice(friendCA);
+  const ethPrice = await getEthPrice();
+
+  console.log(ERC20);
+  switch (ERC20) {
+    case goddogCA.toLowerCase():
+      console.log(true);
+      output = (Number(tokenAmount) * Number(goddogPrice)) / ethPrice;
+      break;
+    case friendCA.toLowerCase():
+      output = (Number(tokenAmount) * Number(friendPrice)) / ethPrice;
+      break;
+  }
+
+  return output;
+}
 
 export async function getRecentTx() {
   const { data, error } = await supabase.from("txs").select();
@@ -125,3 +175,25 @@ export async function getRecentTx() {
 //   frenmint_username: 'iHuntJeegs',
 //  share_pfp: https://pbs.twimg.com/profile_images/1654918866693414913/GVH2mAFd.jpg
 // }
+
+async function fetchUsers(userAddress) {
+  try {
+    const { data, error } = await supabase.from("usernames").select();
+    if (error) {
+      console.error("Error fetching usernames:", error.message);
+      return;
+    }
+
+    if (data) {
+      console.log("Fetched usernames:", data);
+      for (const key in data) {
+        if (data[key]?.user_address === userAddress) {
+          return data[key].username;
+        }
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching users:", error.message);
+  }
+}

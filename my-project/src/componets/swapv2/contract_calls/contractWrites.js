@@ -9,8 +9,13 @@ import {
   approveShareSpending,
   checkShareApproval,
 } from "../../../requests/txRequests";
+import {
+  postPoolTxData,
+  postTransaction,
+} from "../../../requests/supaBaseHandler";
 import { useBalance } from "wagmi";
 import SudoSwapABI from "../../../abi/SudoSwapABI";
+import { getEthPrice } from "../../../requests/priceCalls";
 const wrapperContract = "0xbeea45F16D512a01f7E2a3785458D4a7089c8514";
 const failedTxMessage = {
   failed: true,
@@ -40,13 +45,13 @@ export async function detectTxType(
 
   switch (type) {
     case "mint":
-      res = await wrap(signer, params);
+      res = await wrap(signer, params, wallet?.address);
       console.log(res);
 
       console.log(params);
       break;
     case "burn":
-      res = await unwrap(signer, params);
+      res = await unwrap(signer, params, wallet?.address);
 
       console.log(params);
 
@@ -116,10 +121,6 @@ async function checkTX(
     output = await buyPool(signer, type, params, owner, balance);
   }
   if (type === "sell") {
-    console.log("sell");
-    console.log(params[2]);
-    console.log(poolGoddogBalance);
-
     output = await sellPool(signer, type, params, owner, balance);
   }
   if (type == "pool") {
@@ -179,7 +180,8 @@ async function detectERC20(wallet, targetERC20) {
   return output;
 }
 
-async function unwrap(signer, params) {
+async function unwrap(signer, params, caller) {
+  console.log(params);
   const ca = new Contract(
     "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
     friendTechABI,
@@ -188,6 +190,13 @@ async function unwrap(signer, params) {
   try {
     const res = await ca.unwrap(params[0]?.address, params[1]);
     const receipt = await res.wait();
+    await postTransaction(
+      params[0],
+      params[1],
+      caller,
+      false,
+      uintFormat(params[0]?.displayPrice) * Number(params[1])
+    );
     return {
       failed: false,
       receipt: receipt,
@@ -206,7 +215,7 @@ async function unwrap(signer, params) {
   }
 }
 
-async function wrap(signer, params) {
+async function wrap(signer, params, caller) {
   console.log(params);
   const ca = new Contract(
     "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
@@ -218,7 +227,13 @@ async function wrap(signer, params) {
       value: parseEther(String(params[2])),
     });
     const receipt = await res.wait();
-    console.log(await receipt);
+    await postTransaction(
+      params[0],
+      params[1],
+      caller,
+      false,
+      uintFormat(params[0]?.displayPrice) * Number(params[1])
+    );
     return {
       failed: false,
       receipt: receipt,
@@ -240,7 +255,7 @@ async function wrap(signer, params) {
 
 export async function sellPool(signer, type, params, owner) {
   const constructedParam = await constructParam(type, params, owner);
-  console.log(constructedParam);
+  console.log(params, owner);
   const isAppoved = await checkShareApproval(
     owner,
     "0xa07eBD56b361Fe79AF706A2bF6d8097091225548"
@@ -263,6 +278,7 @@ export async function sellPool(signer, type, params, owner) {
     });
     const reciept = await res.wait();
     console.log(reciept);
+    await postPoolTxData(params, owner, false);
     return {
       failed: false,
       receipt: reciept,
@@ -314,6 +330,8 @@ export async function buyPool(signer, type, params, owner) {
     });
     const reciept = await res.wait();
     console.log(reciept);
+    await postPoolTxData(params, owner, true);
+
     return {
       failed: false,
       receipt: reciept,
