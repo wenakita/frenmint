@@ -47,8 +47,8 @@ function TrendingCarousel({ trending }) {
           {trending?.map((item, index) => {
             if (index <= 11) {
               return (
-                <div key={index} className="px-2">
-                  <div className="flex items-center gap-2">
+                <div key={index} className="px-3  ">
+                  <div className="flex items-center gap-2 ">
                     <h3 className="text-gray-500 font-bold text-xs">
                       #{index + 1}
                     </h3>
@@ -59,12 +59,12 @@ function TrendingCarousel({ trending }) {
                       <img
                         src={item?.ftPfpUrl}
                         alt={item?.ftName}
-                        className="w-8 h-8 rounded-full"
+                        className="size-4 rounded-full"
                       />
                       <div className="truncate text-xs">
                         <h3 className="truncate">{item?.ftName}</h3>
                       </div>
-                      <h3 className="text-green-500 font-bold text-xs truncate">
+                      <h3 className="text-green-500 font-bold text-[9px] truncate">
                         +{uintFormat(item?.displayPrice).toFixed(4)}
                       </h3>
                     </Link>
