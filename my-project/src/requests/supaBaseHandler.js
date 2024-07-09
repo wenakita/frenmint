@@ -82,6 +82,8 @@ export async function postMessageData(supabase, message, userName) {
 //table data to post created_at, buyer_address, share_amount, share_address, eth_vval, share_name,is_buy, pool_address
 
 export async function postPoolTxData(params, owner, isBuy) {
+  const username = await fetchUsers(owner);
+
   const currentDate = new Date();
   const stringDate = String(currentDate);
   console.log(params);
@@ -103,6 +105,7 @@ export async function postPoolTxData(params, owner, isBuy) {
         is_buy: isBuy,
         pool_address: params[0]?.sudoSwapData?.address,
         share_name: params[0]?.ftName,
+        username: username,
       },
     ])
     .single();

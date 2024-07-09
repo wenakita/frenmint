@@ -76,13 +76,13 @@ function SwapTemplate({
       )}
       <div className="text-start text-white  font-semibold p-2 flex justify-between">
         <h3 className=" ">{txType}</h3>
-        {shareData?.chart && (
+        {shareData?.chart && currentShare?.address ? (
           <ChartButton
             currentPriceHistory={shareData?.chart}
             currentShare={currentShare}
             shareTotalVolume={shareData?.volume}
           />
-        )}
+        ) : null}
       </div>
       <div className="mt-1 p-2">
         <div className="grid grid-cols-[1fr_auto] ">
