@@ -15,42 +15,22 @@ export async function postTransaction(
   const currentDate = new Date();
   const stringDate = String(currentDate);
   try {
-    if (isBuy) {
-      console.log("is buy");
-      await supabase
-        .from("txs")
-        .insert([
-          {
-            created_at: stringDate,
-            share_address: shareData?.address,
-            buyer_address: buyer,
-            purchase_amount: shareAmount,
-            frenmint_username: username?.username,
-            share_pfp: shareData?.ftPfpUrl,
-            share_name: shareData?.ftName,
-            is_buy: true,
-            eth_val: ethValue,
-          },
-        ])
-        .single();
-    } else {
-      await supabase
-        .from("txs")
-        .insert([
-          {
-            created_at: stringDate,
-            share_address: shareData?.address,
-            buyer_address: buyer,
-            purchase_amount: shareAmount,
-            frenmint_username: username,
-            share_pfp: shareData?.ftPfpUrl,
-            share_name: shareData?.ftName,
-            is_buy: false,
-            eth_val: ethValue,
-          },
-        ])
-        .single();
-    }
+    await supabase
+      .from("txs")
+      .insert([
+        {
+          created_at: stringDate,
+          share_address: shareData?.address,
+          buyer_address: buyer,
+          purchase_amount: shareAmount,
+          frenmint_username: username?.username,
+          share_pfp: shareData?.ftPfpUrl,
+          share_name: shareData?.ftName,
+          is_buy: true,
+          eth_val: ethValue,
+        },
+      ])
+      .single();
     console.log("done");
   } catch (error) {
     console.log(error);

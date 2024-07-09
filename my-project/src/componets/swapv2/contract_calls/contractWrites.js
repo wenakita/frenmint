@@ -231,7 +231,7 @@ async function wrap(signer, params, caller) {
       params[0],
       params[1],
       caller,
-      false,
+      true,
       uintFormat(params[0]?.displayPrice) * Number(params[1])
     );
     return {
