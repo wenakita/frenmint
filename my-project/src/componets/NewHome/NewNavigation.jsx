@@ -13,7 +13,7 @@ import { base } from "wagmi/chains";
 function NewNavigation(props) {
   const { isCreated } = props;
   const navigate = useNavigate();
-  const { logout, authenticated, user, ready } = usePrivy();
+  const { logout, login, authenticated, user, ready } = usePrivy();
   const [searchInput, setSearchInput] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
   const [trendingUsers, setTrendingUsers] = useState(null);
@@ -123,6 +123,7 @@ function NewNavigation(props) {
                   Whitepaper
                 </Link>
               </li>
+
               {/* <li className="">
                 <Link to={"/my-pools"}>my pool</Link>
               </li> */}
@@ -194,7 +195,7 @@ function NewNavigation(props) {
               </svg>
             </button>
             <button className="btn btn-ghost btn-circle">
-              <Link to={"/newswap"} className="btn btn-ghost btn-circle">
+              <Link to={"/swap"} className="btn btn-ghost btn-circle">
                 <RiSwap2Line className="text-[15px]" />
               </Link>
             </button>
@@ -216,7 +217,16 @@ function NewNavigation(props) {
               </Link>
             )}
           </div>
-        ) : null}
+        ) : (
+          <div className="mx-auto w-full  flex justify-end">
+            <button
+              className="border border-stone-800 bg-neutral-900 rounded-lg text-white p-2 text-[15px] font-bold hover:bg-white hover:text-black"
+              onClick={login}
+            >
+              FrenMint login
+            </button>
+          </div>
+        )}
       </div>
       <dialog id="my_modal_3" className="modal">
         <div className="modal-box bg-neutral-900 h-[350px]">

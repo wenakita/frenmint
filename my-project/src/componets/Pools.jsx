@@ -319,6 +319,7 @@ function Pools(props) {
       {displayPools ? (
         <>
           {poolData.map((item) => {
+            console.log(item?.poolData?.sharePoolData?.tokenBalance);
             return (
               <div
                 key={item}
@@ -373,9 +374,9 @@ function Pools(props) {
                     </div>
                     <div className="flex gap-0.5">
                       <img
-                        src="https://dd.dexscreener.com/ds-data/tokens/base/0xddf7d080c82b8048baae54e376a3406572429b4e.png?size=lg&key=18ea46"
+                        src={item?.poolData?.sharePoolData?.IMG}
                         alt=""
-                        className="size-4"
+                        className="size-4 rounded-full"
                       />
                       <h3 className="mt-[1px]">
                         {uintFormat(

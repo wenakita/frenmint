@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { uintFormat } from "../../requests/friendCalls";
-import { Link } from "react-router-dom";
-import { MdError, MdVerified } from "react-icons/md";
-import {
-  FaCube,
-  FaCubes,
-  FaEthereum,
-  FaEye,
-  FaRankingStar,
-} from "react-icons/fa6";
-import {
-  FaCheckCircle,
-  FaExternalLinkAlt,
-  FaUserFriends,
-} from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { getShareBalance, transferShares } from "../../requests/txRequests";
 import { readContract } from "@wagmi/core";
+import React, { useEffect, useState } from "react";
+import { FaCheckCircle, FaExternalLinkAlt } from "react-icons/fa";
+import { FaEthereum } from "react-icons/fa6";
+import { MdError, MdVerified } from "react-icons/md";
+import { Link, useNavigate } from "react-router-dom";
 import friendTechABI from "../../abi/FriendTechABi";
+import { uintFormat } from "../../requests/friendCalls";
+import { getShareBalance, transferShares } from "../../requests/txRequests";
 
-import { config } from "../../config";
 import { useWallets } from "@privy-io/react-auth";
-import { CiWallet } from "react-icons/ci";
+import { config } from "../../config";
 function CardBuilder(props) {
   const { wallets } = useWallets();
   const w0 = wallets[0];
@@ -40,9 +28,6 @@ function CardBuilder(props) {
   const [receiver, setReceiver] = useState(null);
   const [modalMessage, setModalMessage] = useState(null);
 
-  // if (data) {
-  //   test(data?.ftPfpUrl);
-  // }
   useEffect(() => {
     test(data?.ftPfpUrl);
   }, [data]);
@@ -52,7 +37,6 @@ function CardBuilder(props) {
   }, [selectedData]);
 
   async function test(imgUrl) {
-    //we check to see if image url is valid if it valid we should get a 200 response if not we get 404 etc
     const res = await fetch(url);
     if (res.status == 200) {
       setUrl(imgUrl);

@@ -171,7 +171,7 @@ function CreatePool(props) {
       SudoSwapABI,
       signer
     );
-
+    console.log(currentSpotPrice);
     try {
       const parameters = [
         "0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
@@ -180,7 +180,7 @@ function CreatePool(props) {
         String(w0?.address),
         2,
         ethers.BigNumber.from(String(currentDelta)),
-        "34500000000000000", // fee
+        "69000000000000000", // fee
         ethers.BigNumber.from(currentSpotPrice).mul(
           ethers.BigNumber.from("10").pow(18)
         ),
@@ -425,7 +425,7 @@ function CreatePool(props) {
             <div className="border border-neutral-700 bg-neutral-800 rounded-md">
               <div className="grid grid-rows-1 p-2">
                 <div className="font-bold text-stone-400">Pool fee</div>
-                <div className="font-bold text-white text-[8px] ">4.2%</div>
+                <div className="font-bold text-white text-[8px] ">6.9%</div>
               </div>
             </div>
             <div className="border border-neutral-700 bg-neutral-800 rounded-sm">

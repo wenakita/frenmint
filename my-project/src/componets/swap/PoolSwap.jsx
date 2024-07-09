@@ -127,6 +127,7 @@ function PoolSwap(props) {
       String(w0?.address),
       false,
     ];
+    console.log(spotPrice, buyPrice);
 
     if (validNetwork) {
       const txRes = await buyPool(
@@ -177,6 +178,9 @@ function PoolSwap(props) {
       String(w0?.address),
       false,
     ];
+    console.log(uintFormat(sellPrice));
+    console.log(sellPrice);
+
     if (validNetwork) {
       const txRes = await sellPool(
         signer,

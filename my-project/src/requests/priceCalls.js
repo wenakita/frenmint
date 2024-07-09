@@ -32,3 +32,17 @@ export async function getGoddogPrice() {
     return null;
   }
 }
+
+export async function getTokenPrice(token) {
+  try {
+    const res = await fetch(
+      `https://pro-openapi.debank.com/v1/token?chain_id=base&id=${token}`,
+      debankOptions
+    );
+    const data = await res.json();
+    return data.price;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}

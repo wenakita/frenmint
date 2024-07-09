@@ -7,6 +7,7 @@ import friendTechABI from "../abi/FriendTechABi";
 import GodDogABI from "../abi/GodDogABI";
 import { parseEther } from "viem";
 import WrappedPoolsABI from "../abi/WrappedPoolsABI";
+import OfficialFriendTokenABI from "../abi/OfficialFriendTokenABI";
 const podsPoolCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
 const podsIndexFundCA = "0x5eecab00965c30f2aa776dfe470f926e0ba484cc";
 const goddogTokenCA = "0xddf7d080c82b8048baae54e376a3406572429b4e";
@@ -285,7 +286,7 @@ export async function checkGoddogApproval(owner, operator) {
   }
 }
 
-export async function approveGoddogSpending(signer) {
+export async function approveGoddogSpending(signer, spender) {
   const godDogContract = new Contract(
     "0xDDf7d080C82b8048BAAe54e376a3406572429b4e",
     GodDogABI,
@@ -293,7 +294,7 @@ export async function approveGoddogSpending(signer) {
   );
   try {
     const res = await godDogContract.approve(
-      "0xa07eBD56b361Fe79AF706A2bF6d8097091225548",
+      spender,
       "99999999999999999999999999999999"
     );
     const reciept = await res;
@@ -302,7 +303,26 @@ export async function approveGoddogSpending(signer) {
     console.log(error);
   }
 }
-export async function approveShareSpending(signer) {
+
+export async function approveFriendSpending(signer, spender) {
+  console.log(spender);
+  const friendContract = new Contract(
+    "0x0bD4887f7D41B35CD75DFF9FfeE2856106f86670",
+    OfficialFriendTokenABI,
+    signer
+  );
+  try {
+    const res = await friendContract.approve(
+      spender,
+      "9999999999999999999999999999999999999999999"
+    );
+    const reciept = await res;
+    console.log(await reciept);
+  } catch (error) {
+    console.log(error);
+  }
+}
+export async function approveShareSpending(signer, spender) {
   const friendTechWrapperContract = new Contract(
     "0xbeea45F16D512a01f7E2a3785458D4a7089c8514",
     friendTechABI,
@@ -310,7 +330,7 @@ export async function approveShareSpending(signer) {
   );
   try {
     const res = await friendTechWrapperContract.setApprovalForAll(
-      "0x605145D263482684590f630E9e581B21E4938eb8",
+      spender,
       true
     );
     const reciept = await res.wait();
@@ -550,6 +570,7 @@ export async function isPoolWrapped(poolAddress) {
       functionName: "ownerOf",
       args: [poolAddress],
     });
+    console.log(poolAddress);
     return { address: wrappedPoolOwner, wrapped: true };
   } catch (error) {
     console.log(error);

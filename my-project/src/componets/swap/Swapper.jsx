@@ -28,7 +28,6 @@ import {
 import AvaliablePairs from "./AvailablePairs";
 import ChartButton from "./ChartButton";
 import RecentTx from "../RecentTx";
-import Test from "./Test";
 function Swapper(props) {
   const {
     trendingFriends,

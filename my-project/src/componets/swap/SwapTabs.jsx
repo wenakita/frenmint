@@ -12,8 +12,8 @@ function SwapTabs(props) {
     setViewPools,
     viewSend,
     setViewSend,
-    setViewPods,
-    viewPods,
+    setViewWrappedStaking,
+    viewWrappedStaking,
     viewLending,
     setViewLending,
   } = props;
@@ -58,6 +58,20 @@ function SwapTabs(props) {
           }}
         >
           Swap
+        </button>
+        <button
+          className={`${viewWrappedStaking && `bg-stone-800 border border-transparent rounded-full text-center text-stone-300`} hover:text-stone-600 p-1`}
+          onClick={() => {
+            setViewSwap(false);
+            setViewPoolCreator(false);
+            setViewChart(false);
+            setViewSend(false);
+
+            setViewPools(false);
+            setViewWrappedStaking(true);
+          }}
+        >
+          Stake
         </button>
       </div>
     </div>

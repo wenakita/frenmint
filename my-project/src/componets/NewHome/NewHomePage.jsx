@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   GetTrendingFriends,
   SearchByContract,
 } from "../../requests/friendCalls";
-import CardBuilder from "./CardBuilder";
-import MiddleHome from "./MiddleHome";
-import { supabase } from "../../client";
-import Hero from "./Hero";
+import { getRecentTx } from "../../requests/supaBaseHandler";
 import Faq from "./Faq";
+import Hero from "./Hero";
 import Socials from "./Socials";
-import { useWalletData } from "../hooks/useWalletData";
-import _ from "lodash";
 
 function NewHomePage() {
-  const testing = useWalletData();
-  const [loading, setLoading] = useState(true);
   const [heroData, setHeroData] = useState(null);
   const [trending, setTrending] = useState(null);
   const [recentTxs, setRecentTxs] = useState(null);
@@ -23,42 +16,20 @@ function NewHomePage() {
     getHeroData();
   }, []);
 
-  async function getRecentTx() {
-    const { data, error } = await supabase.from("txs").select();
-    if (error) {
-      console.log(error);
-    }
-    if (data) {
-      const formattedData = [];
-      for (const key in data) {
-        const res = await SearchByContract(data[key]?.share_address);
-        formattedData.push(res);
-      }
-
-      setRecentTxs(formattedData);
-    }
-  }
-  async function getTrending() {
-    const result = await GetTrendingFriends();
-    setTrending(result);
-  }
   async function getHeroData() {
-    getTrending();
-    getRecentTx();
+    const trendingResult = await GetTrendingFriends();
+    const res = await getRecentTx();
     const result = await SearchByContract(
       "0x03d5a5ff92d2078ed2cbb67eecb72c15429b41f9"
     );
-
+    setRecentTxs(res);
+    setTrending(trendingResult);
     setHeroData(result);
   }
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, [2500]);
-  }, [recentTxs]);
+
   return (
     <div>
-      {loading ? (
+      {!trending && !recentTxs ? (
         <div className="flex justify-center mb-10 mt-[300px]">
           <img
             src="https://www.friend.tech/friendtechlogo.png"

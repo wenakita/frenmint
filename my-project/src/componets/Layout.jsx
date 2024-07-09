@@ -1,14 +1,11 @@
 import { Outlet, useLocation } from "react-router-dom";
-import NavBar from "./NavBar";
-import SearchBar from "./SearchBar";
+
 import { usePrivy } from "@privy-io/react-auth";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import RecentTx from "./RecentTx";
-import LiveChat from "./LiveChat";
+
 import NewNavigation from "./NewHome/NewNavigation";
-import TopSlider from "./NewHome/TopSlider";
 import { supabase } from "../client";
 import { useAccount } from "wagmi";
 import TrendingCarousel from "./TrendingCarousel";

@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
 import { getShareBalance, getShareUri } from "./txRequests";
+import { getEthPrice } from "./priceCalls";
+import _ from "lodash";
+import { config } from "../config";
+import friendTechABI from "../abi/FriendTechABi";
+import { readContract } from "@wagmi/core";
+
 const jwt = import.meta.env.VITE_FRIEND_TECH_JWT;
 
 const debankOptions = {
@@ -200,7 +206,7 @@ export async function findHoldingsShareData(
       nftID: currentShare?.identifier,
       contract: currentShareCA,
       balance: shareBalance,
-      FTData: currentShareFTData,
+      ...currentShareFTData,
     });
   }
   return formattedHoldings;
@@ -367,4 +373,57 @@ export async function continueFindingChartData(pageStart, shareAddress) {
   } catch (error) {
     console.log(error);
   }
+}
+
+// getWrappedPoolsHoldings("0xa24e1426Bc37d0D1a9e7037f5De3322E800F2D7d");
+
+export async function getIdHoldings(userAddress) {
+  try {
+    const res = await fetch(
+      `https://pro-openapi.debank.com/v1/user/nft_list?id=${userAddress}&chain_id=base`,
+      debankOptions
+    );
+    const data = await res.json();
+    console.log(data);
+    for (const key in data) {
+      if (
+        data[key]?.contract_id.includes(
+          "0x8D3C4a673Dd2fAC51d4fde7A42a0dfc5E4DCb228"
+        )
+      ) {
+        console.log(data[key]);
+      }
+    }
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function getChart(address) {
+  const ethPrice = await getEthPrice();
+  const priceHistory = await getShareChartData(address);
+  // const formattedPriceHistory = await formatChartData(priceHistory);
+  const orderedPriceHistory = _.orderBy(priceHistory, ["date"]);
+  let totalVolume = 0;
+  for (const key in priceHistory) {
+    const currentData = priceHistory[key];
+    totalVolume += Math.round(Number(currentData?.priceAtDate) * ethPrice);
+  }
+
+  return { volume: totalVolume, history: orderedPriceHistory };
+}
+
+export async function getUserHoldings(userAddress) {
+  const userHoldings = await findId(userAddress);
+  const holdingsData = await findHoldingsShareData(
+    readContract,
+    config,
+    friendTechABI,
+    userAddress,
+    userHoldings
+  );
+
+  return holdingsData;
 }

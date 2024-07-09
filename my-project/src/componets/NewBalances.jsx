@@ -27,6 +27,14 @@ import SudoSwapPoolABI from "../abi/SudoSwapPoolABI";
 import friendTechABI from "../abi/FriendTechABi";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
+import {
+  getExistingPools,
+  getStakedWrappedPools,
+} from "../requests/SudoSwapRequests";
+import {
+  getStakerInfo,
+  withdrawStakedWrappedPool,
+} from "../requests/stakingRequests";
 function NewBalances() {
   const API_KEY = import.meta.env.VITE_DEFINED_KEY;
 
@@ -40,9 +48,14 @@ function NewBalances() {
   const [viewShareHoldings, setViewShareHoldings] = useState(true);
   const [viewWrappedPools, setViewWrappedPools] = useState(false);
   const [viewPools, setViewPools] = useState(false);
+  const [viewStakedPools, setViewStakedPools] = useState(false);
+
   const [transferShares, setTransferShares] = useState(null);
   const [selectedData, setSelectedData] = useState(null);
   const [existingPools, setExistingPools] = useState(null);
+  const [stakedPools, setStakedPools] = useState(null);
+  const [stakingStats, setStakingStats] = useState(null);
+
   const wrappedPoolsBalance = useBalance({
     address: userAddress,
     token: "0x8D3C4a673Dd2fAC51d4fde7A42a0dfc5E4DCb228",
@@ -50,12 +63,22 @@ function NewBalances() {
   });
   useEffect(() => {
     console.log(wrappedPoolsBalance);
-    fetchUsers();
-    getExistingPools();
-    getEthereumPrice();
+    getStakingInfo();
+    getExistingPoolsHolding();
     getShareHoldings();
+    getExistingPoolsHolding();
+
+    fetchUsers();
+    getStaked();
+    getEthereumPrice();
     getActivePools();
   }, []);
+
+  useEffect(() => {
+    if (viewStakedPools) {
+      getStaked();
+    }
+  }, [viewStakedPools]);
 
   async function getActivePools() {
     setUserPools(null);
@@ -67,11 +90,26 @@ function NewBalances() {
     );
     for (const key in a) {
       const currentOwner = a[key].owner;
-
+      let ERC20IMG;
+      console.log(a[key]?.tokenAddress);
+      switch (a[key]?.tokenAddress) {
+        case "0x0bd4887f7d41b35cd75dff9ffee2856106f86670":
+          ERC20IMG =
+            "https://dd.dexscreener.com/ds-data/tokens/base/0x0bd4887f7d41b35cd75dff9ffee2856106f86670.png?size=lg&key=ad3594";
+          break;
+        default:
+          ERC20IMG =
+            "https://dd.dexscreener.com/ds-data/tokens/base/0xddf7d080c82b8048baae54e376a3406572429b4e.png?size=lg&key=18ea46";
+          break;
+      }
+      console.log(ERC20IMG);
       if (currentOwner.localeCompare(userAddress.trim().toLowerCase()) === 0) {
-        usersFoundPools.push(a[key]);
+        const currentPool = a[key];
+        currentPool.IMG = ERC20IMG;
+        usersFoundPools.push(currentPool);
       }
     }
+    console.log(usersFoundPools);
     setUserPools(usersFoundPools);
   }
 
@@ -141,67 +179,37 @@ function NewBalances() {
     }
   }
 
-  async function getExistingPools() {
-    let q = new Quoter(import.meta.env.VITE_DEFINED_KEY, 8453);
-    let a = await q.getPoolsForCollection(
-      "0xbeea45F16D512a01f7E2a3785458D4a7089c8514"
-    );
-    const poolFormattedData = [];
-    for (const key in a) {
-      const currentId = a[key]?.erc1155Id;
-      const currentShareContract = await getShareUri(
-        readContract,
-        config,
-        friendTechABI,
-        currentId
-      );
-      const currentPoolAddress = a[key].address;
-      if (currentShareContract !== null) {
-        const currentShareData = await SearchByContract(currentShareContract);
-        if (currentShareData !== null) {
-          const isWrapped = await isPoolWrapped(currentPoolAddress);
-          console.log(isWrapped);
-          const userShareBalance = await getShareBalance(
-            readContract,
-            config,
-            friendTechABI,
-            userAddress,
-            currentId
-          );
-          const buyPrice = await getSingleBuyNftPrice(
-            readContract,
-            config,
-            SudoSwapPoolABI,
-            currentId,
-            currentPoolAddress,
-            "1"
-          );
-          const sellPrice = await getSingleSellNftPrice(
-            readContract,
-            config,
-            SudoSwapPoolABI,
-            currentId,
-            currentPoolAddress,
-            "1"
-          );
-          poolFormattedData.push({
-            sudoSwapData: a[key],
-            friendTechData: currentShareData,
-            userShareBalance: userShareBalance,
-            buyPrice: Number(sellPrice),
-            sellPrice: buyPrice,
-            address: currentShareData?.address,
-            isWrapped: isWrapped?.wrapped,
-            wrappedPoolOwner: isWrapped?.address,
-          });
-        }
-      }
-    }
+  async function getExistingPoolsHolding() {
+    const poolFormattedData = await getExistingPools(userAddress);
     console.log(poolFormattedData);
-    // setSelectedPool(poolFormattedData[0]);
-    // setAvailablePools(poolFormattedData);
+
     setExistingPools(poolFormattedData);
   }
+
+  async function getStakingInfo() {
+    const userStakingInfo = await getStakerInfo(userAddress);
+    setStakingStats(userStakingInfo);
+  }
+
+  async function getStaked() {
+    const res = await getStakedWrappedPools(userAddress, stakingStats);
+    console.log(res);
+    setStakedPools(res);
+  }
+
+  async function withdraw(nftID) {
+    const provider = await wallets[0]?.getEthersProvider();
+    const network = await provider.getNetwork();
+
+    const signer = await provider?.getSigner();
+    const res = await withdrawStakedWrappedPool(signer, nftID);
+    if (!res?.failed) {
+      getStakerInfo();
+      getStaked();
+    }
+  }
+  async function claim() {}
+
   return (
     <div className="mt-1 ">
       <div
@@ -223,6 +231,8 @@ function NewBalances() {
               onClick={() => {
                 setViewShareHoldings(true);
                 setViewPools(false);
+                setViewStakedPools(false);
+                setViewWrappedPools(false);
               }}
               className={`hover:border hover:border-t-0 hover:border-r-0 p-1 hover:border-l-0  font-bold ${
                 viewShareHoldings === true &&
@@ -235,6 +245,8 @@ function NewBalances() {
               onClick={() => {
                 setViewShareHoldings(false);
                 setViewWrappedPools(false);
+                setViewStakedPools(false);
+
                 setViewPools(true);
               }}
               className={` hover:border hover:border-t-0 hover:border-r-0 hover:border-l-0  p-1  font-bold ${
@@ -248,6 +260,7 @@ function NewBalances() {
               onClick={() => {
                 setViewShareHoldings(false);
                 setViewPools(false);
+                setViewStakedPools(false);
 
                 setViewWrappedPools(true);
               }}
@@ -257,6 +270,21 @@ function NewBalances() {
               }`}
             >
               Wrapped Pools
+            </button>
+            <button
+              onClick={() => {
+                setViewShareHoldings(false);
+                setViewPools(false);
+
+                setViewWrappedPools(false);
+                setViewStakedPools(true);
+              }}
+              className={` hover:border hover:border-t-0 hover:border-r-0 hover:border-l-0  p-1  font-bold ${
+                viewStakedPools === true &&
+                `border  border-t-0 border-r-0 border-l-0 text-white font-bold`
+              }`}
+            >
+              Staked Pools
             </button>
           </div>
         </div>
@@ -314,7 +342,6 @@ function NewBalances() {
           ) : (
             <>
               {viewWrappedPools ? (
-                // here we map out the wrapped pools the user owns
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
                   {existingPools ? (
                     <>
@@ -415,13 +442,123 @@ function NewBalances() {
                   )}
                 </div>
               ) : (
-                <div className="flex justify-center mb-10 mt-[200px]">
-                  <img
-                    src="https://www.friend.tech/friendtechlogo.png"
-                    alt=""
-                    className="w-20 h-20 animate-bounce"
-                  />
-                </div>
+                <>
+                  {viewStakedPools ? (
+                    <>
+                      {viewStakedPools ? (
+                        <>
+                          {stakedPools ? (
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
+                              {stakedPools?.map((item) => {
+                                return (
+                                  <div
+                                    key={item}
+                                    className="w-[180px] md:w-[200px] card rounded-lg mx-auto p-2 border border-neutral-800 bg-gradient-to-tr from-stone-950 to-neutral-950 rounded-xl mt-3"
+                                  >
+                                    <figure
+                                      className={`relative "w-full  rounded-none`}
+                                    >
+                                      <Link
+                                        to={`/friend/${item?.friendTechData?.address}`}
+                                        className="text-white text-[10px] hover:underline  "
+                                      >
+                                        <img
+                                          src={item?.friendTechData?.ftPfpUrl}
+                                          alt=""
+                                          className="w-full h-full  "
+                                        />
+                                      </Link>
+                                      <span
+                                        className={`absolute top-0 right-0 badge badge-dark rounded-sm border border-stone-700 text-[10px]`}
+                                      >
+                                        #{item?.friendTechData?.id}
+                                      </span>
+                                    </figure>
+                                    <div className="flex justify-start gap-1 ms-2 md:p-2">
+                                      <Link
+                                        to={`/friend/${item?.friendTechData.address}`}
+                                        className="text-white font-mono font-bold whitespace-nowrap text-[10px] md:text-[12px] overflow-hidden hover:underline hover:text-stone-700"
+                                      >
+                                        {item?.friendTechData?.ftName}
+                                      </Link>
+                                      <MdVerified className="text-blue-500 size-3 md:size-4" />
+                                    </div>
+                                    <div className="text-start p-2 font-mono text-[9px] card-body ">
+                                      <div>
+                                        {" "}
+                                        <Link
+                                          to={`https://sudoswap.xyz/#/manage/base/${item?.poolData?.address}`}
+                                          className="font-mono hover:underline hover:text-gray-300 font-bold"
+                                        >
+                                          <div className="flex gap-1 ms-0.5">
+                                            <FaExternalLinkAlt className="text-gray-400 mt-0.5" />
+                                            {item?.sudoSwapData?.address.slice(
+                                              0,
+                                              4
+                                            ) +
+                                              "..." +
+                                              item?.sudoSwapData?.address.slice(
+                                                item?.sudoSwapData?.address
+                                                  .length - 4,
+                                                item?.sudoSwapData?.address
+                                                  .length
+                                              )}
+                                          </div>
+                                        </Link>{" "}
+                                      </div>
+                                      <div className="flex gap-0.5">
+                                        <img
+                                          src="https://dd.dexscreener.com/ds-data/tokens/base/0xddf7d080c82b8048baae54e376a3406572429b4e.png?size=lg&key=18ea46"
+                                          alt=""
+                                          className="size-4"
+                                        />
+                                        <h3 className="mt-[1px]">
+                                          {uintFormat(
+                                            item?.totalRewards
+                                          ).toFixed(2)}
+                                          {" Earned"}
+                                        </h3>
+                                      </div>
+                                    </div>
+                                    <div className="flex">
+                                      <button
+                                        className=" text-[9px] font-bold p-1 w-full border bg-gray-200 text-black border-neutral-900 rounded-lg hover:bg-stone-400"
+                                        onClick={() => {
+                                          withdraw(item?.wrappedPoolID);
+                                        }}
+                                      >
+                                        Unstake
+                                      </button>
+                                      <button className=" text-[9px] font-bold p-1 w-full border bg-gray-200 text-black border-neutral-900 rounded-lg hover:bg-stone-400">
+                                        Claim
+                                      </button>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <div className="flex justify-center mb-10 mt-[200px]">
+                              <img
+                                src="https://www.friend.tech/friendtechlogo.png"
+                                alt=""
+                                className="w-20 h-20 animate-bounce"
+                              />
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="flex justify-center mb-10 mt-[200px]">
+                          <img
+                            src="https://www.friend.tech/friendtechlogo.png"
+                            alt=""
+                            className="w-20 h-20 animate-bounce"
+                          />
+                        </div>
+                      )}
+                    </>
+                  ) : null}
+                </>
               )}
             </>
           )}

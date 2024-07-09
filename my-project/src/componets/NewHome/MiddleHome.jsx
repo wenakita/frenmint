@@ -1,7 +1,5 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
-import { FreeMode } from "swiper/modules";
 import CardBuilder from "./CardBuilder";
 
 function MiddleHome(props) {

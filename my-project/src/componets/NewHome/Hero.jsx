@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { HiArrowPath } from "react-icons/hi2";
+import { LuFileSymlink } from "react-icons/lu";
 import { Link } from "react-router-dom";
-import {
-  GetTrendingFriends,
-  SearchByContract,
-} from "../../requests/friendCalls";
 import CardBuilder from "./CardBuilder";
 import MiddleHome from "./MiddleHome";
-import { supabase } from "../../client";
-import { LuFileSymlink } from "react-icons/lu";
-import { HiArrowPath } from "react-icons/hi2";
 function Hero(props) {
   const { heroData, recentTxs, trending } = props;
   return (

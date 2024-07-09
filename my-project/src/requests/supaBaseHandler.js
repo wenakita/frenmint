@@ -1,3 +1,6 @@
+import { supabase } from "../client";
+import { SearchByContract } from "./friendCalls";
+
 export async function postTransaction(
   supabase,
   shareData,
@@ -95,7 +98,22 @@ export async function postMessageData(supabase, message, userName) {
   }
 }
 
-export async function findPrivateChat(shareAddress) {}
+export async function getRecentTx() {
+  const { data, error } = await supabase.from("txs").select();
+  if (error) {
+    console.log(error);
+  }
+  if (data) {
+    const formattedData = [];
+    for (const key in data) {
+      const res = await SearchByContract(data[key]?.share_address);
+      formattedData.push(res);
+    }
+
+    return formattedData;
+  }
+  return null;
+}
 //table name tx
 // {
 //   id: 1,

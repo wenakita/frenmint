@@ -11,15 +11,17 @@ import {
   SearchByContract,
   findHoldingsShareData,
   findId,
+  getChart,
   getShareChartData,
+  getUserHoldings,
 } from "../../requests/friendCalls";
 import { getEthPrice } from "../../requests/priceCalls";
 import CreatePool from "./CreatePool";
 import PoolSwap from "./PoolSwap";
-import ShareSender from "./ShareSender";
 import SwapCharts from "./SwapCharts";
 import SwapTabs from "./SwapTabs";
 import Swapper from "./Swapper";
+import WrappedStaker from "./WrappedStaker";
 
 function NewSwap(props) {
   // document.getElementById("my_modal_300").showModal();  works every where
@@ -31,7 +33,7 @@ function NewSwap(props) {
   const [viewChart, setViewChart] = useState(false);
   const [viewPoolCreator, setViewPoolCreator] = useState(false);
   const [viewSend, setViewSend] = useState(false);
-  const [viewPods, setViewPods] = useState(false);
+  const [viewWrappedStaking, setViewWrappedStaking] = useState(false);
   const [viewLending, setViewLending] = useState(false);
 
   const [currentShare, setCurrentShare] = useState(null);
@@ -48,14 +50,12 @@ function NewSwap(props) {
   const [holdingsData, setHoldingsData] = useState(null);
 
   useEffect(() => {
-    getUserHoldings();
-    getTrending();
+    getInfo();
+    getGoddogShareInfo();
   }, []);
   useEffect(() => {
     if (location?.state) {
-      if (location?.state?.userData !== null) {
-        setCurrentShare(location?.state?.userData);
-      }
+      setCurrentShare(location?.state?.userData);
     } else if (location?.state === null) {
       getGoddogShareInfo();
     }
@@ -64,7 +64,7 @@ function NewSwap(props) {
   useEffect(() => {
     setCurrentPriceHistory(null);
     setCurrentSharePrice(uintFormat(currentShare?.displayPrice));
-    getChart();
+    getInfo();
   }, [currentShare]);
   async function getGoddogShareInfo() {
     const goddogShareInfo = await SearchByContract(
@@ -73,37 +73,16 @@ function NewSwap(props) {
     setCurrentShare(goddogShareInfo);
   }
 
-  async function getChart() {
-    const ethPrice = await getEthPrice();
-    const priceHistory = await getShareChartData(currentShare?.address);
-    // const formattedPriceHistory = await formatChartData(priceHistory);
-    const orderedPriceHistory = _.orderBy(priceHistory, ["date"]);
-    let totalVolume = 0;
-    for (const key in priceHistory) {
-      const currentData = priceHistory[key];
-      totalVolume += Math.round(Number(currentData?.priceAtDate) * ethPrice);
+  async function getInfo() {
+    const trendingResult = await GetTrendingFriends();
+    const res = await getChart(currentShare?.address);
+    if (res) {
+      setShareTotalVolume(res?.volume);
+      setCurrentPriceHistory(res?.history);
     }
-    setShareTotalVolume(totalVolume);
-
-    setCurrentPriceHistory(orderedPriceHistory);
-  }
-
-  async function getTrending() {
-    const trendingFriends = await GetTrendingFriends();
-    setTrendingUsers(trendingFriends);
-  }
-  async function getUserHoldings() {
-    setHoldingsData(null);
-    const userHoldings = await findId(userAddress);
-    const holdingsData = await findHoldingsShareData(
-      readContract,
-      config,
-      friendTechABI,
-      userAddress,
-      userHoldings
-    );
-
+    const holdingsData = await getUserHoldings(userAddress);
     setHoldingsData(holdingsData);
+    setTrendingUsers(trendingResult);
   }
 
   return (
@@ -122,8 +101,8 @@ function NewSwap(props) {
           viewSend={viewSend}
           viewLending={viewLending}
           setViewLending={setViewLending}
-          setViewPods={setViewPods}
-          viewPods={viewPods}
+          setViewWrappedStaking={setViewWrappedStaking}
+          viewWrappedStaking={viewWrappedStaking}
         />
       </div>
       <div className="  mx-auto">
@@ -133,8 +112,8 @@ function NewSwap(props) {
               <Swapper
                 trendingFriends={trendingUsers}
                 holdingsData={holdingsData}
-                getUserHoldings={getUserHoldings}
-                getTrending={getTrending}
+                getUserHoldings={getInfo}
+                getTrending={getInfo}
                 currentShare={currentShare}
                 setCurrentShare={setCurrentShare}
                 currentSharePrice={currentSharePrice}
@@ -161,7 +140,7 @@ function NewSwap(props) {
                     currentPriceHistory={currentPriceHistory}
                     currentShare={currentShare}
                     shareTotalVolume={shareTotalVolume}
-                    getUserHoldings={getUserHoldings}
+                    getUserHoldings={getInfo}
                   />
                 ) : (
                   <>
@@ -175,8 +154,11 @@ function NewSwap(props) {
                       />
                     ) : (
                       <>
-                        {viewSend ? (
-                          <ShareSender holdingsData={holdingsData} />
+                        {viewWrappedStaking ? (
+                          <WrappedStaker
+                            currentShare={currentShare}
+                            setCurrentShare={setCurrentShare}
+                          />
                         ) : null}
                       </>
                     )}
