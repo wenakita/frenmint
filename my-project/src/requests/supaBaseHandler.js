@@ -101,11 +101,12 @@ export async function postPoolTxData(params, owner, isBuy) {
         buyer_address: owner,
         share_amount: String(params[1]),
         share_address: params[0]?.address,
-        eth_val: String(ethVal),
+        eth_val: String(ethVal?.res),
         is_buy: isBuy,
         pool_address: params[0]?.sudoSwapData?.address,
         share_name: params[0]?.ftName,
         username: username,
+        ERC20_Token: ethVal?.token,
       },
     ])
     .single();
@@ -121,10 +122,16 @@ async function detectPair(ERC20, amount, tokenAmount) {
   switch (ERC20) {
     case goddogCA.toLowerCase():
       console.log(true);
-      output = (Number(tokenAmount) * Number(goddogPrice)) / ethPrice;
+      output = {
+        res: (Number(tokenAmount) * Number(goddogPrice)) / ethPrice,
+        token: "$oooOOO",
+      };
       break;
     case friendCA.toLowerCase():
-      output = (Number(tokenAmount) * Number(friendPrice)) / ethPrice;
+      output = {
+        res: (Number(tokenAmount) * Number(friendPrice)) / ethPrice,
+        token: "$Friend",
+      };
       break;
   }
 
