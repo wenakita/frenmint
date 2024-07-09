@@ -92,7 +92,7 @@ export async function postPoolTxData(params, owner, isBuy) {
     params[1],
     params[2]
   );
-
+  console.log(ethVal?.price);
   await supabase
     .from("pool-txs")
     .insert([
@@ -107,11 +107,12 @@ export async function postPoolTxData(params, owner, isBuy) {
         share_name: params[0]?.ftName,
         username: username,
         ERC20_Token: ethVal?.token,
+        token_price: String(ethVal?.price),
       },
     ])
     .single();
 }
-
+detectPair(goddogCA, "1", "20000");
 async function detectPair(ERC20, amount, tokenAmount) {
   let output;
   const goddogPrice = await getGoddogPrice();
@@ -125,16 +126,18 @@ async function detectPair(ERC20, amount, tokenAmount) {
       output = {
         res: (Number(tokenAmount) * Number(goddogPrice)) / ethPrice,
         token: "$oooOOO",
+        price: goddogPrice,
       };
       break;
     case friendCA.toLowerCase():
       output = {
         res: (Number(tokenAmount) * Number(friendPrice)) / ethPrice,
         token: "$Friend",
+        price: friendPrice,
       };
       break;
   }
-
+  console.log(output?.price);
   return output;
 }
 
