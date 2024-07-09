@@ -17,11 +17,8 @@ export const useShareInfo = (currentShare, userAddress) => {
       const trendingResult = await GetTrendingFriends();
       const res = await getChart(currentShare?.address);
 
-      const holdingsData = await getUserHoldings(userAddress);
-
       setData({
         chart: res?.history,
-        holdings: holdingsData,
         volume: res?.volume,
       });
     };

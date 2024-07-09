@@ -7,6 +7,7 @@ import PairsModal from "./subcomponets/PairsModal";
 import { detectTxType } from "./contract_calls/contractWrites";
 import PoolPairsModal from "./subcomponets/PoolPairsModal";
 import AvaliablePairs from "../swap/AvailablePairs";
+import ChartButton from "../swap/ChartButton";
 
 function SwapTemplate({
   pairs,
@@ -34,6 +35,8 @@ function SwapTemplate({
   wallet,
   holdings,
   disableButton,
+  shareData,
+  currentShare,
 }) {
   useEffect(() => {
     setTxType(type[0]);
@@ -73,9 +76,13 @@ function SwapTemplate({
       )}
       <div className="text-start text-white  font-semibold p-2 flex justify-between">
         <h3 className=" ">{txType}</h3>
-        <button>
-          <CiSettings />
-        </button>
+        {shareData?.chart && (
+          <ChartButton
+            currentPriceHistory={shareData?.chart}
+            currentShare={currentShare}
+            shareTotalVolume={shareData?.volume}
+          />
+        )}
       </div>
       <div className="mt-1 p-2">
         <div className="grid grid-cols-[1fr_auto] ">

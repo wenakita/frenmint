@@ -209,6 +209,8 @@ function SwapMain() {
               wallet={walletData}
               holdings={holdings}
               disableButton={disableButton}
+              shareData={shareData}
+              currentShare={currentShare}
             />
           ) : (
             <>
@@ -240,6 +242,8 @@ function SwapMain() {
                   wallet={walletData}
                   holdings={holdings}
                   disableButton={disableButton}
+                  shareData={shareData}
+                  currentShare={currentShare}
                 />
               ) : (
                 <CreatePool
@@ -261,6 +265,7 @@ function SwapMain() {
                   setModalMessage={setModalMessage}
                   balance={walletData}
                   disableButton={disableButton}
+                  shareData={shareData}
                 />
               )}
             </>
