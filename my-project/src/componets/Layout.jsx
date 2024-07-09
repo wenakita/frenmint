@@ -121,7 +121,7 @@ function Layout() {
   };
 
   return (
-    <div className="container touch-pan-y">
+    <div className="container ">
       <dialog id="my_modal_300" className="modal">
         <div className="modal-box bg-neutral-900">
           <div className="flex gap-1">

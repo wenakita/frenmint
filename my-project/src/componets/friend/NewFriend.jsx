@@ -463,7 +463,7 @@ function NewFriend() {
                     <button
                       className="text-[12px] border w-full bg-white hover:bg-stone-400 text-black font-bold rounded-lg border-stone-700 h-[30px]"
                       onClick={() => {
-                        navigate("/newswap", {
+                        navigate("/swap", {
                           state: {
                             userData,
                           },

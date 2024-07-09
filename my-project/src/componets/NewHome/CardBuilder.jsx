@@ -133,7 +133,7 @@ function CardBuilder(props) {
                 <div className="relative flex gap-1 mt-1">
                   <button
                     onClick={() =>
-                      navigate(`/newswap`, { state: { userData: data } })
+                      navigate(`/swap`, { state: { userData: data } })
                     }
                     className=" text-[9px] font-bold p-0.5 w-full border bg-gray-200 text-black border-neutral-900 rounded-lg hover:bg-stone-400"
                   >

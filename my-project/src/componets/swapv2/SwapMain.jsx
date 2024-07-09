@@ -10,8 +10,10 @@ import StatusModal from "./subcomponets/StatusModal";
 import CreatePool from "./CreatePool";
 import { usePoolFinder } from "../hooks/usePoolsFinder";
 import { useUserHoldings } from "../hooks/useUserHoldings";
+import { useLocation } from "react-router-dom";
 import ShareChart from "./subcomponets/ShareChart";
 function SwapMain() {
+  const location = useLocation();
   const [searchInput, setSearchInput] = useState(null);
   const [currentShare, setCurrentShare] = useState(null);
   const [transactionType, setTransactionType] = useState(null);
@@ -50,15 +52,30 @@ function SwapMain() {
   }, [type, currentShare]);
 
   useEffect(() => {
+    console.log(location?.state?.userData);
+    if (location?.state?.userData) {
+      setCurrentShare(location?.state?.userData);
+    }
+  }, []);
+
+  useEffect(() => {
     setModalMessage(null);
-    if (foundShares?.results) {
+    if (foundShares?.results && !location?.state?.userData) {
       setCurrentShare(foundShares.results[0]);
+    } else {
+      setCurrentShare(location?.state?.userData);
+
+      setDisabled(false);
     }
   }, []);
   useEffect(() => {
     console.log(foundShares);
-    if (foundShares?.results) {
+    if (foundShares?.results && !location?.state?.userData) {
       setCurrentShare(foundShares.results[0]);
+      setDisabled(false);
+    } else {
+      setCurrentShare(location?.state?.userData);
+
       setDisabled(false);
     }
   }, [foundShares]);
