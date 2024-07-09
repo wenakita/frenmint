@@ -13,3 +13,7 @@
 .custom-collapse .ant-collapse-header {
   border-bottom-color: "black";
 }
+.slick-prev,
+.slick-next {
+  display: none !important;
+}
