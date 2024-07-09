@@ -256,7 +256,7 @@ function NewBalances() {
             >
               Pools
             </button>
-            <button
+            {/* <button
               onClick={() => {
                 setViewShareHoldings(false);
                 setViewPools(false);
@@ -285,7 +285,7 @@ function NewBalances() {
               }`}
             >
               Staked Pools
-            </button>
+            </button> */}
           </div>
         </div>
         {/* <img
